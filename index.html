@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LexForge PRO — Gerador de Petição Inicial</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════
+   LEXFORGE PRO — DESIGN SYSTEM: PRETO & OURO
+   ═══════════════════════════════════════════════ */
+:root {
+  /* Core Palette */
+  --black:    #0c0c0e;
+  --black2:   #111114;
+  --black3:   #18181c;
+  --black4:   #222228;
+  --black5:   #2a2a32;
+  --gold:     #c9a84c;
+  --gold2:    #e2c06a;
+  --gold3:    #a07830;
+  --gold4:    #f0d88a;
+  --gold-dim: rgba(201,168,76,0.12);
+  --gold-line:rgba(201,168,76,0.18);
+  --gold-glow:rgba(201,168,76,0.08);
+
+  /* Text */
+  --t1: #f0ece0;
+  --t2: #c8c4b4;
+  --t3: #7a7870;
+  --t4: #4a4840;
+
+  /* Status */
+  --red:    #c0392b;
+  --red-bg: rgba(192,57,43,0.08);
+  --green:  #2ecc71;
+  --green-bg: rgba(46,204,113,0.08);
+  --blue:   #5b8cda;
+  --blue-bg:rgba(91,140,218,0.08);
+
+  /* Dimensions */
+  --sidebar-w: 280px;
+  --header-h:  56px;
+  --radius:    2px;
+  --radius2:   4px;
+
+  /* Shadows */
+  --sh1: 0 1px 3px rgba(0,0,0,.4), 0 4px 12px rgba(0,0,0,.3);
+  --sh2: 0 8px 32px rgba(0,0,0,.5), 0 2px 8px rgba(0,0,0,.3);
+  --sh-gold: 0 0 20px rgba(201,168,76,.15);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 15px; }
+
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background: var(--black);
+  color: var(--t1);
+  min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══════════════════════════════════════
+   SCROLLBAR
+   ═══════════════════════════════════════ */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--black2); }
+::-webkit-scrollbar-thumb { background: var(--black5); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold3); }
+
+/* ═══════════════════════════════════════
+   TOPBAR
+   ═══════════════════════════════════════ */
+.topbar {
+  position: sticky; top: 0; z-index: 200;
+  height: var(--header-h);
+  background: var(--black2);
+  border-bottom: 1px solid var(--gold-line);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1.5rem;
+  box-shadow: 0 2px 16px rgba(0,0,0,.6);
+}
+
+.tb-left { display: flex; align-items: center; gap: 1rem; }
+
+.tb-logo {
+  display: flex; align-items: center; gap: .65rem;
+}
+
+.tb-seal {
+  width: 34px; height: 34px;
+  border: 1px solid var(--gold-line);
+  background: var(--gold-dim);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+  color: var(--gold);
+  flex-shrink: 0;
+}
+
+.tb-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--gold2);
+  letter-spacing: .05em;
+}
+
+.tb-sep {
+  width: 1px; height: 22px;
+  background: var(--gold-line);
+}
+
+.tb-subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .58rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--t3);
+}
+
+.tb-right { display: flex; align-items: center; gap: .75rem; }
+
+.tb-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .55rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid var(--gold-line);
+  padding: .2rem .6rem;
+  background: var(--gold-dim);
+}
+
+.tb-badge.red { color: #ff6b6b; border-color: rgba(255,107,107,.25); background: rgba(255,107,107,.06); }
+
+/* ═══════════════════════════════════════
+   LAYOUT
+   ═══════════════════════════════════════ */
+.layout {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) 1fr;
+  min-height: calc(100vh - var(--header-h));
+}
+
+/* ═══════════════════════════════════════
+   SIDEBAR
+   ═══════════════════════════════════════ */
+.sidebar {
+  background: var(--black2);
+  border-right: 1px solid var(--gold-line);
+  position: sticky;
+  top: var(--header-h);
+  height: calc(100vh - var(--header-h));
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.sb-search-wrap {
+  padding: .85rem .9rem .7rem;
+  border-bottom: 1px solid var(--gold-line);
+  background: var(--black3);
+}
+
+.sb-search {
+  width: 100%;
+  background: var(--black4);
+  border: 1px solid var(--gold-line);
+  color: var(--t1);
+  font-family: 'DM Sans', sans-serif;
+  font-size: .78rem;
+  padding: .45rem .7rem;
+  outline: none;
+  border-radius: var(--radius);
+  transition: border-color .15s;
+}
+.sb-search:focus { border-color: var(--gold3); }
+.sb-search::placeholder { color: var(--t4); font-style: italic; }
+
+.sb-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .56rem;
+  letter-spacing: .1em;
+  color: var(--t4);
+  margin-top: .35rem;
+  text-transform: uppercase;
+}
+
+.sb-areas { flex: 1; overflow-y: auto; }
+
+.sb-group-label {
+  padding: .5rem .9rem .3rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .58rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--gold3);
+  border-bottom: 1px solid rgba(201,168,76,.08);
+  background: rgba(201,168,76,.03);
+  display: flex; align-items: center; gap: .5rem;
+}
+.sb-group-label::after { content: ''; flex: 1; height: 1px; background: rgba(201,168,76,.1); }
+
+.ab {
+  display: flex; align-items: center; gap: .5rem;
+  padding: .42rem .9rem;
+  background: transparent;
+  border: none; border-left: 2px solid transparent;
+  cursor: pointer; text-align: left; width: 100%;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .76rem; color: var(--t3);
+  transition: all .12s; line-height: 1.3;
+}
+.ab:hover { background: var(--gold-glow); color: var(--t2); border-left-color: var(--gold3); }
+.ab.on {
+  background: rgba(201,168,76,.1);
+  border-left-color: var(--gold);
+  color: var(--gold2);
+}
+.ab .ico { font-size: .9rem; flex-shrink: 0; width: 18px; text-align: center; }
+.ab .lbl { flex: 1; }
+.ab .cod {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .52rem; color: var(--t4); letter-spacing: .06em;
+}
+.ab.on .cod { color: var(--gold3); }
+
+/* ═══════════════════════════════════════
+   SIDEBAR PROGRESS
+   ═══════════════════════════════════════ */
+.sb-prog {
+  padding: .85rem .9rem;
+  border-top: 1px solid var(--gold-line);
+  background: var(--black3);
+  flex-shrink: 0;
+}
+
+.sb-prog-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .58rem; letter-spacing: .15em;
+  text-transform: uppercase; color: var(--t4);
+  margin-bottom: .55rem;
+}
+
+.pi {
+  display: flex; align-items: center; gap: .45rem;
+  font-size: .7rem; color: var(--t4); padding: .15rem 0;
+}
+.pd {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--black5); flex-shrink: 0;
+  border: 1px solid var(--t4);
+  transition: all .2s;
+}
+.pd.ok { background: var(--gold3); border-color: var(--gold); }
+.pd.err { background: var(--red); border-color: var(--red); }
+
+.prog-track { height: 2px; background: var(--black5); margin-top: .6rem; border-radius: 1px; }
+.prog-fill { height: 100%; background: linear-gradient(90deg, var(--gold3), var(--gold)); border-radius: 1px; transition: width .35s; }
+
+/* ═══════════════════════════════════════
+   MAIN PANEL
+   ═══════════════════════════════════════ */
+.main {
+  padding: 1.75rem 2rem 3rem;
+  max-width: 820px;
+}
+
+/* PAGE TITLE */
+.pg-head {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--gold-line);
+}
+
+.pg-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .58rem; letter-spacing: .25em;
+  text-transform: uppercase; color: var(--gold3);
+  margin-bottom: .4rem;
+}
+
+.pg-head h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem; font-weight: 700; color: var(--gold2);
+  line-height: 1.1; letter-spacing: .02em;
+}
+
+.pg-head p {
+  font-size: .8rem; color: var(--t3); margin-top: .35rem;
+  line-height: 1.55;
+}
+
+.area-tag {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-size: .72rem; font-weight: 500;
+  border: 1px solid var(--gold-line);
+  padding: .22rem .75rem;
+  color: var(--gold2);
+  background: var(--gold-dim);
+  margin-top: .6rem;
+}
+.area-tag-empty {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-size: .72rem; color: var(--t4);
+  border: 1px dashed var(--black5);
+  padding: .22rem .75rem; margin-top: .6rem;
+}
+
+/* ═══════════════════════════════════════
+   ANTI-HALLUCINATION NOTICE
+   ═══════════════════════════════════════ */
+.notice-ah {
+  display: flex; align-items: flex-start; gap: .75rem;
+  background: rgba(201,168,76,.05);
+  border: 1px solid var(--gold-line);
+  border-left: 3px solid var(--gold3);
+  padding: .8rem 1rem;
+  margin-bottom: 1.25rem;
+  font-size: .76rem; color: var(--t2); line-height: 1.55;
+}
+.notice-ah-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .55rem; letter-spacing: .1em;
+  background: var(--gold3); color: var(--black);
+  padding: .15rem .45rem; white-space: nowrap;
+  flex-shrink: 0; margin-top: 2px; font-weight: 500;
+  text-transform: uppercase;
+}
+
+/* ═══════════════════════════════════════
+   FORM CARDS
+   ═══════════════════════════════════════ */
+.card {
+  background: var(--black2);
+  border: 1px solid rgba(201,168,76,.12);
+  margin-bottom: .65rem;
+  box-shadow: var(--sh1);
+}
+.card.open { border-color: rgba(201,168,76,.22); }
+
+.card-head {
+  display: flex; align-items: center; gap: .65rem;
+  padding: .7rem 1rem;
+  cursor: pointer; user-select: none;
+  border-bottom: 1px solid transparent;
+  transition: background .12s;
+}
+.card.open .card-head { border-bottom-color: rgba(201,168,76,.12); background: rgba(201,168,76,.04); }
+.card-head:hover { background: rgba(201,168,76,.05); }
+
+.card-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .56rem; letter-spacing: .1em;
+  background: var(--gold3); color: var(--black);
+  padding: .12rem .4rem; font-weight: 500; flex-shrink: 0;
+}
+
+.card-title {
+  font-size: .82rem; font-weight: 600; color: var(--t1); flex: 1;
+}
+
+.card-status { font-size: .66rem; }
+.card-status.ok { color: var(--gold3); }
+.card-status.pend { color: var(--t4); }
+.card-status.opt { color: var(--t4); font-style: italic; }
+
+.card-chev { font-size: .65rem; color: var(--t4); transition: transform .18s; }
+.card:not(.open) .card-chev { transform: rotate(-90deg); }
+
+.card-body { padding: 1rem; display: none; }
+.card.open .card-body { display: block; }
+
+/* ═══════════════════════════════════════
+   FORM FIELDS
+   ═══════════════════════════════════════ */
+.frow { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; margin-bottom: .75rem; }
+.frow.f3 { grid-template-columns: 1fr 1fr 1fr; }
+.frow.f1 { grid-template-columns: 1fr; }
+.frow:last-child { margin-bottom: 0; }
+@media(max-width:600px){ .frow,.frow.f3 { grid-template-columns:1fr; } }
+
+.fg { display: flex; flex-direction: column; gap: .25rem; }
+
+.fl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .62rem; font-weight: 500;
+  letter-spacing: .06em; color: var(--t2);
+  text-transform: uppercase; display: flex; align-items: center; gap: .3rem;
+}
+.fl .req { color: var(--gold); }
+.fl .opt { font-weight: 400; color: var(--t4); font-style: italic; text-transform: none; letter-spacing: 0; font-size: .62rem; }
+
+.fh { font-size: .62rem; color: var(--t4); font-style: italic; }
+
+input[type=text], input[type=number], input[type=date],
+input[type=email], input[type=tel], select, textarea {
+  font-family: 'DM Sans', sans-serif;
+  font-size: .82rem; color: var(--t1);
+  background: var(--black3);
+  border: 1px solid rgba(201,168,76,.15);
+  border-radius: var(--radius);
+  padding: .5rem .7rem;
+  width: 100%; outline: none;
+  transition: border-color .15s, box-shadow .15s;
+  -webkit-appearance: none;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--gold3);
+  box-shadow: 0 0 0 3px rgba(201,168,76,.08);
+}
+input::placeholder, textarea::placeholder {
+  color: var(--t4); font-style: italic; font-size: .78rem;
+}
+input.err { border-color: var(--red) !important; }
+select option { background: var(--black3); color: var(--t1); }
+textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+input[readonly] { background: var(--black4); color: var(--t4); cursor: default; }
+
+/* PEDIDOS */
+.ped-row { display: flex; align-items: center; gap: .4rem; margin-bottom: .4rem; }
+.ped-n {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .6rem; color: var(--t4);
+  width: 18px; text-align: right; flex-shrink: 0;
+}
+.ped-row input { flex: 1; }
+.btn-del-ped {
+  background: transparent;
+  border: 1px solid rgba(201,168,76,.15);
+  color: var(--t4); padding: .44rem .55rem;
+  cursor: pointer; font-size: .7rem;
+  border-radius: var(--radius); transition: all .12s; flex-shrink: 0;
+}
+.btn-del-ped:hover { border-color: var(--red); color: var(--red); background: var(--red-bg); }
+
+.btn-add-ped {
+  display: inline-flex; align-items: center; gap: .35rem;
+  background: transparent;
+  border: 1px dashed rgba(201,168,76,.25);
+  color: var(--t3);
+  font-family: 'DM Sans', sans-serif;
+  font-size: .74rem; padding: .42rem .9rem;
+  border-radius: var(--radius);
+  cursor: pointer; transition: all .15s; margin-top: .25rem;
+}
+.btn-add-ped:hover { border-color: var(--gold3); color: var(--gold2); background: var(--gold-dim); }
+
+/* TAGS */
+.tag-grid { display: flex; flex-wrap: wrap; gap: .3rem; }
+.tag {
+  font-family: 'DM Sans', sans-serif;
+  font-size: .68rem; padding: .22rem .6rem;
+  border: 1px solid rgba(201,168,76,.18);
+  cursor: pointer; transition: all .12s;
+  color: var(--t3); background: transparent;
+  border-radius: var(--radius);
+}
+.tag:hover { border-color: var(--gold3); color: var(--gold2); }
+.tag.on { background: rgba(201,168,76,.15); border-color: var(--gold3); color: var(--gold2); }
+
+/* ═══════════════════════════════════════
+   VALIDATION BOX
+   ═══════════════════════════════════════ */
+.vbox {
+  display: none;
+  background: var(--red-bg);
+  border: 1px solid rgba(192,57,43,.3);
+  border-left: 3px solid var(--red);
+  padding: .8rem 1rem; margin-bottom: 1rem;
+}
+.vbox.show { display: block; }
+.vbox-title { font-size: .74rem; font-weight: 600; color: #ff8080; margin-bottom: .4rem; display: flex; align-items: center; gap: .35rem; }
+.vbox ul { list-style: none; display: flex; flex-direction: column; gap: 3px; }
+.vbox ul li { font-size: .72rem; color: #c09090; display: flex; align-items: center; gap: .35rem; }
+.vbox ul li::before { content: '›'; color: var(--red); }
+
+/* ═══════════════════════════════════════
+   GENERATE BAR
+   ═══════════════════════════════════════ */
+.gen-bar {
+  background: var(--black2);
+  border: 1px solid var(--gold-line);
+  padding: 1.1rem;
+  margin-top: .75rem;
+  box-shadow: var(--sh1);
+}
+.gen-inner { display: flex; align-items: flex-start; gap: 1.25rem; flex-wrap: wrap; }
+
+.btn-gen {
+  display: inline-flex; align-items: center; gap: .5rem;
+  background: var(--gold3);
+  color: var(--black);
+  border: none;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem; font-weight: 700;
+  letter-spacing: .04em;
+  padding: .7rem 1.75rem;
+  cursor: pointer;
+  transition: all .2s;
+  flex-shrink: 0;
+}
+.btn-gen:hover {
+  background: var(--gold);
+  box-shadow: 0 4px 20px rgba(201,168,76,.3);
+  transform: translateY(-1px);
+}
+.btn-gen:active { transform: none; }
+.btn-gen:disabled { opacity: .4; pointer-events: none; }
+
+.gen-note {
+  font-size: .72rem; color: var(--t4); line-height: 1.55;
+  max-width: 340px;
+}
+.gen-note strong { color: var(--t3); }
+
+/* ═══════════════════════════════════════
+   LOADING
+   ═══════════════════════════════════════ */
+.loading { display: none; text-align: center; padding: 3rem 1rem; }
+.loading.show { display: block; animation: fadeup .3s ease; }
+
+.ld-ring {
+  width: 40px; height: 40px;
+  border: 1px solid var(--gold-line);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin .9s linear infinite;
+  margin: 0 auto 1.5rem;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.ld-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem; font-style: italic; color: var(--t2);
+}
+.ld-sub { font-size: .72rem; color: var(--t4); margin-top: .3rem; }
+.ld-steps { max-width: 280px; margin: 1.25rem auto 0; display: flex; flex-direction: column; gap: 3px; }
+.ld-step {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .6rem; color: var(--t4);
+  display: flex; align-items: center; gap: .45rem;
+  padding: .2rem 0; letter-spacing: .04em;
+}
+.sd { width: 5px; height: 5px; border-radius: 50%; background: var(--black5); flex-shrink: 0; transition: background .2s; }
+.sd.act { background: var(--gold); animation: pd 1s ease-in-out infinite; }
+.sd.done { background: var(--gold3); }
+@keyframes pd { 0%,100%{opacity:1}50%{opacity:.3} }
+
+/* ═══════════════════════════════════════
+   OUTPUT
+   ═══════════════════════════════════════ */
+.output { display: none; }
+.output.show { display: block; animation: fadeup .3s ease; }
+@keyframes fadeup { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+.out-bar {
+  background: var(--black2);
+  border: 1px solid var(--gold-line);
+  border-bottom: none;
+  padding: .65rem 1rem;
+  display: flex; align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap; gap: .5rem;
+}
+
+.out-bar-left { display: flex; align-items: center; gap: .65rem; }
+.out-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); }
+.out-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .6rem; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--t3);
+}
+
+.out-actions { display: flex; gap: .35rem; flex-wrap: wrap; }
+
+.btn-act {
+  display: inline-flex; align-items: center; gap: .3rem;
+  background: var(--black3);
+  border: 1px solid rgba(201,168,76,.18);
+  color: var(--t2);
+  font-family: 'DM Sans', sans-serif;
+  font-size: .7rem; font-weight: 500;
+  padding: .35rem .75rem;
+  cursor: pointer; transition: all .12s;
+  border-radius: var(--radius);
+}
+.btn-act:hover { border-color: var(--gold3); color: var(--gold2); background: var(--gold-dim); }
+.btn-act.gold { background: var(--gold3); border-color: var(--gold3); color: var(--black); font-weight: 600; }
+.btn-act.gold:hover { background: var(--gold); }
+
+/* ═══════════════════════════════════════
+   PETITION DOCUMENT (print-ready)
+   ═══════════════════════════════════════ */
+.doc {
+  background: #ffffff;
+  border: 1px solid var(--gold-line);
+  padding: 4.5rem 5.5rem 5.5rem;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 12pt;
+  color: #111;
+  line-height: 2;
+  box-shadow: var(--sh2), var(--sh-gold);
+  min-height: 300px;
+  position: relative;
+}
+
+.doc::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--gold3), var(--gold), var(--gold3));
+}
+
+@media(max-width:680px){ .doc { padding: 2rem 1.25rem 2.5rem; } }
+
+/* Document typography */
+.doc .d-header { text-align: center; margin-bottom: 3rem; }
+.doc .d-juizo { font-size: 11.5pt; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; border-bottom: 2px solid #111; padding-bottom: .35rem; margin-bottom: .5rem; }
+.doc .d-vara { font-size: 10.5pt; color: #444; font-style: italic; }
+.doc .d-sec { font-size: 11pt; font-weight: 700; text-align: center; text-transform: uppercase; letter-spacing: .06em; margin: 2.8rem 0 .8rem; border-bottom: 1px solid #bbb; padding-bottom: .3rem; }
+.doc p { text-indent: 2.5cm; text-align: justify; hyphens: auto; margin-bottom: .3rem; font-size: 12pt; }
+.doc p.ct { text-align: center; text-indent: 0; }
+.doc p.ni { text-indent: 0; }
+.doc ol.pl { margin: .4rem 0 .4rem 3.5cm; padding: 0; }
+.doc ol.pl li { font-size: 12pt; line-height: 2; text-align: justify; margin-bottom: .15rem; }
+.doc .sig { margin-top: 3.5rem; text-align: center; }
+.doc .sig-line { width: 280px; height: 1px; background: #222; margin: .5rem auto; }
+.doc .sig-n { font-weight: 700; text-align: center; text-indent: 0; font-size: 12pt; }
+.doc .sig-o { font-style: italic; text-align: center; text-indent: 0; color: #555; font-size: 11pt; }
+
+/* META BAR */
+.doc-meta {
+  background: var(--black3);
+  border: 1px solid var(--gold-line);
+  border-top: none;
+  padding: .5rem .9rem;
+  display: flex; gap: 1.25rem; flex-wrap: wrap; align-items: center;
+}
+.mc {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .56rem; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--t4);
+}
+.mc strong { color: var(--t3); margin-left: .2rem; }
+
+/* ═══════════════════════════════════════
+   REVIEW PANEL
+   ═══════════════════════════════════════ */
+.rev-panel {
+  display: none;
+  background: var(--black2);
+  border: 1px solid rgba(91,140,218,.2);
+  margin-top: .75rem;
+  overflow: hidden;
+}
+.rev-panel.show { display: block; animation: fadeup .3s ease; }
+.rev-head {
+  background: var(--black3);
+  border-bottom: 1px solid rgba(91,140,218,.2);
+  padding: .65rem 1rem;
+  font-size: .78rem; font-weight: 600; color: var(--t2);
+  display: flex; align-items: center; gap: .5rem;
+}
+.rev-body { padding: 1rem; font-size: .78rem; color: var(--t2); line-height: 1.7; min-height: 60px; }
+.rev-ld { display: flex; align-items: center; gap: .5rem; color: var(--t4); font-style: italic; font-size: .76rem; }
+.rev-spin { width: 14px; height: 14px; border: 1px solid var(--black5); border-top-color: var(--blue); border-radius: 50%; animation: spin .8s linear infinite; flex-shrink: 0; }
+.rev-score {
+  display: inline-flex; align-items: center; gap: .35rem;
+  font-family: 'JetBrains Mono', monospace; font-size: .65rem; font-weight: 500;
+  padding: .18rem .55rem; margin-bottom: .6rem;
+  border-radius: var(--radius);
+}
+.rs-ok { background: var(--green-bg); color: var(--green); border: 1px solid rgba(46,204,113,.25); }
+.rs-bom { background: rgba(201,168,76,.1); color: var(--gold2); border: 1px solid var(--gold-line); }
+.rs-attn { background: var(--red-bg); color: #ff8080; border: 1px solid rgba(192,57,43,.3); }
+.rev-st { font-size: .7rem; font-weight: 600; margin: .65rem 0 .3rem; color: var(--t2); }
+.rev-item { display: flex; gap: .4rem; margin-bottom: .35rem; align-items: flex-start; }
+.ri { flex-shrink: 0; margin-top: 1px; }
+
+/* ═══════════════════════════════════════
+   SEPARATOR
+   ═══════════════════════════════════════ */
+hr.sep {
+  border: none;
+  border-top: 1px solid rgba(201,168,76,.1);
+  margin: .75rem 0;
+}
+
+/* ═══════════════════════════════════════
+   TOAST
+   ═══════════════════════════════════════ */
+.toast {
+  position: fixed; bottom: 1.25rem; right: 1.25rem;
+  z-index: 9999;
+  background: var(--black2);
+  border: 1px solid var(--gold-line);
+  color: var(--gold2);
+  font-size: .75rem; font-weight: 500;
+  padding: .55rem 1.1rem;
+  box-shadow: var(--sh2);
+  transform: translateY(80px); opacity: 0;
+  transition: all .22s cubic-bezier(.34,1.56,.64,1);
+  display: flex; align-items: center; gap: .4rem;
+  pointer-events: none;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+
+/* Mobile */
+@media(max-width:760px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--gold-line); }
+  .main { padding: 1rem; }
+  .tb-right { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ╔═══════════════════════════════════╗
+     ║            TOPBAR                ║
+     ╚═══════════════════════════════════╝ -->
+<header class="topbar">
+  <div class="tb-left">
+    <div class="tb-logo">
+      <div class="tb-seal">⚖</div>
+      <div class="tb-name">LexForge</div>
+    </div>
+    <div class="tb-sep"></div>
+    <div class="tb-subtitle">Petição Inicial · Sistema Jurídico Profissional</div>
+  </div>
+  <div class="tb-right">
+    <div class="tb-badge red">🛡 Anti-Invenção</div>
+    <div class="tb-badge">CPC/1973 + CPC/2015</div>
+    <div class="tb-badge">46 Áreas</div>
+  </div>
+</header>
+
+<!-- ╔═══════════════════════════════════╗
+     ║             LAYOUT               ║
+     ╚═══════════════════════════════════╝ -->
+<div class="layout">
+
+<!-- ════════════════ SIDEBAR ════════════════ -->
+<aside class="sidebar">
+  <div class="sb-search-wrap">
+    <input class="sb-search" type="text" placeholder="Buscar área do direito..." oninput="filterAreas(this.value)">
+    <div class="sb-count" id="areaCount">46 áreas disponíveis</div>
+  </div>
+
+  <div class="sb-areas" id="areaList">
+
+    <div class="sb-group" data-g="privado">
+      <div class="sb-group-label">Direito Privado — Cível</div>
+      <button class="ab" data-area="Direito Civil — Obrigações e Contratos" data-lei="CC/2002, arts. 233–965; CPC/2015, art. 318" data-presc="3 a 10 anos (CC, arts. 205–206)" onclick="sel(this)"><span class="ico">📜</span><span class="lbl">Obrigações e Contratos</span><span class="cod">CC</span></button>
+      <button class="ab" data-area="Responsabilidade Civil — Danos Morais e Materiais" data-lei="CC/2002, arts. 186, 187, 927–954; CF/88, art. 5º, V e X" data-presc="3 anos (CC, art. 206, §3º, V)" onclick="sel(this)"><span class="ico">⚖️</span><span class="lbl">Responsabilidade Civil</span><span class="cod">CC</span></button>
+      <button class="ab" data-area="Direito de Família — Divórcio e Separação" data-lei="CC/2002, arts. 1.511–1.783-A; CPC/2015, arts. 693–699; EC 66/2010" data-presc="Imprescritível (estado pessoal)" onclick="sel(this)"><span class="ico">💍</span><span class="lbl">Divórcio / Separação</span><span class="cod">CC</span></button>
+      <button class="ab" data-area="Alimentos — Ação de Alimentos ou Revisional" data-lei="CC/2002, arts. 1.694–1.710; Lei 5.478/1968; CPC/2015, arts. 693–699" data-presc="2 anos (CC, art. 206, §2º)" onclick="sel(this)"><span class="ico">👨‍👩‍👧</span><span class="lbl">Alimentos</span><span class="cod">CC</span></button>
+      <button class="ab" data-area="Guarda, Visitação e Convivência" data-lei="CC/2002, arts. 1.583–1.590; ECA, arts. 21–24; Lei 13.058/2014" data-presc="Imprescritível (tutela de menor)" onclick="sel(this)"><span class="ico">🧒</span><span class="lbl">Guarda e Visitação</span><span class="cod">CC</span></button>
+      <button class="ab" data-area="União Estável — Reconhecimento e Dissolução" data-lei="CC/2002, arts. 1.723–1.727; Lei 9.278/1996; CF/88, art. 226, §3º" data-presc="10 anos (CC, art. 205)" onclick="sel(this)"><span class="ico">💑</span><span class="lbl">União Estável</span><span class="cod">CC</span></button>
+      <button class="ab" data-area="Inventário e Partilha de Bens" data-lei="CC/2002, arts. 1.784–2.027; CPC/2015, arts. 610–673; Lei 11.441/2007" data-presc="10 anos (CC, art. 205)" onclick="sel(this)"><span class="ico">📋</span><span class="lbl">Inventário e Partilha</span><span class="cod">CC</span></button>
+      <button class="ab" data-area="Herança e Direito das Sucessões" data-lei="CC/2002, arts. 1.784–2.027; CPC/2015, arts. 610–673" data-presc="10 anos (CC, art. 205)" onclick="sel(this)"><span class="ico">🏛️</span><span class="lbl">Herança e Sucessões</span><span class="cod">CC</span></button>
+      <button class="ab" data-area="Direito Imobiliário — Compra e Venda" data-lei="CC/2002, arts. 481–532; Lei 4.591/1964; Lei 6.766/1979" data-presc="10 anos (CC, art. 205)" onclick="sel(this)"><span class="ico">🏠</span><span class="lbl">Imobiliário — Compra e Venda</span><span class="cod">CC</span></button>
+      <button class="ab" data-area="Locação Residencial e Comercial" data-lei="Lei 8.245/1991 (Lei do Inquilinato); CC/2002, arts. 565–578" data-presc="3 anos (CC, art. 206, §3º, I)" onclick="sel(this)"><span class="ico">🔑</span><span class="lbl">Locação / Inquilinato</span><span class="cod">LOC</span></button>
+      <button class="ab" data-area="Despejo e Reintegração de Posse" data-lei="Lei 8.245/1991, arts. 59–66; CPC/2015, arts. 560–566; CC/2002, arts. 1.196–1.224" data-presc="1 ano e 1 dia (ação possessória, CC art. 1.210)" onclick="sel(this)"><span class="ico">🚪</span><span class="lbl">Despejo / Reintegração</span><span class="cod">LOC</span></button>
+      <button class="ab" data-area="Usucapião" data-lei="CC/2002, arts. 1.238–1.244; CF/88, arts. 183 e 191; CPC/2015, arts. 246 e 259; Lei 6.969/1981" data-presc="5 a 15 anos conforme modalidade (CC, arts. 1.238–1.242)" onclick="sel(this)"><span class="ico">📌</span><span class="lbl">Usucapião</span><span class="cod">CC</span></button>
+      <button class="ab" data-area="Condomínio e Direitos de Vizinhança" data-lei="CC/2002, arts. 1.314–1.358-A; Lei 4.591/1964; CPC/2015, arts. 600–609" data-presc="5 anos (CC, art. 206, §5º, I)" onclick="sel(this)"><span class="ico">🏢</span><span class="lbl">Condomínio / Vizinhança</span><span class="cod">CC</span></button>
+      <button class="ab" data-area="Superendividamento e Renegociação de Dívidas" data-lei="CDC, arts. 54-A–54-G (inseridos pela Lei 14.181/2021); CC/2002, arts. 317 e 394" data-presc="5 anos (CDC, art. 27)" onclick="sel(this)"><span class="ico">💳</span><span class="lbl">Superendividamento</span><span class="cod">CDC</span></button>
+    </div>
+
+    <div class="sb-group" data-g="bancario">
+      <div class="sb-group-label">Direito Bancário e Financeiro</div>
+      <button class="ab" data-area="Direito Bancário — Revisão Contratual e Cobranças Abusivas" data-lei="CDC, arts. 2–54; CC/2002, arts. 591–626; Res. CMN 4.656/2018; Lei 7.357/1985" data-presc="5 anos (CDC, art. 27)" onclick="sel(this)"><span class="ico">🏦</span><span class="lbl">Revisão Contratual Bancária</span><span class="cod">CDC</span></button>
+      <button class="ab" data-area="Negativação Indevida — SPC/Serasa e Cobrança Indevida" data-lei="CDC, arts. 42 e 42-A; CC/2002, art. 186; Lei 9.507/1997 (Habeas Data)" data-presc="5 anos (CDC, art. 27)" onclick="sel(this)"><span class="ico">❌</span><span class="lbl">Negativação Indevida</span><span class="cod">CDC</span></button>
+    </div>
+
+    <div class="sb-group" data-g="consumidor">
+      <div class="sb-group-label">Direito do Consumidor</div>
+      <button class="ab" data-area="Produto Defeituoso ou com Vício" data-lei="CDC, arts. 12–17 (fato do produto) e arts. 18–25 (vício do produto); art. 6º, VI" data-presc="5 anos (CDC, art. 27); 30 ou 90 dias (CDC, art. 26)" onclick="sel(this)"><span class="ico">🛒</span><span class="lbl">Produto Defeituoso / Vício</span><span class="cod">CDC</span></button>
+      <button class="ab" data-area="Serviço Defeituoso ou com Vício" data-lei="CDC, arts. 14 e 20–22; art. 6º, VI" data-presc="5 anos (CDC, art. 27); 30 ou 90 dias (CDC, art. 26)" onclick="sel(this)"><span class="ico">🔧</span><span class="lbl">Serviço Defeituoso</span><span class="cod">CDC</span></button>
+      <button class="ab" data-area="Plano de Saúde — Negativa de Cobertura" data-lei="Lei 9.656/1998; RN-ANS; CDC; CF/88, art. 196" data-presc="10 anos (CC/2002, art. 205)" onclick="sel(this)"><span class="ico">🏥</span><span class="lbl">Plano de Saúde</span><span class="cod">ANS</span></button>
+      <button class="ab" data-area="Transporte Aéreo — Atraso, Cancelamento ou Extravio" data-lei="CDC; Lei 7.565/1986 (CBA); Res. ANAC 400/2016; Convenção de Montreal (Dec. 5.910/2006)" data-presc="2 anos (Convenção de Montreal, art. 35); 5 anos (CDC, art. 27)" onclick="sel(this)"><span class="ico">✈️</span><span class="lbl">Transporte Aéreo</span><span class="cod">ANAC</span></button>
+      <button class="ab" data-area="Comércio Eletrônico e Direito de Arrependimento" data-lei="CDC, art. 49 (arrependimento); Decreto 7.962/2013 (e-commerce); LGPD" data-presc="5 anos (CDC, art. 27)" onclick="sel(this)"><span class="ico">🛍️</span><span class="lbl">E-commerce</span><span class="cod">CDC</span></button>
+      <button class="ab" data-area="Construtora e Incorporadora — Vícios e Atraso" data-lei="Lei 4.591/1964; CDC; CC/2002, arts. 618 e 927; Lei 13.786/2018" data-presc="20 anos para vícios ocultos (CC, art. 618); 5 anos (CDC, art. 27)" onclick="sel(this)"><span class="ico">🏗️</span><span class="lbl">Construtora / Incorporadora</span><span class="cod">CDC</span></button>
+    </div>
+
+    <div class="sb-group" data-g="trabalho">
+      <div class="sb-group-label">Direito do Trabalho</div>
+      <button class="ab" data-area="Reclamação Trabalhista — Verbas Rescisórias e Direitos" data-lei="CLT (Decreto-Lei 5.452/1943); CF/88, art. 7º; Lei 13.467/2017 (Reforma Trabalhista)" data-presc="2 anos após rescisão; 5 anos no curso do contrato (CF/88, art. 7º, XXIX)" onclick="sel(this)"><span class="ico">⚒️</span><span class="lbl">Reclamação Trabalhista</span><span class="cod">CLT</span></button>
+      <button class="ab" data-area="Acidente de Trabalho e Doença Ocupacional" data-lei="Lei 8.213/1991, arts. 19–23; NR-1 (MTE); CC/2002, arts. 186 e 927; CF/88, art. 7º, XXVIII" data-presc="3 anos — dano civil (CC, art. 206, §3º, V)" onclick="sel(this)"><span class="ico">🦺</span><span class="lbl">Acidente de Trabalho</span><span class="cod">CLT</span></button>
+      <button class="ab" data-area="Assédio Moral e Sexual no Trabalho" data-lei="CF/88, art. 5º; CC/2002, arts. 186 e 927; CLT, arts. 483 e 482-B; Lei 14.457/2022" data-presc="3 anos (CC/2002, art. 206, §3º, V)" onclick="sel(this)"><span class="ico">🚫</span><span class="lbl">Assédio Moral / Sexual</span><span class="cod">CLT</span></button>
+      <button class="ab" data-area="Reconhecimento de Vínculo Empregatício" data-lei="CLT, arts. 2–9 e 442–456; CF/88, art. 7º; CPC/2015, art. 55" data-presc="2 anos após rescisão; 5 anos retroativos (CF/88, art. 7º, XXIX)" onclick="sel(this)"><span class="ico">📄</span><span class="lbl">Reconhecimento de Vínculo</span><span class="cod">CLT</span></button>
+      <button class="ab" data-area="Rescisão Indireta do Contrato de Trabalho" data-lei="CLT, art. 483; CF/88, art. 7º, I" data-presc="2 anos após rescisão" onclick="sel(this)"><span class="ico">🔓</span><span class="lbl">Rescisão Indireta</span><span class="cod">CLT</span></button>
+    </div>
+
+    <div class="sb-group" data-g="prev">
+      <div class="sb-group-label">Direito Previdenciário</div>
+      <button class="ab" data-area="Aposentadoria por Tempo de Contribuição" data-lei="Lei 8.213/1991; EC 103/2019 (Reforma Previdenciária); Decreto 3.048/1999" data-presc="10 anos (Decreto 20.910/1932, art. 1º)" onclick="sel(this)"><span class="ico">👴</span><span class="lbl">Aposentadoria por Contribuição</span><span class="cod">INSS</span></button>
+      <button class="ab" data-area="Aposentadoria por Incapacidade Permanente (Invalidez)" data-lei="Lei 8.213/1991, arts. 42–47; Decreto 3.048/1999; CF/88, art. 201, I" data-presc="10 anos (Decreto 20.910/1932)" onclick="sel(this)"><span class="ico">♿</span><span class="lbl">Aposentadoria por Invalidez</span><span class="cod">INSS</span></button>
+      <button class="ab" data-area="Auxílio por Incapacidade Temporária (Auxílio-Doença)" data-lei="Lei 8.213/1991, arts. 59–63; Decreto 3.048/1999; IN INSS 128/2022" data-presc="10 anos (Decreto 20.910/1932)" onclick="sel(this)"><span class="ico">🩺</span><span class="lbl">Auxílio-Doença</span><span class="cod">INSS</span></button>
+      <button class="ab" data-area="Pensão por Morte" data-lei="Lei 8.213/1991, arts. 74–79; EC 103/2019; Decreto 3.048/1999" data-presc="10 anos (Decreto 20.910/1932)" onclick="sel(this)"><span class="ico">🕊️</span><span class="lbl">Pensão por Morte</span><span class="cod">INSS</span></button>
+      <button class="ab" data-area="Aposentadoria Especial por Atividade de Risco" data-lei="Lei 8.213/1991, arts. 57–58; Decreto 3.048/1999, Anexo IV; IN INSS 128/2022" data-presc="10 anos (Decreto 20.910/1932)" onclick="sel(this)"><span class="ico">⚗️</span><span class="lbl">Aposentadoria Especial</span><span class="cod">INSS</span></button>
+      <button class="ab" data-area="BPC/LOAS — Benefício de Prestação Continuada" data-lei="Lei 8.742/1993 (LOAS), art. 20; Decreto 6.214/2007; CF/88, art. 203, V" data-presc="10 anos (Decreto 20.910/1932)" onclick="sel(this)"><span class="ico">♟️</span><span class="lbl">BPC / LOAS</span><span class="cod">LOAS</span></button>
+    </div>
+
+    <div class="sb-group" data-g="trib">
+      <div class="sb-group-label">Direito Tributário</div>
+      <button class="ab" data-area="Repetição de Indébito Tributário" data-lei="CTN (Lei 5.172/1966), arts. 165–168; CF/88, arts. 150–152; Lei 6.830/1980" data-presc="5 anos (CTN, art. 168)" onclick="sel(this)"><span class="ico">💰</span><span class="lbl">Repetição de Indébito</span><span class="cod">CTN</span></button>
+      <button class="ab" data-area="Mandado de Segurança em Matéria Fiscal" data-lei="CF/88, art. 5º, LXIX; Lei 12.016/2009; CTN" data-presc="120 dias do ato coator (Lei 12.016/2009, art. 23)" onclick="sel(this)"><span class="ico">🛡️</span><span class="lbl">MS Fiscal</span><span class="cod">CTN</span></button>
+      <button class="ab" data-area="Embargos à Execução Fiscal" data-lei="Lei 6.830/1980 (LEF); CTN, arts. 183–193; CPC/2015, arts. 914–920" data-presc="30 dias da intimação da penhora (LEF, art. 16)" onclick="sel(this)"><span class="ico">📬</span><span class="lbl">Execução Fiscal / Embargos</span><span class="cod">LEF</span></button>
+    </div>
+
+    <div class="sb-group" data-g="adm">
+      <div class="sb-group-label">Direito Administrativo</div>
+      <button class="ab" data-area="Mandado de Segurança Individual" data-lei="CF/88, art. 5º, LXIX; Lei 12.016/2009" data-presc="120 dias do ato coator (Lei 12.016/2009, art. 23)" onclick="sel(this)"><span class="ico">📢</span><span class="lbl">Mandado de Segurança</span><span class="cod">MS</span></button>
+      <button class="ab" data-area="Ação de Improbidade Administrativa" data-lei="Lei 8.429/1992 (LIA); Lei 14.230/2021; CF/88, art. 37, §4º" data-presc="8 anos (LIA, art. 23, com redação da Lei 14.230/2021)" onclick="sel(this)"><span class="ico">🏛️</span><span class="lbl">Improbidade Administrativa</span><span class="cod">LIA</span></button>
+      <button class="ab" data-area="Ação Popular" data-lei="CF/88, art. 5º, LXXIII; Lei 4.717/1965" data-presc="5 anos (Lei 4.717/1965, art. 21)" onclick="sel(this)"><span class="ico">🗳️</span><span class="lbl">Ação Popular</span><span class="cod">ADM</span></button>
+      <button class="ab" data-area="Servidor Público — Direitos Funcionais e Remuneração" data-lei="CF/88, arts. 37–41; Lei 8.112/1990; estatutos municipais e estaduais" data-presc="5 anos (Decreto 20.910/1932)" onclick="sel(this)"><span class="ico">👔</span><span class="lbl">Servidor Público</span><span class="cod">ADM</span></button>
+      <button class="ab" data-area="Ação Civil Pública" data-lei="Lei 7.347/1985; CF/88, art. 129, III; CDC, arts. 81–104" data-presc="5 anos (Lei 7.347/1985, art. 21)" onclick="sel(this)"><span class="ico">⚡</span><span class="lbl">Ação Civil Pública</span><span class="cod">ACP</span></button>
+      <button class="ab" data-area="Licitações e Contratos Administrativos" data-lei="Lei 14.133/2021 (Nova Lei de Licitações); Lei 8.666/1993 (aplicável a contratos vigentes); CF/88, art. 37, XXI" data-presc="5 anos (Decreto 20.910/1932)" onclick="sel(this)"><span class="ico">📊</span><span class="lbl">Licitações e Contratos</span><span class="cod">ADM</span></button>
+    </div>
+
+    <div class="sb-group" data-g="penal">
+      <div class="sb-group-label">Direito Penal e Processual Penal</div>
+      <button class="ab" data-area="Ação Penal Privada — Queixa-Crime" data-lei="CPP, arts. 29–31, 38 e 41–44; CP, art. 100, §2º; CF/88, art. 5º, LIX" data-presc="6 meses (CP, art. 38 c/c CPP, art. 38)" onclick="sel(this)"><span class="ico">⚠️</span><span class="lbl">Queixa-Crime</span><span class="cod">CPP</span></button>
+      <button class="ab" data-area="Habeas Corpus" data-lei="CF/88, art. 5º, LXVIII; CPP, arts. 647–667" data-presc="Sem prazo decadencial (garantia constitucional)" onclick="sel(this)"><span class="ico">🔓</span><span class="lbl">Habeas Corpus</span><span class="cod">CPP</span></button>
+      <button class="ab" data-area="Reparação Civil de Dano Decorrente de Crime" data-lei="CC/2002, arts. 186 e 927; CPP, arts. 63–68; CP, art. 91, I" data-presc="3 anos (CC/2002, art. 206, §3º, V)" onclick="sel(this)"><span class="ico">💼</span><span class="lbl">Reparação Civil — Crime</span><span class="cod">CC</span></button>
+    </div>
+
+    <div class="sb-group" data-g="emp">
+      <div class="sb-group-label">Direito Empresarial</div>
+      <button class="ab" data-area="Dissolução Parcial ou Total de Sociedade" data-lei="CC/2002, arts. 1.033–1.038; Lei 6.404/1976; CPC/2015, art. 599" data-presc="10 anos (CC/2002, art. 205)" onclick="sel(this)"><span class="ico">🏢</span><span class="lbl">Dissolução de Sociedade</span><span class="cod">CC</span></button>
+      <button class="ab" data-area="Recuperação Judicial e Falência" data-lei="Lei 11.101/2005 (LRF); Lei 14.112/2020 (reforma); CF/88, art. 170" data-presc="2 anos a contar do trânsito em julgado da sentença de falência (LRF, art. 132)" onclick="sel(this)"><span class="ico">🔄</span><span class="lbl">Recuperação Judicial / Falência</span><span class="cod">LRF</span></button>
+      <button class="ab" data-area="Execução de Títulos de Crédito — Cheque, NP, Duplicata" data-lei="Lei 7.357/1985 (Cheque); Decreto 2.044/1908 e Lei Uniforme (NP); Lei 5.474/1968 (Duplicata); CPC/2015, arts. 771–780" data-presc="6 meses a 5 anos conforme espécie do título" onclick="sel(this)"><span class="ico">📝</span><span class="lbl">Títulos de Crédito</span><span class="cod">CC</span></button>
+      <button class="ab" data-area="Franquia — Contrato de Franchising" data-lei="Lei 13.966/2019 (Lei de Franquia); CC/2002, arts. 421–480; Lei 9.279/1996" data-presc="3 a 10 anos (CC/2002, arts. 205–206)" onclick="sel(this)"><span class="ico">🤝</span><span class="lbl">Franquia</span><span class="cod">CC</span></button>
+      <button class="ab" data-area="Propriedade Industrial — Marcas e Patentes" data-lei="Lei 9.279/1996 (LPI); CF/88, art. 5º, XXIX; TRIPS (Dec. 1.355/1994)" data-presc="5 anos (LPI, art. 225)" onclick="sel(this)"><span class="ico">™️</span><span class="lbl">Marcas e Patentes</span><span class="cod">LPI</span></button>
+    </div>
+
+    <div class="sb-group" data-g="digital">
+      <div class="sb-group-label">Direito Digital e LGPD</div>
+      <button class="ab" data-area="LGPD — Violação de Dados Pessoais" data-lei="Lei 13.709/2018 (LGPD); CDC; CC/2002, arts. 186 e 927; Lei 12.965/2014 (MCI)" data-presc="5 anos (LGPD + CDC, art. 27)" onclick="sel(this)"><span class="ico">🔒</span><span class="lbl">LGPD — Dados Pessoais</span><span class="cod">LGPD</span></button>
+      <button class="ab" data-area="Crimes Cibernéticos — Lei Carolina Dieckmann e Marco Civil" data-lei="Lei 12.737/2012; Lei 12.965/2014 (MCI), arts. 18–21; LGPD; CF/88, art. 5º, X" data-presc="3 anos (CC/2002, art. 206, §3º, V)" onclick="sel(this)"><span class="ico">💻</span><span class="lbl">Crimes Cibernéticos</span><span class="cod">MCI</span></button>
+      <button class="ab" data-area="Remoção de Conteúdo Digital e Direito ao Esquecimento" data-lei="Lei 12.965/2014 (MCI), arts. 19–21; LGPD, art. 18; CF/88, art. 5º, X; CC/2002, art. 21" data-presc="3 anos (CC/2002, art. 206, §3º, V)" onclick="sel(this)"><span class="ico">🗑️</span><span class="lbl">Remoção de Conteúdo</span><span class="cod">MCI</span></button>
+    </div>
+
+    <div class="sb-group" data-g="saude">
+      <div class="sb-group-label">Saúde e Responsabilidade Médica</div>
+      <button class="ab" data-area="Responsabilidade Médica e Hospitalar — Erro Médico" data-lei="CC/2002, arts. 186, 927 e 951; CDC, art. 14, §4º; CF/88, art. 196; CFM" data-presc="3 anos (CC/2002, art. 206, §3º, V)" onclick="sel(this)"><span class="ico">⚕️</span><span class="lbl">Erro Médico / Hospitalar</span><span class="cod">CC</span></button>
+      <button class="ab" data-area="Fornecimento de Medicamento pelo Estado — Direito à Saúde" data-lei="CF/88, arts. 6º e 196–200; Lei 8.080/1990; Lei 9.313/1996" data-presc="5 anos (Decreto 20.910/1932)" onclick="sel(this)"><span class="ico">💊</span><span class="lbl">Medicamento / Direito à Saúde</span><span class="cod">SUS</span></button>
+    </div>
+
+    <div class="sb-group" data-g="eca">
+      <div class="sb-group-label">Infância, Juventude e Família</div>
+      <button class="ab" data-area="ECA — Proteção de Criança e Adolescente" data-lei="Lei 8.069/1990 (ECA); CF/88, art. 227; CC/2002, arts. 1.630–1.638" data-presc="Imprescritível (tutela de menor)" onclick="sel(this)"><span class="ico">🧒</span><span class="lbl">ECA — Proteção de Menores</span><span class="cod">ECA</span></button>
+      <button class="ab" data-area="Adoção" data-lei="Lei 8.069/1990 (ECA), arts. 39–52-D; CC/2002, arts. 1.618–1.629; Lei 13.509/2017" data-presc="Imprescritível" onclick="sel(this)"><span class="ico">👶</span><span class="lbl">Adoção</span><span class="cod">ECA</span></button>
+    </div>
+
+    <div class="sb-group" data-g="vd">
+      <div class="sb-group-label">Violência Doméstica e Gênero</div>
+      <button class="ab" data-area="Violência Doméstica — Lei Maria da Penha" data-lei="Lei 11.340/2006 (Maria da Penha); CF/88, art. 226, §8º; CP, arts. 129, 147 e 213" data-presc="Ação penal pública incondicionada (imprescritível enquanto perdurar)" onclick="sel(this)"><span class="ico">🚺</span><span class="lbl">Lei Maria da Penha</span><span class="cod">LMP</span></button>
+      <button class="ab" data-area="Violência de Gênero — Reparação Civil" data-lei="CP, art. 121, §2º, VI; Lei 11.340/2006; CC/2002, arts. 186 e 927" data-presc="3 anos (CC/2002, art. 206, §3º, V)" onclick="sel(this)"><span class="ico">⚤</span><span class="lbl">Violência de Gênero — Reparação</span><span class="cod">CC</span></button>
+    </div>
+
+    <div class="sb-group" data-g="exec">
+      <div class="sb-group-label">Execução e Monitória</div>
+      <button class="ab" data-area="Execução de Título Extrajudicial" data-lei="CPC/2015, arts. 771–925; art. 784 (rol de títulos); art. 827 (honorários de 10%)" data-presc="5 anos (CC/2002, art. 206, §5º, I)" onclick="sel(this)"><span class="ico">📌</span><span class="lbl">Execução de Título Extrajudicial</span><span class="cod">CPC</span></button>
+      <button class="ab" data-area="Ação Monitória" data-lei="CPC/2015, arts. 700–702" data-presc="Conforme prazo do título de origem" onclick="sel(this)"><span class="ico">📩</span><span class="lbl">Ação Monitória</span><span class="cod">CPC</span></button>
+      <button class="ab" data-area="Cumprimento de Sentença — Título Judicial" data-lei="CPC/2015, arts. 513–538; art. 523 (prazo de 15 dias); art. 525 (impugnação)" data-presc="5 anos (CC/2002, art. 206, §5º, I)" onclick="sel(this)"><span class="ico">🔨</span><span class="lbl">Cumprimento de Sentença</span><span class="cod">CPC</span></button>
+    </div>
+
+    <div class="sb-group" data-g="const">
+      <div class="sb-group-label">Constitucional e Eleitoral</div>
+      <button class="ab" data-area="Mandado de Injunção" data-lei="CF/88, art. 5º, LXXI; Lei 13.300/2016" data-presc="Sem prazo decadencial específico previsto em lei" onclick="sel(this)"><span class="ico">📑</span><span class="lbl">Mandado de Injunção</span><span class="cod">CF</span></button>
+      <button class="ab" data-area="Direito Eleitoral — Impugnação e Cassação" data-lei="Código Eleitoral (Lei 4.737/1965); Lei 9.504/1997; LC 64/1990" data-presc="Prazos próprios do Código Eleitoral e da legislação especial" onclick="sel(this)"><span class="ico">🗳️</span><span class="lbl">Direito Eleitoral</span><span class="cod">CE</span></button>
+    </div>
+
+    <div class="sb-group" data-g="amb">
+      <div class="sb-group-label">Ambiental e Urbanístico</div>
+      <button class="ab" data-area="Dano Ambiental — Reparação e Compensação" data-lei="Lei 6.938/1981 (PNMA); CF/88, art. 225; Lei 9.605/1998; CC/2002, art. 927, §único" data-presc="Imprescritível para reparação de dano ambiental (posição consolidada do STJ)" onclick="sel(this)"><span class="ico">🌿</span><span class="lbl">Dano Ambiental</span><span class="cod">ENV</span></button>
+      <button class="ab" data-area="Direito Urbanístico — Estatuto da Cidade" data-lei="Lei 10.257/2001 (Estatuto da Cidade); CF/88, arts. 182 e 183; CC/2002, arts. 1.238–1.242" data-presc="Conforme modalidade (5 a 15 anos)" onclick="sel(this)"><span class="ico">🏙️</span><span class="lbl">Urbanístico / Estatuto da Cidade</span><span class="cod">URB</span></button>
+    </div>
+
+  </div><!-- /sb-areas -->
+
+  <div class="sb-prog">
+    <div class="sb-prog-title">Progresso</div>
+    <div class="pi"><div class="pd" id="pd0"></div>Área selecionada</div>
+    <div class="pi"><div class="pd" id="pd1"></div>Dados do Autor</div>
+    <div class="pi"><div class="pd" id="pd2"></div>Dados do Réu</div>
+    <div class="pi"><div class="pd" id="pd3"></div>Advogado / OAB</div>
+    <div class="pi"><div class="pd" id="pd4"></div>Vara e Processo</div>
+    <div class="pi"><div class="pd" id="pd5"></div>Fatos (mín. 100 car.)</div>
+    <div class="pi"><div class="pd" id="pd6"></div>Pedidos</div>
+    <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+  </div>
+</aside>
+
+<!-- ════════════════ MAIN ════════════════ -->
+<main class="main">
+
+  <div class="pg-head">
+    <div class="pg-eyebrow">Sistema de Petição Inicial · LexForge PRO</div>
+    <h1>Gerador de Petição Inicial</h1>
+    <p>Preencha todos os campos com dados reais. A IA usa <strong>exclusivamente</strong> as informações fornecidas — nenhum dado será inventado.</p>
+    <div>
+      <div class="area-tag-empty" id="areaEmpty">← Selecione a área do direito na barra lateral</div>
+      <div class="area-tag" id="areaTag" style="display:none">⚖ <span id="areaTagTxt"></span></div>
+    </div>
+  </div>
+
+  <div class="notice-ah">
+    <div class="notice-ah-badge">🛡 Zero Invenção</div>
+    <div><strong>Garantia anti-alucinação:</strong> Valores, nomes, datas, artigos de lei e jurisprudências são baseados apenas nos dados informados abaixo. A IA não fabrica informações. Campos não preenchidos são omitidos ou marcados <em>[a completar]</em>.</div>
+  </div>
+
+  <!-- VALIDATION -->
+  <div class="vbox" id="vbox"><div class="vbox-title">⛔ Complete os campos obrigatórios:</div><ul id="vlist"></ul></div>
+
+  <!-- ─── 01 AUTOR ─── -->
+  <div class="card open" id="c1">
+    <div class="card-head" onclick="tog('c1')">
+      <span class="card-num">01</span>
+      <span class="card-title">Qualificação do Autor</span>
+      <span class="card-status pend" id="s1">Pendente</span>
+      <span class="card-chev">▾</span>
+    </div>
+    <div class="card-body">
+      <div class="frow">
+        <div class="fg"><label class="fl">Nome completo <span class="req">*</span></label><input type="text" id="a_nome" placeholder="Nome civil completo" oninput="upd()"></div>
+        <div class="fg"><label class="fl">Nacionalidade <span class="req">*</span></label>
+          <select id="a_nac" onchange="upd()">
+            <option value="brasileiro(a)">Brasileiro(a)</option>
+            <option value="brasileiro(a) naturalizado(a)">Brasileiro(a) Naturalizado(a)</option>
+            <option value="estrangeiro(a)">Estrangeiro(a)</option>
+          </select>
+        </div>
+      </div>
+      <div class="frow f3">
+        <div class="fg"><label class="fl">Estado civil <span class="req">*</span></label>
+          <select id="a_ecivil" onchange="upd(); chkConj()">
+            <option value="">Selecione</option>
+            <option>Solteiro(a)</option><option>Casado(a)</option>
+            <option>Divorciado(a)</option><option>Separado(a) judicialmente</option>
+            <option>Viúvo(a)</option><option>Em união estável</option>
+          </select>
+        </div>
+        <div class="fg"><label class="fl">Profissão <span class="req">*</span></label><input type="text" id="a_prof" placeholder="Ex: comerciante" oninput="upd()"></div>
+        <div class="fg"><label class="fl">CPF <span class="req">*</span></label><input type="text" id="a_cpf" placeholder="000.000.000-00" oninput="upd()"></div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label class="fl">RG <span class="opt">(recomendado)</span></label><input type="text" id="a_rg" placeholder="00.000.000-0 SSP/UF"></div>
+        <div class="fg"><label class="fl">CNPJ <span class="opt">(se pessoa jurídica)</span></label><input type="text" id="a_cnpj" placeholder="00.000.000/0001-00"></div>
+      </div>
+      <div class="frow f1" id="rw_conj" style="display:none">
+        <div class="fg"><label class="fl">Cônjuge / Companheiro(a)</label><input type="text" id="a_conj" placeholder="Nome completo do cônjuge ou companheiro(a)"></div>
+      </div>
+      <div class="frow f1">
+        <div class="fg"><label class="fl">Endereço completo — para intimações <span class="req">*</span></label><input type="text" id="a_end" placeholder="Rua, nº, complemento, bairro, cidade — UF, CEP" oninput="upd()"></div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label class="fl">E-mail <span class="opt">(intimações eletrônicas)</span></label><input type="email" id="a_email" placeholder="email@exemplo.com.br"></div>
+        <div class="fg"><label class="fl">Telefone</label><input type="tel" id="a_tel" placeholder="(11) 99999-0000"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── 02 RÉU ─── -->
+  <div class="card" id="c2">
+    <div class="card-head" onclick="tog('c2')">
+      <span class="card-num">02</span>
+      <span class="card-title">Qualificação do Réu</span>
+      <span class="card-status pend" id="s2">Pendente</span>
+      <span class="card-chev">▾</span>
+    </div>
+    <div class="card-body">
+      <div class="frow">
+        <div class="fg"><label class="fl">Nome / Razão Social <span class="req">*</span></label><input type="text" id="r_nome" placeholder="Nome completo ou razão social" oninput="upd()"></div>
+        <div class="fg"><label class="fl">Tipo <span class="req">*</span></label>
+          <select id="r_tipo" onchange="upd(); chkReu()">
+            <option value="">Selecione</option>
+            <option value="pf">Pessoa Física</option>
+            <option value="pj">Pessoa Jurídica</option>
+            <option value="pub">Ente Público / Autarquia</option>
+          </select>
+        </div>
+      </div>
+      <div id="r_pf_f" style="display:none">
+        <div class="frow f3">
+          <div class="fg"><label class="fl">CPF <span class="opt">(se disponível)</span></label><input type="text" id="r_cpf" placeholder="000.000.000-00"></div>
+          <div class="fg"><label class="fl">RG <span class="opt">(se disponível)</span></label><input type="text" id="r_rg" placeholder="00.000.000-0"></div>
+          <div class="fg"><label class="fl">Qualificação</label><input type="text" id="r_qualif" placeholder="Ex: empresário, empregador"></div>
+        </div>
+      </div>
+      <div id="r_pj_f" style="display:none">
+        <div class="frow">
+          <div class="fg"><label class="fl">CNPJ <span class="opt">(se disponível)</span></label><input type="text" id="r_cnpj" placeholder="00.000.000/0001-00"></div>
+          <div class="fg"><label class="fl">Representante Legal</label><input type="text" id="r_rep" placeholder="Sócio-administrador, diretor..."></div>
+        </div>
+      </div>
+      <div class="frow f1">
+        <div class="fg"><label class="fl">Endereço para citação <span class="req">*</span></label><input type="text" id="r_end" placeholder="Endereço onde o réu será citado" oninput="upd()"><span class="fh">Incluir CEP para viabilizar citação postal</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── 03 ADVOGADO ─── -->
+  <div class="card" id="c3">
+    <div class="card-head" onclick="tog('c3')">
+      <span class="card-num">03</span>
+      <span class="card-title">Advogado e Representação</span>
+      <span class="card-status pend" id="s3">Pendente</span>
+      <span class="card-chev">▾</span>
+    </div>
+    <div class="card-body">
+      <div class="frow">
+        <div class="fg"><label class="fl">Nome completo <span class="req">*</span></label><input type="text" id="adv_n" placeholder="Nome conforme cadastro OAB" oninput="upd()"></div>
+        <div class="fg"><label class="fl">OAB nº <span class="req">*</span></label><input type="text" id="adv_oab" placeholder="Ex: 123.456/SP" oninput="upd()"></div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label class="fl">Endereço profissional <span class="opt">(intimações)</span></label><input type="text" id="adv_end" placeholder="Rua, nº, sala, cidade — UF, CEP"></div>
+        <div class="fg"><label class="fl">E-mail profissional <span class="opt">(PJe / e-SAJ)</span></label><input type="email" id="adv_email" placeholder="adv@escritorio.com.br"></div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label class="fl">Cidade da assinatura</label><input type="text" id="adv_cidade" placeholder="Ex: São Paulo"></div>
+        <div class="fg"><label class="fl">Procuração</label>
+          <select id="adv_proc">
+            <option value="juntada">Procuração em anexo</option>
+            <option value="ad_judicia">Poderes ad judicia declarados na petição</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── 04 PROCESSO ─── -->
+  <div class="card" id="c4">
+    <div class="card-head" onclick="tog('c4')">
+      <span class="card-num">04</span>
+      <span class="card-title">Dados do Processo e Competência</span>
+      <span class="card-status pend" id="s4">Pendente</span>
+      <span class="card-chev">▾</span>
+    </div>
+    <div class="card-body">
+      <div class="frow">
+        <div class="fg"><label class="fl">Tribunal / Vara / Juízo <span class="req">*</span></label><input type="text" id="p_vara" placeholder="Ex: 3ª Vara Cível da Comarca de São Paulo/SP" oninput="upd()"></div>
+        <div class="fg"><label class="fl">Rito processual <span class="req">*</span></label>
+          <select id="p_rito" onchange="upd()">
+            <option value="">Selecione</option>
+            <option>Procedimento Comum (CPC/2015, art. 318)</option>
+            <option>Juizado Especial Cível — JEC (Lei 9.099/1995)</option>
+            <option>Juizado Especial Federal — JEF (Lei 10.259/2001)</option>
+            <option>Juizado Especial da Fazenda Pública (Lei 12.153/2009)</option>
+            <option>Execução de Título Extrajudicial (CPC/2015, art. 824)</option>
+            <option>Cumprimento de Sentença (CPC/2015, art. 513)</option>
+            <option>Ação Monitória (CPC/2015, art. 700)</option>
+            <option>Especial — Inventário (CPC/2015, art. 610)</option>
+            <option>Especial — Despejo (Lei 8.245/1991)</option>
+            <option>Mandado de Segurança (Lei 12.016/2009)</option>
+            <option>Habeas Corpus (CPP, art. 647)</option>
+            <option>Ação Civil Pública (Lei 7.347/1985)</option>
+          </select>
+        </div>
+      </div>
+      <div class="frow f3">
+        <div class="fg"><label class="fl">Valor da causa (R$) <span class="req">*</span></label><input type="text" id="p_valor" placeholder="15.000,00" oninput="upd()"><span class="fh">CPC/2015, art. 292</span></div>
+        <div class="fg"><label class="fl">Data dos fatos</label><input type="date" id="p_data"></div>
+        <div class="fg"><label class="fl">Prazo prescricional</label><input type="text" id="p_presc" readonly placeholder="—"><span class="fh">Preenchido pela área</span></div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label class="fl">Gratuidade de Justiça?</label>
+          <select id="p_grat">
+            <option value="nao">Não requerida</option>
+            <option value="sim">Sim — art. 98, CPC/2015</option>
+          </select>
+        </div>
+        <div class="fg"><label class="fl">Tutela de urgência?</label>
+          <select id="p_tutela">
+            <option value="nao">Não requerida</option>
+            <option value="antecipada">Tutela Antecipada — CPC/2015, art. 300</option>
+            <option value="cautelar">Tutela Cautelar — CPC/2015, art. 305</option>
+            <option value="evidencia">Tutela da Evidência — CPC/2015, art. 311</option>
+          </select>
+        </div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label class="fl">Fundamentação da urgência <span class="opt">(se requerida)</span></label><input type="text" id="p_urg" placeholder="Ex: risco de dano irreparável; urgência médica; periculum in mora..."></div>
+        <div class="fg"><label class="fl">Audiência de conciliação (CPC/2015, art. 334)</label>
+          <select id="p_aud">
+            <option value="sim">Autor não se opõe</option>
+            <option value="nao">Autor manifesta desinteresse (art. 334, §4º, I)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── 05 FATOS ─── -->
+  <div class="card" id="c5">
+    <div class="card-head" onclick="tog('c5')">
+      <span class="card-num">05</span>
+      <span class="card-title">Exposição dos Fatos</span>
+      <span class="card-status pend" id="s5">Pendente</span>
+      <span class="card-chev">▾</span>
+    </div>
+    <div class="card-body">
+      <div class="frow f1">
+        <div class="fg">
+          <label class="fl">Narração cronológica dos fatos <span class="req">*</span></label>
+          <textarea id="f_fatos" rows="8"
+            placeholder="Descreva em ordem cronológica: quando ocorreram os fatos, o que aconteceu exatamente, qual foi a conduta do réu, quais danos foram sofridos e qual é o nexo de causalidade.
+
+Quanto mais detalhes você fornecer, mais precisa e fundamentada será a petição.
+
+ATENÇÃO: Não exagere nem omita. Informe apenas o que realmente ocorreu."
+            oninput="upd(); charCount()"></textarea>
+          <span class="fh" id="chct">0 caracteres</span>
+        </div>
+      </div>
+      <div class="frow f1">
+        <div class="fg">
+          <label class="fl">Tentativas de resolução extrajudicial <span class="opt">(se houver)</span></label>
+          <textarea id="f_tent" rows="3" placeholder="Ex: Em [data], o autor formalizou reclamação (protocolo nº ___). Em [data], enviou notificação extrajudicial. A ré não respondeu / respondeu negativamente em [data]..."></textarea>
+        </div>
+      </div>
+      <div class="frow f1">
+        <div class="fg">
+          <label class="fl">Documentos e provas disponíveis <span class="opt">(liste o que o autor possui)</span></label>
+          <input type="text" id="f_docs" placeholder="Ex: contrato assinado, notas fiscais, e-mails, prints, laudo médico, boletim de ocorrência, contracheques...">
+          <span class="fh">Apenas o que efetivamente existe — a IA não inventará provas</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── 06 FUNDAMENTOS ─── -->
+  <div class="card" id="c6">
+    <div class="card-head" onclick="tog('c6')">
+      <span class="card-num">06</span>
+      <span class="card-title">Fundamentos Jurídicos Adicionais</span>
+      <span class="card-status opt">Automático + Opcional</span>
+      <span class="card-chev">▾</span>
+    </div>
+    <div class="card-body">
+      <p style="font-size:.74rem;color:var(--t3);margin-bottom:.65rem">A legislação base da área é incluída automaticamente. Selecione fundamentos adicionais que se aplicam ao caso:</p>
+      <div class="tag-grid" id="fundGrid">
+        <button class="tag" onclick="tg(this)">Dano moral (CC, art. 186)</button>
+        <button class="tag" onclick="tg(this)">Dano material (CC, art. 927)</button>
+        <button class="tag" onclick="tg(this)">Dano estético (CC, art. 949)</button>
+        <button class="tag" onclick="tg(this)">Dano existencial</button>
+        <button class="tag" onclick="tg(this)">Lucros cessantes (CC, art. 402)</button>
+        <button class="tag" onclick="tg(this)">Responsabilidade objetiva (CC, art. 927, §único)</button>
+        <button class="tag" onclick="tg(this)">Responsabilidade subjetiva (CC, art. 186)</button>
+        <button class="tag" onclick="tg(this)">Solidariedade (CC, art. 264)</button>
+        <button class="tag" onclick="tg(this)">Inversão do ônus da prova (CDC, art. 6º, VIII)</button>
+        <button class="tag" onclick="tg(this)">Desconsideração da PJ (CC, art. 50)</button>
+        <button class="tag" onclick="tg(this)">Correção monetária — IPCA</button>
+        <button class="tag" onclick="tg(this)">Juros de mora 1%/mês (CC, art. 406)</button>
+        <button class="tag" onclick="tg(this)">Taxa SELIC (CTN, art. 161 c/c CC, art. 406)</button>
+        <button class="tag" onclick="tg(this)">Honorários sucumbenciais (CPC/2015, art. 85)</button>
+        <button class="tag" onclick="tg(this)">Astreintes / multa diária (CPC/2015, art. 536)</button>
+        <button class="tag" onclick="tg(this)">Multa 10% pelo não pagamento (CPC/2015, art. 523)</button>
+        <button class="tag" onclick="tg(this)">Litigância de má-fé (CPC/2015, art. 80)</button>
+      </div>
+      <div class="frow f1" style="margin-top:.8rem">
+        <div class="fg">
+          <label class="fl">Fundamento específico adicional <span class="opt">(texto livre)</span></label>
+          <input type="text" id="f_extra" placeholder="Ex: Súmula 385 STJ; Tema 660 STJ; art. 42, §único, CDC...">
+          <span class="fh">Informe apenas o que você tem certeza que existe e se aplica ao caso</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── 07 PEDIDOS ─── -->
+  <div class="card" id="c7">
+    <div class="card-head" onclick="tog('c7')">
+      <span class="card-num">07</span>
+      <span class="card-title">Pedidos</span>
+      <span class="card-status pend" id="s7">Pendente</span>
+      <span class="card-chev">▾</span>
+    </div>
+    <div class="card-body">
+      <p style="font-size:.74rem;color:var(--t3);margin-bottom:.65rem">Seja específico. Informe valores exatos quando souber. Pedidos vagos resultam em sentenças imprecisas.</p>
+      <div id="pedList"></div>
+      <button class="btn-add-ped" onclick="addPed()">＋ Adicionar pedido</button>
+    </div>
+  </div>
+
+  <!-- ─── 08 PROVAS ─── -->
+  <div class="card" id="c8">
+    <div class="card-head" onclick="tog('c8')">
+      <span class="card-num">08</span>
+      <span class="card-title">Meios de Prova e Testemunhas</span>
+      <span class="card-status opt">Opcional</span>
+      <span class="card-chev">▾</span>
+    </div>
+    <div class="card-body">
+      <div class="tag-grid">
+        <button class="tag on" onclick="tg(this)">Prova documental</button>
+        <button class="tag" onclick="tg(this)">Prova testemunhal</button>
+        <button class="tag" onclick="tg(this)">Prova pericial</button>
+        <button class="tag" onclick="tg(this)">Prova eletrônica / digital</button>
+        <button class="tag" onclick="tg(this)">Depoimento pessoal do réu</button>
+        <button class="tag" onclick="tg(this)">Inspeção judicial</button>
+        <button class="tag" onclick="tg(this)">Exibição de documentos (CPC/2015, art. 396)</button>
+        <button class="tag on" onclick="tg(this)">Todas as demais admitidas em direito</button>
+      </div>
+      <div class="frow f1" style="margin-top:.8rem">
+        <div class="fg">
+          <label class="fl">Testemunhas <span class="opt">(se já souber os nomes)</span></label>
+          <input type="text" id="p_test" placeholder="Ex: João da Silva (testemunha presencial); Maria Souza (vizinha)">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GENERATE BAR -->
+  <div class="gen-bar">
+    <div class="gen-inner">
+      <button class="btn-gen" id="btnGen" onclick="generate()">⚖ Gerar Petição Inicial</button>
+      <div class="gen-note">
+        <strong>Sistema anti-invenção ativo.</strong> A IA não fabrica fatos, valores, artigos ou jurisprudências. Apenas o que você informou será usado. Artigos citados são exclusivamente os consolidados da legislação vigente para a área selecionada.
+      </div>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div class="loading" id="ldState">
+    <div class="ld-ring"></div>
+    <div class="ld-title">Redigindo a petição...</div>
+    <div class="ld-sub">Baseando-se exclusivamente nos dados informados</div>
+    <div class="ld-steps">
+      <div class="ld-step"><div class="sd" id="sd0"></div>Verificando qualificação das partes</div>
+      <div class="ld-step"><div class="sd" id="sd1"></div>Selecionando legislação aplicável</div>
+      <div class="ld-step"><div class="sd" id="sd2"></div>Construindo fundamentação jurídica</div>
+      <div class="ld-step"><div class="sd" id="sd3"></div>Integrando jurisprudência consolidada</div>
+      <div class="ld-step"><div class="sd" id="sd4"></div>Estruturando os pedidos</div>
+      <div class="ld-step"><div class="sd" id="sd5"></div>Formatando conforme CPC/2015</div>
+    </div>
+  </div>
+
+  <!-- OUTPUT -->
+  <div class="output" id="outSec">
+    <div class="out-bar">
+      <div class="out-bar-left">
+        <div class="out-dot"></div>
+        <div class="out-label">Petição gerada — revise antes de protocolar</div>
+      </div>
+      <div class="out-actions">
+        <button class="btn-act" onclick="copyDoc()">📋 Copiar texto</button>
+        <button class="btn-act" onclick="printDoc()">🖨️ Imprimir / PDF</button>
+        <button class="btn-act" onclick="reviewDoc()">🔍 Revisar com IA</button>
+        <button class="btn-act gold" onclick="resetAll()">↩ Nova petição</button>
+      </div>
+    </div>
+    <div class="doc" id="theDoc"></div>
+    <div class="doc-meta" id="docMeta"></div>
+    <div class="rev-panel" id="revPanel">
+      <div class="rev-head">🔍 Revisão Crítica — Análise de Qualidade Jurídica</div>
+      <div class="rev-body" id="revBody"><div class="rev-ld"><div class="rev-spin"></div>Analisando...</div></div>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── STATE ──
+let SA='',SL='',SP='',pedN=0;
+window._raw='';window._dat=null;
+
+// ── FILTER AREAS ──
+function filterAreas(q){
+  const ql=q.toLowerCase();let cnt=0;
+  document.querySelectorAll('.ab').forEach(b=>{
+    const ok=!q||b.textContent.toLowerCase().includes(ql);
+    b.style.display=ok?'':'none';if(ok)cnt++;
+  });
+  document.querySelectorAll('.sb-group').forEach(g=>{
+    g.style.display=Array.from(g.querySelectorAll('.ab')).some(b=>b.style.display!=='none')?'':'none';
+  });
+  document.getElementById('areaCount').textContent=cnt+' área'+(cnt!==1?'s':'')+' disponíve'+(cnt!==1?'is':'l');
+}
+
+// ── SELECT AREA ──
+function sel(btn){
+  document.querySelectorAll('.ab').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  SA=btn.dataset.area;SL=btn.dataset.lei;SP=btn.dataset.presc||'';
+  document.getElementById('areaEmpty').style.display='none';
+  document.getElementById('areaTag').style.display='inline-flex';
+  document.getElementById('areaTagTxt').textContent=SA;
+  document.getElementById('p_presc').value=SP;
+  document.getElementById('pd0').className='pd ok';
+  upd();
+}
+
+// ── TOGGLE CARD ──
+function tog(id){document.getElementById(id).classList.toggle('open');}
+
+// ── DYNAMIC FIELDS ──
+function chkConj(){
+  const v=document.getElementById('a_ecivil').value;
+  document.getElementById('rw_conj').style.display=(v==='Casado(a)'||v==='Em união estável')?'grid':'none';
+}
+function chkReu(){
+  const t=document.getElementById('r_tipo').value;
+  document.getElementById('r_pf_f').style.display=t==='pf'?'block':'none';
+  document.getElementById('r_pj_f').style.display=t==='pj'?'block':'none';
+}
+
+// ── CHAR COUNT ──
+function charCount(){
+  const n=document.getElementById('f_fatos').value.length;
+  const el=document.getElementById('chct');
+  el.textContent=n+' caracteres'+(n>=300?' ✓':n>=100?' — recomendado: mín. 300':' — insuficiente');
+  el.style.color=n>=300?'var(--gold3)':n>=100?'var(--t3)':'var(--red)';
+}
+
+// ── PEDIDOS ──
+function addPed(){
+  pedN++;
+  const d=document.createElement('div');
+  d.className='ped-row';d.id='p'+pedN;
+  d.innerHTML=`<span class="ped-n">${pedN}.</span><input type="text" placeholder="Ex: Condenação ao pagamento de R$ 15.000,00 a título de danos morais" oninput="upd()"><button class="btn-del-ped" onclick="delPed('p${pedN}')">✕</button>`;
+  document.getElementById('pedList').appendChild(d);
+  d.querySelector('input').focus();upd();
+}
+function delPed(id){const el=document.getElementById(id);if(el)el.remove();renum();upd();}
+function renum(){document.querySelectorAll('.ped-n').forEach((n,i)=>n.textContent=(i+1)+'.');}
+function getPeds(){return Array.from(document.querySelectorAll('#pedList input')).map(i=>i.value.trim()).filter(Boolean);}
+
+// ── TAGS ──
+function tg(el){el.classList.toggle('on');}
+function getTags(g){return Array.from(document.querySelectorAll('#'+g+' .tag.on')).map(t=>t.textContent.trim());}
+function getProvas(){return Array.from(document.querySelectorAll('#c8 .tag.on')).map(t=>t.textContent.trim());}
+
+// ── PROGRESS ──
+const g=id=>document.getElementById(id);
+const v=id=>{const el=g(id);return el?el.value.trim():'';}
+
+function upd(){
+  const okA=!!(v('a_nome')&&v('a_cpf')&&v('a_ecivil')&&v('a_prof')&&v('a_end'));
+  const okR=!!(v('r_nome')&&v('r_tipo')&&v('r_end'));
+  const okD=!!(v('adv_n')&&v('adv_oab'));
+  const okP=!!(v('p_vara')&&v('p_rito')&&v('p_valor'));
+  const okF=v('f_fatos').length>=100;
+  const okPed=getPeds().length>0;
+  const checks=[!!SA,okA,okR,okD,okP,okF,okPed];
+  ['pd0','pd1','pd2','pd3','pd4','pd5','pd6'].forEach((id,i)=>g(id).className='pd'+(checks[i]?' ok':''));
+  const pct=Math.round(checks.filter(Boolean).length/7*100);
+  g('progFill').style.width=pct+'%';
+  const st=(id,ok,optTxt)=>{
+    if(!g(id))return;
+    if(optTxt){g(id).textContent=optTxt;g(id).className='card-status opt';return;}
+    g(id).textContent=ok?'✓ Completo':'Pendente';
+    g(id).className='card-status '+(ok?'ok':'pend');
+  };
+  st('s1',okA);st('s2',okR);st('s3',okD);st('s4',okP);st('s5',okF);st('s7',okPed);
+}
+
+// ── COLLECT DATA ──
+function collect(){
+  return{
+    area:SA,lei:SL,presc:SP,
+    autor:{nome:v('a_nome'),nac:v('a_nac'),ecivil:v('a_ecivil'),prof:v('a_prof'),cpf:v('a_cpf'),rg:v('a_rg'),cnpj:v('a_cnpj'),conj:v('a_conj'),end:v('a_end'),email:v('a_email'),tel:v('a_tel')},
+    reu:{nome:v('r_nome'),tipo:v('r_tipo'),cpf:v('r_cpf'),rg:v('r_rg'),cnpj:v('r_cnpj'),rep:v('r_rep'),qualif:v('r_qualif'),end:v('r_end')},
+    adv:{nome:v('adv_n'),oab:v('adv_oab'),end:v('adv_end'),email:v('adv_email'),cidade:v('adv_cidade')||'[Cidade]',proc:v('adv_proc')},
+    proc:{vara:v('p_vara'),rito:v('p_rito'),valor:v('p_valor'),data:v('p_data'),grat:v('p_grat'),tutela:v('p_tutela'),urg:v('p_urg'),aud:v('p_aud')},
+    fatos:v('f_fatos'),tent:v('f_tent'),docs:v('f_docs'),
+    funds:getTags('fundGrid'),provas:getProvas(),peds:getPeds(),extra:v('f_extra'),test:v('p_test')
+  };
+}
+
+// ── BUILD PROMPT ──
+function buildPrompt(d){
+  const dtStr=d.proc.data?new Date(d.proc.data+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'}):null;
+  const tipoMap={pf:'pessoa física',pj:'pessoa jurídica de direito privado',pub:'ente público / autarquia'};
+
+  const aQ=[d.autor.nome,d.autor.nac,d.autor.ecivil,d.autor.prof,
+    d.autor.cpf?`portador(a) do CPF nº ${d.autor.cpf}`:null,
+    d.autor.rg?`RG nº ${d.autor.rg}`:null,
+    d.autor.cnpj?`CNPJ nº ${d.autor.cnpj}`:null,
+    d.autor.conj?`convivente com ${d.autor.conj}`:null,
+    `residente e domiciliado(a) em ${d.autor.end}`,
+    d.autor.email?`e-mail: ${d.autor.email}`:null,
+    d.autor.tel?`tel.: ${d.autor.tel}`:null].filter(Boolean).join(', ');
+
+  const rQ=[d.reu.nome,tipoMap[d.reu.tipo]||'',
+    d.reu.cpf?`CPF nº ${d.reu.cpf}`:null,
+    d.reu.rg?`RG nº ${d.reu.rg}`:null,
+    d.reu.cnpj?`CNPJ nº ${d.reu.cnpj}`:null,
+    d.reu.rep?`neste ato representada por ${d.reu.rep}`:null,
+    d.reu.qualif||null,
+    `com endereço em ${d.reu.end}`].filter(Boolean).join(', ');
+
+  return `Você é um advogado sênior com 30 anos de experiência em ${d.area}. Redija uma PETIÇÃO INICIAL COMPLETA, tecnicamente impecável, conforme o CPC/2015 e a legislação: ${d.lei}.
+
+╔══════════════════════════════════════════════════════╗
+║      SISTEMA ANTI-ALUCINAÇÃO — REGRAS ABSOLUTAS      ║
+╚══════════════════════════════════════════════════════╝
+
+TERMINANTEMENTE PROIBIDO — NUNCA FAÇA:
+1. ❌ JAMAIS invente fatos não informados pelo usuário
+2. ❌ JAMAIS crie valores monetários diferentes dos informados
+3. ❌ JAMAIS fabrique números de processos, protocolos ou documentos
+4. ❌ JAMAIS invente nomes de pessoas, empresas ou terceiros
+5. ❌ JAMAIS cite artigos de lei que não existem ou foram revogados — somente os da legislação: ${d.lei}
+6. ❌ JAMAIS fabrique números de súmulas, temas ou acórdãos — cite apenas as pacificadas no STJ/STF (exemplo aceitável: Súmula 297 STJ; Tema 660 STJ)
+7. ❌ JAMAIS crie datas, eventos ou circunstâncias não mencionados
+8. ❌ Se um campo não foi informado: OMITA ou use "[a ser complementado pelo advogado]"
+
+AUTORIZADO — FAÇA APENAS ISSO:
+✅ Use os fatos exatamente como narrados pelo usuário
+✅ Cite artigos da legislação: ${d.lei}
+✅ Aplique fundamentação técnica aos fatos informados
+✅ Cite apenas súmulas e orientações consolidadas e reconhecidas
+✅ Estruture conforme CPC/2015
+
+═══════════════════════════════════════════
+DADOS DO PROCESSO:
+═══════════════════════════════════════════
+Área: ${d.area}
+Legislação aplicável: ${d.lei}
+Tribunal/Vara: ${d.proc.vara}
+Rito: ${d.proc.rito}
+Valor da causa: R$ ${d.proc.valor}
+${dtStr?'Data dos fatos: '+dtStr:''}
+${d.presc?'Prazo prescricional: '+d.presc:''}
+Gratuidade: ${d.proc.grat==='sim'?'REQUERER — CPC/2015, art. 98':'Não requerida'}
+Tutela de urgência: ${d.proc.tutela!=='nao'?d.proc.tutela+(d.proc.urg?' — '+d.proc.urg:''):'Não requerida'}
+Audiência: ${d.proc.aud==='nao'?'Autor manifesta desinteresse — CPC/2015, art. 334, §4º, I':'Autor não se opõe'}
+
+AUTOR (qualificação completa):
+${aQ}
+
+RÉU (qualificação completa):
+${rQ}
+
+ADVOGADO: ${d.adv.nome}, OAB nº ${d.adv.oab}${d.adv.end?', escritório em '+d.adv.end:''}${d.adv.email?', e-mail '+d.adv.email:''}
+
+FATOS NARRADOS (use LITERALMENTE — não acrescente nem altere):
+${d.fatos}
+${d.tent?'\nTENTATIVAS EXTRAJUDICIAIS:\n'+d.tent:''}
+${d.docs?'\nDOCUMENTOS DISPONÍVEIS (mencionar como provas): '+d.docs:''}
+
+FUNDAMENTOS ADICIONAIS: ${d.funds.length?d.funds.join('; '):'conforme legislação base da área'}
+${d.extra?'FUNDAMENTO ESPECÍFICO: '+d.extra:''}
+
+PEDIDOS (reproduza fielmente — não altere valores nem termos):
+${d.peds.map((p,i)=>(i+1)+'. '+p).join('\n')}
+
+MEIOS DE PROVA: ${d.provas.join(', ')||'prova documental e demais admitidas em direito'}
+${d.test?'TESTEMUNHAS: '+d.test:''}
+
+═══════════════════════════════════════════
+ESTRUTURA OBRIGATÓRIA DA PETIÇÃO:
+═══════════════════════════════════════════
+
+Use exatamente estas marcações (colchetes incluídos):
+
+[SEÇÃO: ENDEREÇAMENTO]
+[SEÇÃO: QUALIFICAÇÃO DAS PARTES]
+[SEÇÃO: I — DOS FATOS]
+[SEÇÃO: II — DO DIREITO]
+${d.proc.tutela!=='nao'?'[SEÇÃO: III — DA TUTELA DE URGÊNCIA]\n[SEÇÃO: IV — DOS PEDIDOS]':'[SEÇÃO: III — DOS PEDIDOS]'}
+[SEÇÃO: DO VALOR DA CAUSA]
+[SEÇÃO: DAS PROVAS]
+[SEÇÃO: FECHO]
+
+REGRAS DE REDAÇÃO:
+- Parágrafo com recuo; texto justificado; tom formal e objetivo
+- Citações de lei: "nos termos do art. X da Lei Y/AAAA" ou "conforme o art. X do CPC/2015"
+- Extensão do corpo: 900 a 1.600 palavras
+- NÃO use markdown, asteriscos, negrito ou listas com traço
+- Nos pedidos, use lista numerada (1. ... 2. ... etc.)
+- Encerre com "Nesses termos, pede deferimento." e dados de assinatura`;
+}
+
+// ── VALIDATE ──
+function validate(){
+  const e=[];
+  if(!SA)e.push('Selecione a área do Direito na barra lateral');
+  if(!v('a_nome'))e.push('Nome completo do Autor');
+  if(!v('a_cpf'))e.push('CPF do Autor');
+  if(!v('a_ecivil'))e.push('Estado civil do Autor');
+  if(!v('a_prof'))e.push('Profissão do Autor');
+  if(!v('a_end'))e.push('Endereço do Autor');
+  if(!v('r_nome'))e.push('Nome do Réu');
+  if(!v('r_tipo'))e.push('Tipo de pessoa do Réu (física/jurídica)');
+  if(!v('r_end'))e.push('Endereço do Réu para citação');
+  if(!v('adv_n'))e.push('Nome do Advogado');
+  if(!v('adv_oab'))e.push('OAB nº');
+  if(!v('p_vara'))e.push('Tribunal / Vara / Juízo');
+  if(!v('p_rito'))e.push('Rito processual');
+  if(!v('p_valor'))e.push('Valor da causa');
+  const f=v('f_fatos');
+  if(!f)e.push('Narração dos fatos (obrigatória)');
+  else if(f.length<100)e.push('Fatos muito curtos — descreva com mais detalhes (mínimo 100 caracteres)');
+  if(getPeds().length===0)e.push('Informe ao menos um pedido');
+  return e;
+}
+
+// ── GENERATE ──
+async function generate(){
+  const erros=validate();
+  if(erros.length){
+    g('vlist').innerHTML=erros.map(e=>`<li>${e}</li>`).join('');
+    g('vbox').classList.add('show');
+    g('vbox').scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+  g('vbox').classList.remove('show');
+  g('btnGen').disabled=true;
+  g('outSec').classList.remove('show');
+  g('ldState').classList.add('show');
+  g('ldState').scrollIntoView({behavior:'smooth'});
+
+  const sds=['sd0','sd1','sd2','sd3','sd4','sd5'];
+  let si=0;
+  const iv=setInterval(()=>{
+    if(si>0)g(sds[si-1]).className='sd done';
+    if(si<sds.length)g(sds[si]).className='sd act';
+    si++;if(si>sds.length)clearInterval(iv);
+  },850);
+
+  const d=collect();
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:4096,messages:[{role:'user',content:buildPrompt(d)}]})
+    });
+    clearInterval(iv);sds.forEach(id=>g(id).className='sd done');
+    if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.error?.message||'HTTP '+res.status);}
+    const result=await res.json();
+    const raw=result.content.map(b=>b.text||'').join('\n');
+    window._raw=raw;window._dat=d;
+    render(raw,d);
+  }catch(err){
+    clearInterval(iv);
+    g('ldState').classList.remove('show');
+    g('btnGen').disabled=false;
+    g('vlist').innerHTML=`<li>Erro: ${err.message}</li>`;
+    g('vbox').classList.add('show');
+  }
+}
+
+// ── RENDER ──
+function render(raw,d){
+  g('ldState').classList.remove('show');
+  g('btnGen').disabled=false;
+  const today=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+  const lines=raw.split('\n');
+  let html=`<div class="d-header"><div class="d-juizo">Excelentíssimo(a) Senhor(a) Doutor(a) Juiz(a) de Direito</div><div class="d-vara">${d.proc.vara}</div></div>`;
+  let pm=false,pi=[];
+
+  for(let i=0;i<lines.length;i++){
+    const ln=lines[i].trim();if(!ln)continue;
+    const sm=ln.match(/^\[SEÇÃO:\s*(.+)\]$/i);
+    if(sm){
+      if(pm){html+=`<ol class="pl">${pi.map(x=>`<li>${x}</li>`).join('')}</ol>`;pi=[];pm=false;}
+      const t=sm[1].trim();
+      if(/endereçamento|qualificação/i.test(t))continue;
+      if(/fecho/i.test(t))break;
+      html+=`<div class="d-sec">${t}</div>`;continue;
+    }
+    if(/^\d+\.\s/.test(ln)){pm=true;pi.push(ln.replace(/^\d+\.\s/,''));continue;}
+    if(pm){html+=`<ol class="pl">${pi.map(x=>`<li>${x}</li>`).join('')}</ol>`;pi=[];pm=false;}
+    html+=`<p>${ln}</p>`;
+  }
+  if(pm&&pi.length)html+=`<ol class="pl">${pi.map(x=>`<li>${x}</li>`).join('')}</ol>`;
+
+  html+=`<div class="sig"><p class="ct" style="margin-bottom:2.5rem">Nesses termos, pede deferimento.</p><p class="ct">${d.adv.cidade}, ${today}.</p><div class="sig-line"></div><p class="sig-n">${d.adv.nome}</p><p class="sig-o">OAB nº ${d.adv.oab}</p>${d.adv.email?`<p class="sig-o">${d.adv.email}</p>`:''}</div>`;
+
+  g('theDoc').innerHTML=html;
+  const wc=raw.split(/\s+/).length;
+  g('docMeta').innerHTML=`<span class="mc">Palavras: <strong>${wc.toLocaleString('pt-BR')}</strong></span><span class="mc">Área: <strong>${d.area.split('—')[0].trim()}</strong></span><span class="mc">Rito: <strong>${d.proc.rito.split(' (')[0]}</strong></span><span class="mc">Valor: <strong>R$ ${d.proc.valor}</strong></span><span class="mc">Gerado: <strong>${new Date().toLocaleTimeString('pt-BR')}</strong></span>`;
+  g('outSec').classList.add('show');
+  g('revPanel').classList.remove('show');
+  setTimeout(()=>g('outSec').scrollIntoView({behavior:'smooth'}),100);
+}
+
+// ── COPY ──
+function copyDoc(){
+  const txt=g('theDoc').innerText;
+  (navigator.clipboard?navigator.clipboard.writeText(txt).then(()=>toast('✓ Petição copiada para a área de transferência')):Promise.reject()).catch(()=>{
+    const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);toast('✓ Petição copiada');
+  });
+}
+
+// ── PRINT ──
+function printDoc(){
+  const body=g('theDoc').innerHTML;
+  const w=window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Petição Inicial</title>
+<style>@page{margin:3cm 2.5cm 3cm 3cm;size:A4}body{font-family:'Times New Roman',Times,serif;font-size:12pt;color:#000;background:#fff;line-height:2}.d-header{text-align:center;margin-bottom:3rem}.d-juizo{font-size:11.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.07em;border-bottom:2px solid #000;padding-bottom:.3rem}.d-vara{font-size:10.5pt;color:#555;font-style:italic;margin-top:.3rem}.d-sec{font-size:11pt;font-weight:700;text-align:center;text-transform:uppercase;letter-spacing:.05em;margin:2.8rem 0 .8rem;border-bottom:1px solid #bbb;padding-bottom:.3rem;page-break-after:avoid}p{text-indent:2.5cm;text-align:justify;hyphens:auto;margin-bottom:.3rem;font-size:12pt}p.ct,p.sig-n,p.sig-o{text-indent:0;text-align:center}ol.pl{margin:.4rem 0 .4rem 3.5cm;padding:0}ol.pl li{font-size:12pt;line-height:2;text-align:justify}.sig{margin-top:3cm;text-align:center;page-break-inside:avoid}.sig-line{width:8cm;height:1px;background:#000;margin:.5rem auto}.sig-n{font-weight:700}.sig-o{font-style:italic;color:#555;font-size:11pt}</style></head><body>${body}</body></html>`);
+  w.document.close();setTimeout(()=>w.print(),600);
+}
+
+// ── REVIEW ──
+async function reviewDoc(){
+  const panel=g('revPanel'),body=g('revBody');
+  panel.classList.add('show');
+  body.innerHTML=`<div class="rev-ld"><div class="rev-spin"></div>Analisando a petição...</div>`;
+  panel.scrollIntoView({behavior:'smooth'});
+  const d=window._dat;
+  const txt=g('theDoc').innerText;
+  const p=`Você é um revisor jurídico sênior. Analise esta petição de ${d?d.area:'direito'} e retorne APENAS JSON válido, sem texto externo.\n\nPETIÇÃO:\n${txt.slice(0,4000)}\n\nJSON:\n{"score":0-100,"nivel":"Excelente|Bom|Adequado|Requer revisão","cpc_2015":"Conforme|Parcialmente conforme|Verificar","positivos":["máx 4"],"atencao":["máx 3 — apenas problemas reais"],"sugestoes":["máx 3 — práticas e específicas"],"conclusao":"Uma frase"}`;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,messages:[{role:'user',content:p}]})});
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    const result=await res.json();
+    let txt2=result.content.map(b=>b.text||'').join('').replace(/```json|```/g,'').trim();
+    let rev;try{rev=JSON.parse(txt2);}catch(e){throw new Error('Resposta inválida');}
+    const sc=rev.score||0;
+    const cls=sc>=80?'rs-ok':sc>=60?'rs-bom':'rs-attn';
+    const ic=sc>=80?'✅':sc>=60?'⚠️':'🔴';
+    let h=`<div class="rev-score ${cls}">${ic} ${sc}/100 — ${rev.nivel||''}</div>`;
+    h+=`<div style="font-size:.72rem;margin-bottom:.6rem;color:var(--t3)"><strong style="color:var(--t2)">CPC/2015:</strong> ${rev.cpc_2015||'—'}</div>`;
+    if(rev.positivos?.length){h+=`<div class="rev-st" style="color:var(--gold3)">✓ Pontos positivos</div>`;rev.positivos.forEach(x=>h+=`<div class="rev-item"><span class="ri" style="color:var(--gold3)">✓</span><span style="font-size:.76rem">${x}</span></div>`);}
+    if(rev.atencao?.length){h+=`<div class="rev-st" style="color:#c0a020">⚠ Pontos de atenção</div>`;rev.atencao.forEach(x=>h+=`<div class="rev-item"><span class="ri" style="color:#c0a020">⚠</span><span style="font-size:.76rem">${x}</span></div>`);}
+    if(rev.sugestoes?.length){h+=`<div class="rev-st" style="color:var(--blue)">→ Sugestões</div>`;rev.sugestoes.forEach(x=>h+=`<div class="rev-item"><span class="ri" style="color:var(--blue)">→</span><span style="font-size:.76rem">${x}</span></div>`);}
+    if(rev.conclusao)h+=`<div style="margin-top:.7rem;padding-top:.6rem;border-top:1px solid rgba(201,168,76,.15);font-size:.76rem;font-style:italic;color:var(--t3)"><strong style="color:var(--t2)">Conclusão:</strong> ${rev.conclusao}</div>`;
+    body.innerHTML=h;
+  }catch(err){body.innerHTML=`<div style="color:var(--red);font-size:.76rem">Erro: ${err.message}</div>`;}
+}
+
+// ── RESET ──
+function resetAll(){if(confirm('Iniciar nova petição? Os dados serão perdidos.'))location.reload();}
+
+// ── TOAST ──
+function toast(msg){const t=g('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3200);}
+
+// INIT
+addPed();upd();
+</script>
+</body>
+</html>
