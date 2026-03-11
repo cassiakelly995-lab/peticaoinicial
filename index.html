@@ -110,6 +110,24 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--k);color:var(--
 .wf-desc{font-size:.62rem;color:var(--t4);line-height:1.4;margin-top:.12rem}
 
 /* ══════════════════════════
+   API KEY BAR
+══════════════════════════ */
+.apibar{background:#0e0e12;border-bottom:1px solid rgba(201,168,76,.12);padding:.38rem 1.25rem;}
+.apibar-inner{display:flex;align-items:center;gap:.65rem;flex-wrap:wrap}
+.apibar-ico{font-size:.85rem;flex-shrink:0}
+.apibar-lbl{font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--t4);flex-shrink:0}
+.apibar-field{display:flex;align-items:center;background:var(--k3);border:1px solid rgba(201,168,76,.15);flex:1;min-width:220px;max-width:380px}
+.apibar-field input{background:transparent;border:none;color:var(--t2);font-family:'JetBrains Mono',monospace;font-size:.68rem;padding:.3rem .55rem;flex:1;outline:none;letter-spacing:.04em}
+.apibar-field input::placeholder{color:var(--t4);font-style:italic;letter-spacing:0}
+.apibar-eye{background:transparent;border:none;border-left:1px solid rgba(201,168,76,.1);color:var(--t4);padding:.28rem .5rem;cursor:pointer;font-size:.72rem;transition:color .12s;flex-shrink:0}
+.apibar-eye:hover{color:var(--g2)}
+.apibar-status{font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.07em;flex-shrink:0;transition:color .2s}
+.apibar-status.ok{color:var(--green)}.apibar-status.err{color:#e08080}.apibar-status.wait{color:var(--t4)}
+.apibar-link{font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.07em;color:var(--g3);text-decoration:none;opacity:.7;flex-shrink:0}
+.apibar-link:hover{opacity:1;text-decoration:underline}
+.apibar-field.has-key{border-color:rgba(39,174,96,.3);}
+
+/* ══════════════════════════
    TOPBAR
 ══════════════════════════ */
 #appShell{display:none}
@@ -504,6 +522,20 @@ input.campo-erro,select.campo-erro,textarea.campo-erro{
     <button class="tb-home" onclick="goHome()">⬅ Início</button>
   </div>
 </header>
+
+<!-- BARRA DE API KEY -->
+<div class="apibar" id="apiBar">
+  <div class="apibar-inner">
+    <span class="apibar-ico">🔑</span>
+    <span class="apibar-lbl">Chave de API Anthropic:</span>
+    <div class="apibar-field">
+      <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." autocomplete="off" oninput="saveKey()" onpaste="setTimeout(saveKey,10)">
+      <button class="apibar-eye" onclick="toggleKeyVis()" title="Mostrar/Ocultar">👁</button>
+    </div>
+    <span class="apibar-status" id="apiStatus">—</span>
+    <a class="apibar-link" href="https://console.anthropic.com/settings/keys" target="_blank">Obter chave ↗</a>
+  </div>
+</div>
 
 <div class="doc-tabs">
   <button class="dtab on" onclick="switchDoc('peticao',this)">⚖ Petição Inicial</button>
@@ -1119,7 +1151,7 @@ async function genSummary(txt){
   gEl('aisSpin').style.display='block';
   gEl('aiSummaryBody').textContent='Gerando resumo...';
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-calls':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,messages:[{role:'user',content:`Em 2 frases objetivas, faça um RESUMO DO CASO para o advogado, descrevendo o que aconteceu e o que o cliente quer. Sem formalidades. Use linguagem direta. Fatos: ${txt.slice(0,600)}`}]})});
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:apiHeaders(),body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,messages:[{role:'user',content:`Em 2 frases objetivas, faça um RESUMO DO CASO para o advogado, descrevendo o que aconteceu e o que o cliente quer. Sem formalidades. Use linguagem direta. Fatos: ${txt.slice(0,600)}`}]})});
     const d=await res.json();
     const result=d.content.map(b=>b.text||'').join('');
     gEl('aisSpin').style.display='none';
@@ -1323,6 +1355,41 @@ REGRAS: parágrafo com recuo 2,5cm; texto justificado; tom formal; 900–1.500 p
 }
 
 // ══════════════════════
+// API KEY
+// ══════════════════════
+function getKey(){return(gEl('apiKeyInput')&&gEl('apiKeyInput').value.trim())||'';}
+
+function saveKey(){
+  const k=getKey();
+  const field=gEl('apiKeyInput')?.closest('.apibar-field');
+  const status=gEl('apiStatus');
+  if(!k){
+    if(status){status.textContent='— sem chave';status.className='apibar-status wait';}
+    if(field)field.classList.remove('has-key');
+    return;
+  }
+  if(k.startsWith('sk-ant')||k.startsWith('sk-')){
+    if(status){status.textContent='✓ Chave válida';status.className='apibar-status ok';}
+    if(field)field.classList.add('has-key');
+  } else {
+    if(status){status.textContent='⚠ Formato inválido';status.className='apibar-status err';}
+    if(field)field.classList.remove('has-key');
+  }
+}
+
+function toggleKeyVis(){
+  const inp=gEl('apiKeyInput');if(!inp)return;
+  inp.type=inp.type==='password'?'text':'password';
+}
+
+function apiHeaders(){
+  const key=getKey();
+  const h={'Content-Type':'application/json','anthropic-dangerous-direct-browser-calls':'true'};
+  if(key)h['x-api-key']=key;
+  return h;
+}
+
+// ══════════════════════
 // VALIDATE — marca campos em vermelho
 // ══════════════════════
 function clearErros(){
@@ -1392,6 +1459,14 @@ async function generate(){
     gEl('vbox').scrollIntoView({behavior:'smooth',block:'center'});
     return;
   }
+  // Verifica API key
+  if(!getKey()){
+    gEl('vlist').innerHTML=`<li>⚠ Informe sua chave de API Anthropic na barra superior (campo 🔑)</li><li>Acesse <strong>console.anthropic.com/settings/keys</strong> para obter sua chave</li>`;
+    gEl('vbox').classList.add('show');
+    gEl('vbox').scrollIntoView({behavior:'smooth',block:'center'});
+    gEl('apiKeyInput')?.focus();
+    return;
+  }
   gEl('vbox').classList.remove('show');
   gEl('btnGen').disabled=true;
   gEl('outSec').classList.remove('show');
@@ -1404,7 +1479,7 @@ async function generate(){
   setPhase(1,'active');gEl('ldSub').textContent='Etapa 2 — Gerando documento com artigos verificados...';
   let raw='';
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-calls':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:4096,messages:[{role:'user',content:buildPrompt(d)}]})});
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:apiHeaders(),body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:4096,messages:[{role:'user',content:buildPrompt(d)}]})});
     if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.error?.message||'HTTP '+res.status);}
     const result=await res.json();
     raw=result.content.map(b=>b.text||'').join('\n');
@@ -1466,7 +1541,7 @@ DOCUMENTO (primeiros 3500 caracteres):
 ${raw.slice(0,3500)}
 JSON: {"score":0-100,"nivel":"Excelente|Bom|Adequado|Requer revisão","cpc_ok":true_ou_false,"cpc_obs":"observação","artigos_ok":true_ou_false,"artigos_obs":"artigos fora da lista ou OK","positivos":["máx 3"],"atencao":["máx 3"],"sugestoes":["máx 3"],"conclusao":"Uma frase"}`;
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-calls':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,messages:[{role:'user',content:p}]})});
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:apiHeaders(),body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,messages:[{role:'user',content:p}]})});
     if(!res.ok)throw new Error('HTTP '+res.status);
     const result=await res.json();
     let txt=result.content.map(b=>b.text||'').join('').replace(/```json|```/g,'').trim();
