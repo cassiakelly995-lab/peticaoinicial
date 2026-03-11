@@ -1368,11 +1368,11 @@ function saveKey(){
     if(field)field.classList.remove('has-key');
     return;
   }
-  if(k.startsWith('sk-ant')||k.startsWith('sk-')){
-    if(status){status.textContent='✓ Chave válida';status.className='apibar-status ok';}
+  if(k.length>20){
+    if(status){status.textContent='✓ Chave informada';status.className='apibar-status ok';}
     if(field)field.classList.add('has-key');
   } else {
-    if(status){status.textContent='⚠ Formato inválido';status.className='apibar-status err';}
+    if(status){status.textContent='⚠ Chave muito curta';status.className='apibar-status err';}
     if(field)field.classList.remove('has-key');
   }
 }
