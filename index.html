@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LexForge PRO v4 — Legal Document Automation System</title>
+<title>LexForge PRO v5 — Legal Document Automation System</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -24,94 +24,44 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--k);color:var(--
 ::-webkit-scrollbar-thumb{background:var(--k5);border-radius:2px}
 ::-webkit-scrollbar-thumb:hover{background:var(--g3)}
 
-/* ══════════════════════════
-   WELCOME SCREEN
-══════════════════════════ */
-#welcomeScreen{
-  position:fixed;inset:0;z-index:1000;background:var(--k);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:2rem;overflow-y:auto;
-}
-.ws-bg{
-  position:fixed;inset:0;pointer-events:none;overflow:hidden;
-}
-.ws-bg::before{
-  content:'';position:absolute;top:-20%;left:-10%;width:55%;height:70%;
-  background:radial-gradient(ellipse,rgba(201,168,76,.05) 0%,transparent 70%);
-}
-.ws-bg::after{
-  content:'';position:absolute;bottom:-10%;right:-5%;width:50%;height:60%;
-  background:radial-gradient(ellipse,rgba(201,168,76,.04) 0%,transparent 70%);
-}
+/* WELCOME SCREEN */
+#welcomeScreen{position:fixed;inset:0;z-index:1000;background:var(--k);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;overflow-y:auto;}
+.ws-bg{position:fixed;inset:0;pointer-events:none;overflow:hidden;}
+.ws-bg::before{content:'';position:absolute;top:-20%;left:-10%;width:55%;height:70%;background:radial-gradient(ellipse,rgba(201,168,76,.05) 0%,transparent 70%);}
+.ws-bg::after{content:'';position:absolute;bottom:-10%;right:-5%;width:50%;height:60%;background:radial-gradient(ellipse,rgba(201,168,76,.04) 0%,transparent 70%);}
 .ws-content{max-width:900px;width:100%;position:relative;animation:wsIn .7s cubic-bezier(.22,1,.36,1)}
 @keyframes wsIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 .ws-top{text-align:center;margin-bottom:3rem}
-.ws-badge{
-  display:inline-flex;align-items:center;gap:.5rem;
-  font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--g3);border:1px solid var(--gl);padding:.28rem .85rem;margin-bottom:1.5rem;
-  background:rgba(201,168,76,.04);
-}
-.ws-logo{
-  font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:700;
-  color:var(--g2);letter-spacing:.04em;line-height:1;margin-bottom:.6rem;
-}
+.ws-badge{display:inline-flex;align-items:center;gap:.5rem;font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--g3);border:1px solid var(--gl);padding:.28rem .85rem;margin-bottom:1.5rem;background:rgba(201,168,76,.04);}
+.ws-logo{font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:700;color:var(--g2);letter-spacing:.04em;line-height:1;margin-bottom:.6rem;}
 .ws-logo span{color:var(--g3)}
-.ws-sub{
-  font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;
-  color:var(--t4);margin-bottom:.9rem;
-}
+.ws-sub{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:var(--t4);margin-bottom:.9rem;}
 .ws-desc{font-size:.82rem;color:var(--t3);line-height:1.65;max-width:500px;margin:0 auto}
 .ws-divider{width:60px;height:1px;background:linear-gradient(90deg,transparent,var(--g3),transparent);margin:1.5rem auto}
-
-.ws-step{
-  font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.15em;text-transform:uppercase;
-  color:var(--t4);margin-bottom:1rem;text-align:center;
-}
-
-/* Area Cards Grid */
+.ws-step{font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.15em;text-transform:uppercase;color:var(--t4);margin-bottom:1rem;text-align:center;}
 .ws-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.65rem;margin-bottom:2rem}
-.ws-card{
-  background:var(--k2);border:1px solid rgba(201,168,76,.1);
-  padding:1.1rem;cursor:pointer;transition:all .18s;
-  display:flex;flex-direction:column;gap:.5rem;
-  position:relative;overflow:hidden;
-}
+.ws-card{background:var(--k2);border:1px solid rgba(201,168,76,.1);padding:1.1rem;cursor:pointer;transition:all .18s;display:flex;flex-direction:column;gap:.5rem;position:relative;overflow:hidden;}
 .ws-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--g3);transform:scaleX(0);transition:transform .18s;transform-origin:left}
 .ws-card:hover{border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.04);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
 .ws-card:hover::before{transform:scaleX(1)}
 .ws-card.selected{border-color:var(--g);background:rgba(201,168,76,.08)}
 .ws-card.selected::before{transform:scaleX(1)}
-.wc-ico{font-size:1.4rem}
-.wc-title{font-size:.78rem;font-weight:600;color:var(--t1);line-height:1.3}
+.wc-ico{font-size:1.4rem}.wc-title{font-size:.78rem;font-weight:600;color:var(--t1);line-height:1.3}
 .wc-sub{font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.08em;text-transform:uppercase;color:var(--g3)}
 .wc-desc{font-size:.65rem;color:var(--t4);line-height:1.45}
-
 .ws-actions{display:flex;justify-content:center;gap:.8rem;flex-wrap:wrap;margin-bottom:2rem}
-.ws-btn-main{
-  display:inline-flex;align-items:center;gap:.5rem;
-  background:var(--g3);color:var(--k);border:none;
-  font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;letter-spacing:.04em;
-  padding:.75rem 2.2rem;cursor:pointer;transition:all .18s;
-}
+.ws-btn-main{display:inline-flex;align-items:center;gap:.5rem;background:var(--g3);color:var(--k);border:none;font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;letter-spacing:.04em;padding:.75rem 2.2rem;cursor:pointer;transition:all .18s;}
 .ws-btn-main:hover{background:var(--g);box-shadow:0 6px 22px rgba(201,168,76,.3);transform:translateY(-1px)}
 .ws-btn-main:disabled{opacity:.35;pointer-events:none}
-.ws-btn-sec{
-  display:inline-flex;align-items:center;gap:.42rem;
-  background:transparent;border:1px solid var(--gl);color:var(--t2);
-  font-family:'DM Sans',sans-serif;font-size:.78rem;padding:.7rem 1.4rem;cursor:pointer;transition:all .15s;
-}
+.ws-btn-sec{display:inline-flex;align-items:center;gap:.42rem;background:transparent;border:1px solid var(--gl);color:var(--t2);font-family:'DM Sans',sans-serif;font-size:.78rem;padding:.7rem 1.4rem;cursor:pointer;transition:all .15s;}
 .ws-btn-sec:hover{border-color:var(--g3);color:var(--g2)}
-
 .ws-feats{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.55rem}
 .wf{background:rgba(201,168,76,.03);border:1px solid var(--gl);padding:.65rem .85rem;display:flex;gap:.5rem;align-items:flex-start}
 .wf-ico{font-size:.9rem;flex-shrink:0;margin-top:1px}
 .wf-title{font-size:.72rem;font-weight:600;color:var(--t2)}
 .wf-desc{font-size:.62rem;color:var(--t4);line-height:1.4;margin-top:.12rem}
 
-/* ══════════════════════════
-   API KEY BAR
-══════════════════════════ */
+/* API BAR */
 .apibar{background:#0e0e12;border-bottom:1px solid rgba(201,168,76,.12);padding:.38rem 1.25rem;}
 .apibar-inner{display:flex;align-items:center;gap:.65rem;flex-wrap:wrap}
 .apibar-ico{font-size:.85rem;flex-shrink:0}
@@ -127,9 +77,7 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--k);color:var(--
 .apibar-link:hover{opacity:1;text-decoration:underline}
 .apibar-field.has-key{border-color:rgba(39,174,96,.3);}
 
-/* ══════════════════════════
-   TOPBAR
-══════════════════════════ */
+/* TOPBAR */
 #appShell{display:none}
 .tb{position:sticky;top:0;z-index:300;height:var(--sh);background:var(--k2);border-bottom:1px solid var(--gl);display:flex;align-items:center;justify-content:space-between;padding:0 1.25rem;box-shadow:0 2px 16px rgba(0,0,0,.5)}
 .tb-l{display:flex;align-items:center;gap:.8rem}
@@ -182,49 +130,26 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--k);color:var(--
 .atag{display:inline-flex;align-items:center;gap:.38rem;font-size:.68rem;font-weight:500;border:1px solid var(--gl);padding:.18rem .65rem;color:var(--g2);background:var(--gd);margin-top:.5rem}
 .atag-e{display:inline-flex;align-items:center;gap:.38rem;font-size:.68rem;color:var(--t4);border:1px dashed var(--k5);padding:.18rem .65rem;margin-top:.5rem}
 
-/* ══════════════════════════
-   AUTO-SUGGESTION PANEL
-══════════════════════════ */
-.auto-panel{
-  display:none;background:rgba(74,128,208,.04);border:1px solid rgba(74,128,208,.2);
-  border-left:3px solid var(--blue);margin-bottom:1rem;overflow:hidden;
-  animation:sugestIn .25s ease;
-}
+/* AUTO SUGGESTION */
+.auto-panel{display:none;background:rgba(74,128,208,.04);border:1px solid rgba(74,128,208,.2);border-left:3px solid var(--blue);margin-bottom:1rem;overflow:hidden;animation:sugestIn .25s ease;}
 @keyframes sugestIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
 .auto-panel.show{display:block}
-.auto-header{
-  background:rgba(74,128,208,.08);border-bottom:1px solid rgba(74,128,208,.15);
-  padding:.5rem .85rem;display:flex;align-items:center;justify-content:space-between;
-}
+.auto-header{background:rgba(74,128,208,.08);border-bottom:1px solid rgba(74,128,208,.15);padding:.5rem .85rem;display:flex;align-items:center;justify-content:space-between;}
 .auto-title{font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--blue)}
 .auto-close{background:transparent;border:none;color:var(--t4);cursor:pointer;font-size:.8rem;line-height:1}
 .auto-close:hover{color:var(--t2)}
 .auto-body{padding:.75rem .85rem;display:grid;grid-template-columns:1fr 1fr;gap:.65rem}
 .auto-sect{display:flex;flex-direction:column;gap:.35rem}
 .auto-sect-title{font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:.15rem}
-.auto-chip{
-  display:flex;align-items:center;gap:.35rem;font-size:.67rem;color:var(--t2);
-  background:rgba(74,128,208,.07);border:1px solid rgba(74,128,208,.15);
-  padding:.26rem .6rem;cursor:pointer;transition:all .12s;user-select:none;
-}
+.auto-chip{display:flex;align-items:center;gap:.35rem;font-size:.67rem;color:var(--t2);background:rgba(74,128,208,.07);border:1px solid rgba(74,128,208,.15);padding:.26rem .6rem;cursor:pointer;transition:all .12s;user-select:none;}
 .auto-chip:hover{background:rgba(74,128,208,.15);border-color:rgba(74,128,208,.35)}
 .auto-chip.applied{background:rgba(39,174,96,.08);border-color:rgba(39,174,96,.25);color:var(--green)}
 .auto-chip .aci{font-size:.62rem;flex-shrink:0}
-.auto-apply-all{
-  display:inline-flex;align-items:center;gap:.3rem;
-  background:var(--blue);color:#fff;border:none;
-  font-family:'DM Sans',sans-serif;font-size:.67rem;font-weight:500;
-  padding:.35rem .85rem;cursor:pointer;transition:all .12s;margin-top:.4rem;
-  grid-column:1/-1;width:fit-content;
-}
+.auto-apply-all{display:inline-flex;align-items:center;gap:.3rem;background:var(--blue);color:#fff;border:none;font-family:'DM Sans',sans-serif;font-size:.67rem;font-weight:500;padding:.35rem .85rem;cursor:pointer;transition:all .12s;margin-top:.4rem;grid-column:1/-1;width:fit-content;}
 .auto-apply-all:hover{background:#5a90e0}
 
 /* AI SUMMARY */
-.ai-summary{
-  display:none;background:rgba(201,168,76,.03);border:1px solid var(--gl);
-  border-left:3px solid var(--g3);margin-bottom:.85rem;
-  animation:sugestIn .25s ease;
-}
+.ai-summary{display:none;background:rgba(201,168,76,.03);border:1px solid var(--gl);border-left:3px solid var(--g3);margin-bottom:.85rem;animation:sugestIn .25s ease;}
 .ai-summary.show{display:block}
 .ais-header{background:rgba(201,168,76,.06);border-bottom:1px solid var(--gl);padding:.45rem .85rem;display:flex;align-items:center;gap:.42rem}
 .ais-title{font-family:'JetBrains Mono',monospace;font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--g3)}
@@ -244,7 +169,6 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--k);color:var(--
 .cnum{font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.07em;background:var(--g3);color:var(--k);padding:.09rem .36rem;font-weight:500;flex-shrink:0}
 .ctit{font-size:.78rem;font-weight:600;color:var(--t1);flex:1}
 .cst{font-size:.62rem}.cst.ok{color:var(--g3)}.cst.pend{color:var(--t4)}.cst.opt{color:var(--t4);font-style:italic}
-/* Card 05 destaque quando tem campos pendentes */
 #c5.tem-campos-pendentes{border-color:rgba(224,160,32,.4);animation:card5pulse 2s ease-in-out 3;}
 @keyframes card5pulse{0%,100%{box-shadow:0 1px 3px rgba(0,0,0,.35)}50%{box-shadow:0 0 0 4px rgba(224,160,32,.15),0 4px 20px rgba(0,0,0,.3)}}
 .cch{font-size:.58rem;color:var(--t4);transition:transform .18s}
@@ -271,13 +195,7 @@ input::placeholder,textarea::placeholder{color:var(--t4);font-style:italic;font-
 select option{background:var(--k3);color:var(--t1)}
 textarea{resize:vertical;min-height:82px;line-height:1.6}
 input[readonly]{background:var(--k4);color:var(--t4);cursor:default}
-
-/* CAMPO COM ERRO */
-input.campo-erro,select.campo-erro,textarea.campo-erro{
-  border-color:#c0392b !important;
-  box-shadow:0 0 0 3px rgba(192,57,43,.18) !important;
-  background:rgba(192,57,43,.06) !important;
-}
+input.campo-erro,select.campo-erro,textarea.campo-erro{border-color:#c0392b !important;box-shadow:0 0 0 3px rgba(192,57,43,.18) !important;background:rgba(192,57,43,.06) !important;}
 .fg.campo-erro-label .fl{color:#e08080;}
 .fg.campo-erro-label .fl .req{color:#ff6b6b;}
 .campo-erro-msg{font-size:.58rem;color:#e08080;margin-top:.15rem;display:none;}
@@ -416,104 +334,61 @@ input.campo-erro,select.campo-erro,textarea.campo-erro{
 .modal-cancel{background:transparent;border:none;color:var(--t4);font-size:.7rem;cursor:pointer;margin-top:.7rem;width:100%;text-align:center;padding:.3rem}
 .modal-cancel:hover{color:var(--t2)}
 
+/* SPINNER OVERLAY for export */
+.export-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:900;display:none;align-items:center;justify-content:center;flex-direction:column;gap:1rem}
+.export-overlay.show{display:flex}
+.export-msg{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--g2)}
+
 @media(max-width:760px){.layout{grid-template-columns:1fr}.sb{position:static;height:auto;border-right:none;border-bottom:1px solid var(--gl)}.main{padding:1rem}.auto-body{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
-<!-- ══════════════════════════
-     WELCOME SCREEN
-══════════════════════════ -->
+<!-- WELCOME SCREEN -->
 <div id="welcomeScreen">
   <div class="ws-bg"></div>
   <div class="ws-content">
     <div class="ws-top">
-      <div class="ws-badge">⚖ Sistema Jurídico · Versão 4.0 · Brasil</div>
+      <div class="ws-badge">⚖ Sistema Jurídico · Versão 5.0 · Brasil</div>
       <div class="ws-logo">LexForge <span>PRO</span></div>
       <div class="ws-sub">Legal Document Automation System</div>
       <div class="ws-divider"></div>
-      <p class="ws-desc">Geração automática de peças processuais com artigos verificados, dupla revisão por IA e checklist pré-protocolo. Selecione a área do direito para começar.</p>
+      <p class="ws-desc">Geração automática de peças processuais com artigos verificados, dupla revisão por IA, linguagem jurídica formal e checklist pré-protocolo.</p>
     </div>
-
     <div class="ws-step">① Selecione a área do direito</div>
     <div class="ws-grid" id="wsAreaGrid">
-      <div class="ws-card" data-key="resp_civil" onclick="wsSelect(this,'Responsabilidade Civil — Danos Morais e Materiais','CC/2002, arts. 186, 187, 927–954; CF/88, art. 5º, V e X','Procedimento Comum (CPC/2015, art. 318)','3 anos (CC/2002, art. 206, §3º, V)')">
-        <div class="wc-ico">⚖️</div>
-        <div class="wc-title">Responsabilidade Civil</div>
-        <div class="wc-sub">CC</div>
-        <div class="wc-desc">Danos morais, materiais e estéticos</div>
-      </div>
-      <div class="ws-card" data-key="negativacao" onclick="wsSelect(this,'Negativação Indevida no SPC/Serasa','CDC, arts. 42 e 42-A; CC/2002, art. 186; Lei 9.507/1997; Súmula 385 STJ','Juizado Especial Cível (Lei 9.099/1995)','5 anos (CDC, art. 27)')">
-        <div class="wc-ico">❌</div>
-        <div class="wc-title">Negativação Indevida</div>
-        <div class="wc-sub">CDC</div>
-        <div class="wc-desc">SPC, Serasa, protestos indevidos</div>
-      </div>
-      <div class="ws-card" data-key="plano" onclick="wsSelect(this,'Plano de Saúde — Negativa de Cobertura','Lei 9.656/1998; CDC; CF/88, art. 196; Súmula 102 STJ','Procedimento Comum c/c Tutela de Urgência (CPC/2015, art. 300)','10 anos (CC/2002, art. 205)')">
-        <div class="wc-ico">🏥</div>
-        <div class="wc-title">Plano de Saúde</div>
-        <div class="wc-sub">ANS</div>
-        <div class="wc-desc">Negativa de cobertura e procedimentos</div>
-      </div>
-      <div class="ws-card" data-key="trab_geral" onclick="wsSelect(this,'Reclamação Trabalhista — Verbas Rescisórias','CLT (Decreto-Lei 5.452/1943); CF/88, art. 7º; Lei 13.467/2017','Rito Ordinário ou Sumaríssimo (CLT, arts. 852-A–852-I)','2 anos após rescisão; 5 anos no curso do contrato (CF/88, art. 7º, XXIX)')">
-        <div class="wc-ico">⚒️</div>
-        <div class="wc-title">Reclamação Trabalhista</div>
-        <div class="wc-sub">CLT</div>
-        <div class="wc-desc">Verbas rescisórias, horas extras, FGTS</div>
-      </div>
-      <div class="ws-card" data-key="bancario" onclick="wsSelect(this,'Direito Bancário — Revisão Contratual e Cobranças Abusivas','CDC (Lei 8.078/1990), arts. 2–54; CC/2002, arts. 591–626; Res. CMN 4.656/2018; Súmula 297 STJ','Juizado Especial Cível (Lei 9.099/1995) ou Procedimento Comum','5 anos (CDC, art. 27)')">
-        <div class="wc-ico">🏦</div>
-        <div class="wc-title">Direito Bancário</div>
-        <div class="wc-sub">CDC</div>
-        <div class="wc-desc">Revisão contratual, cobranças abusivas</div>
-      </div>
-      <div class="ws-card" data-key="apo_inv" onclick="wsSelect(this,'Aposentadoria por Incapacidade Permanente (Invalidez)','Lei 8.213/1991, arts. 42–47; Decreto 3.048/1999; CF/88, art. 201, I','Juizado Especial Federal (Lei 10.259/2001) ou Procedimento Comum','10 anos (Decreto 20.910/1932)')">
-        <div class="wc-ico">♿</div>
-        <div class="wc-title">Apo. por Invalidez</div>
-        <div class="wc-sub">INSS</div>
-        <div class="wc-desc">Incapacidade permanente, INSS</div>
-      </div>
-      <div class="ws-card" data-key="divorcio" onclick="wsSelect(this,'Divórcio e Separação','CC/2002, arts. 1.511–1.783-A; EC 66/2010; CPC/2015, arts. 693–699','Procedimento Especial — Família (CPC/2015, art. 693)','Imprescritível (estado pessoal)')">
-        <div class="wc-ico">💍</div>
-        <div class="wc-title">Divórcio / Separação</div>
-        <div class="wc-sub">CC</div>
-        <div class="wc-desc">Dissolução do casamento e partilha</div>
-      </div>
-      <div class="ws-card" data-key="alimentos" onclick="wsSelect(this,'Ação de Alimentos','CC/2002, arts. 1.694–1.710; Lei 5.478/1968; CPC/2015, arts. 693–699','Procedimento Especial — Alimentos (Lei 5.478/1968)','2 anos (CC/2002, art. 206, §2º)')">
-        <div class="wc-ico">👨‍👩‍👧</div>
-        <div class="wc-title">Alimentos</div>
-        <div class="wc-sub">CC</div>
-        <div class="wc-desc">Fixação e revisão de alimentos</div>
-      </div>
+      <div class="ws-card" data-key="resp_civil" onclick="wsSelect(this,'Responsabilidade Civil — Danos Morais e Materiais','CC/2002, arts. 186, 187, 927–954; CF/88, art. 5º, V e X','Procedimento Comum (CPC/2015, art. 318)','3 anos (CC/2002, art. 206, §3º, V)')"><div class="wc-ico">⚖️</div><div class="wc-title">Responsabilidade Civil</div><div class="wc-sub">CC</div><div class="wc-desc">Danos morais, materiais e estéticos</div></div>
+      <div class="ws-card" data-key="negativacao" onclick="wsSelect(this,'Negativação Indevida no SPC/Serasa','CDC, arts. 42 e 42-A; CC/2002, art. 186; Lei 9.507/1997; Súmula 385 STJ','Juizado Especial Cível (Lei 9.099/1995)','5 anos (CDC, art. 27)')"><div class="wc-ico">❌</div><div class="wc-title">Negativação Indevida</div><div class="wc-sub">CDC</div><div class="wc-desc">SPC, Serasa, protestos indevidos</div></div>
+      <div class="ws-card" data-key="plano" onclick="wsSelect(this,'Plano de Saúde — Negativa de Cobertura','Lei 9.656/1998; CDC; CF/88, art. 196; Súmula 102 STJ','Procedimento Comum c/c Tutela de Urgência (CPC/2015, art. 300)','10 anos (CC/2002, art. 205)')"><div class="wc-ico">🏥</div><div class="wc-title">Plano de Saúde</div><div class="wc-sub">ANS</div><div class="wc-desc">Negativa de cobertura e procedimentos</div></div>
+      <div class="ws-card" data-key="trab_geral" onclick="wsSelect(this,'Reclamação Trabalhista — Verbas Rescisórias','CLT (Decreto-Lei 5.452/1943); CF/88, art. 7º; Lei 13.467/2017','Rito Ordinário ou Sumaríssimo (CLT, arts. 852-A–852-I)','2 anos após rescisão; 5 anos no curso do contrato (CF/88, art. 7º, XXIX)')"><div class="wc-ico">⚒️</div><div class="wc-title">Reclamação Trabalhista</div><div class="wc-sub">CLT</div><div class="wc-desc">Verbas rescisórias, horas extras, FGTS</div></div>
+      <div class="ws-card" data-key="bancario" onclick="wsSelect(this,'Direito Bancário — Revisão Contratual e Cobranças Abusivas','CDC (Lei 8.078/1990), arts. 2–54; CC/2002, arts. 591–626; Res. CMN 4.656/2018; Súmula 297 STJ','Juizado Especial Cível (Lei 9.099/1995) ou Procedimento Comum','5 anos (CDC, art. 27)')"><div class="wc-ico">🏦</div><div class="wc-title">Direito Bancário</div><div class="wc-sub">CDC</div><div class="wc-desc">Revisão contratual, cobranças abusivas</div></div>
+      <div class="ws-card" data-key="apo_inv" onclick="wsSelect(this,'Aposentadoria por Incapacidade Permanente (Invalidez)','Lei 8.213/1991, arts. 42–47; Decreto 3.048/1999; CF/88, art. 201, I','Juizado Especial Federal (Lei 10.259/2001) ou Procedimento Comum','10 anos (Decreto 20.910/1932)')"><div class="wc-ico">♿</div><div class="wc-title">Apo. por Invalidez</div><div class="wc-sub">INSS</div><div class="wc-desc">Incapacidade permanente, INSS</div></div>
+      <div class="ws-card" data-key="divorcio" onclick="wsSelect(this,'Divórcio e Separação','CC/2002, arts. 1.511–1.783-A; EC 66/2010; CPC/2015, arts. 693–699','Procedimento Especial — Família (CPC/2015, art. 693)','Imprescritível (estado pessoal)')"><div class="wc-ico">💍</div><div class="wc-title">Divórcio / Separação</div><div class="wc-sub">CC</div><div class="wc-desc">Dissolução do casamento e partilha</div></div>
+      <div class="ws-card" data-key="alimentos" onclick="wsSelect(this,'Ação de Alimentos','CC/2002, arts. 1.694–1.710; Lei 5.478/1968; CPC/2015, arts. 693–699','Procedimento Especial — Alimentos (Lei 5.478/1968)','2 anos (CC/2002, art. 206, §2º)')"><div class="wc-ico">👨‍👩‍👧</div><div class="wc-title">Alimentos</div><div class="wc-sub">CC</div><div class="wc-desc">Fixação e revisão de alimentos</div></div>
     </div>
-
     <div class="ws-actions">
       <button class="ws-btn-main" id="wsBtnIniciar" onclick="wsIniciar()" disabled>📄 Iniciar Petição →</button>
-      <button class="ws-btn-sec" onclick="wsVerTodos()">Ver todas as 46 áreas</button>
+      <button class="ws-btn-sec" onclick="wsVerTodos()">Ver todas as áreas</button>
     </div>
-
     <div class="ws-feats">
       <div class="wf"><div class="wf-ico">🛡</div><div><div class="wf-title">Zero Invenção</div><div class="wf-desc">Artigos pré-selecionados por área — apenas vigentes e verificados</div></div></div>
-      <div class="wf"><div class="wf-ico">✨</div><div><div class="wf-title">Sugestão Automática</div><div class="wf-desc">Fundamentos e pedidos sugeridos ao selecionar a área</div></div></div>
+      <div class="wf"><div class="wf-ico">✍️</div><div><div class="wf-title">Linguagem Jurídica Formal</div><div class="wf-desc">Gênero correto, qualificação completa, texto forense</div></div></div>
       <div class="wf"><div class="wf-ico">🔍</div><div><div class="wf-title">Dupla Revisão IA</div><div class="wf-desc">Revisão crítica automática pós-geração</div></div></div>
       <div class="wf"><div class="wf-ico">✅</div><div><div class="wf-title">Checklist</div><div class="wf-desc">Lista de verificação pré-protocolo obrigatória</div></div></div>
-      <div class="wf"><div class="wf-ico">📄</div><div><div class="wf-title">Export PDF / Word</div><div class="wf-desc">Baixar o documento gerado em PDF ou DOCX</div></div></div>
+      <div class="wf"><div class="wf-ico">📄</div><div><div class="wf-title">Export PDF / Word</div><div class="wf-desc">Download funcional em PDF e DOCX</div></div></div>
       <div class="wf"><div class="wf-ico">🧠</div><div><div class="wf-title">Resumo do Caso</div><div class="wf-desc">IA gera resumo inteligente dos fatos informados</div></div></div>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════
-     APP SHELL
-══════════════════════════ -->
+<!-- APP SHELL -->
 <div id="appShell">
-
 <header class="tb">
   <div class="tb-l">
     <div class="seal">⚖</div>
     <div class="brand">LexForge PRO</div>
     <div class="vsep"></div>
-    <div class="vsub">Legal Document Automation · v4</div>
+    <div class="vsub">Legal Document Automation · v5</div>
   </div>
   <div class="tb-r">
     <div class="chip red">🛡 Zero Invenção</div>
@@ -523,7 +398,6 @@ input.campo-erro,select.campo-erro,textarea.campo-erro{
   </div>
 </header>
 
-<!-- BARRA DE API KEY -->
 <div class="apibar" id="apiBar">
   <div class="apibar-inner">
     <span class="apibar-ico">🔑</span>
@@ -545,7 +419,6 @@ input.campo-erro,select.campo-erro,textarea.campo-erro{
 </div>
 
 <div class="layout">
-<!-- SIDEBAR -->
 <aside class="sb">
   <div class="sb-top">
     <input class="sb-inp" type="text" placeholder="Buscar área do direito..." oninput="filterA(this.value)">
@@ -620,46 +493,34 @@ input.campo-erro,select.campo-erro,textarea.campo-erro{
   </div>
 </aside>
 
-<!-- MAIN -->
 <main class="main">
   <div class="ph">
-    <div class="ph-ey" id="docTypeLabel">LexForge PRO v4 · Petição Inicial · CPC/2015</div>
+    <div class="ph-ey" id="docTypeLabel">LexForge PRO v5 · Petição Inicial · CPC/2015</div>
     <h1 id="docTitle">Gerador de Petição Inicial</h1>
-    <p>Formulário dinâmico por área · Artigos verificados · Dupla revisão IA · Checklist pré-protocolo</p>
+    <p>Formulário dinâmico · Linguagem jurídica formal · Qualificação correta das partes · Dupla revisão IA</p>
     <div><div class="atag-e" id="atE">← Selecione a área do direito</div><div class="atag" id="atS" style="display:none">⚖ <span id="atTxt"></span></div></div>
   </div>
 
-  <!-- AUTO SUGGESTION PANEL -->
   <div class="auto-panel" id="autoPanel">
     <div class="auto-header">
       <div class="auto-title">✨ Sugestões Automáticas para a Área</div>
       <button class="auto-close" onclick="gEl('autoPanel').classList.remove('show')">✕</button>
     </div>
     <div class="auto-body">
-      <div class="auto-sect">
-        <div class="auto-sect-title">⚖ Fundamentos Jurídicos</div>
-        <div id="autoFunds"></div>
-      </div>
-      <div class="auto-sect">
-        <div class="auto-sect-title">📋 Pedidos Sugeridos</div>
-        <div id="autoPeds"></div>
-      </div>
+      <div class="auto-sect"><div class="auto-sect-title">⚖ Fundamentos Jurídicos</div><div id="autoFunds"></div></div>
+      <div class="auto-sect"><div class="auto-sect-title">📋 Pedidos Sugeridos</div><div id="autoPeds"></div></div>
       <button class="auto-apply-all" onclick="applyAllSuggestions()">✅ Aplicar todas as sugestões</button>
     </div>
   </div>
 
-  <!-- AI SUMMARY -->
   <div class="ai-summary" id="aiSummary">
-    <div class="ais-header">
-      <div class="ais-spin" id="aisSpin"></div>
-      <div class="ais-title">🧠 Resumo Inteligente do Caso</div>
-    </div>
+    <div class="ais-header"><div class="ais-spin" id="aisSpin"></div><div class="ais-title">🧠 Resumo Inteligente do Caso</div></div>
     <div class="ais-body" id="aiSummaryBody">Gerando resumo...</div>
   </div>
 
   <div class="notice">
     <div class="nbadge">🛡 Anti-Invenção</div>
-    <div><strong>Sistema de bloqueio ativo:</strong> Artigos de lei são pré-selecionados por área — apenas os vigentes e verificados são permitidos. Valores e nomes usados exclusivamente do que você informou.</div>
+    <div><strong>Sistema de bloqueio ativo:</strong> Artigos pré-selecionados por área — apenas vigentes. Qualificação corrigida automaticamente: gênero gramatical, "inscrito(a) no CPF", endereço completo e comarca obrigatória.</div>
   </div>
 
   <div class="vbox" id="vbox"><div class="vt">⛔ Campos obrigatórios incompletos:</div><ul id="vlist"></ul></div>
@@ -668,11 +529,12 @@ input.campo-erro,select.campo-erro,textarea.campo-erro{
   <div class="card open" id="c1">
     <div class="ch" onclick="tog('c1')"><span class="cnum">01</span><span class="ctit">Qualificação do Autor (Requerente)</span><span class="cst pend" id="s1">Pendente</span><span class="cch">▾</span></div>
     <div class="cb">
-      <div class="fr"><div class="fg"><label class="fl">Nome completo <span class="req">*</span></label><input type="text" id="a_nome" placeholder="Nome civil completo" oninput="upd()"></div><div class="fg"><label class="fl">Nacionalidade <span class="req">*</span></label><select id="a_nac" onchange="upd()"><option value="brasileiro(a)">Brasileiro(a)</option><option value="brasileiro(a) naturalizado(a)">Brasileiro(a) Naturalizado(a)</option><option value="estrangeiro(a)">Estrangeiro(a)</option></select></div></div>
-      <div class="fr f3"><div class="fg"><label class="fl">Estado civil <span class="req">*</span></label><select id="a_ec" onchange="upd();chkConj()"><option value="">Selecione</option><option>Solteiro(a)</option><option>Casado(a)</option><option>Divorciado(a)</option><option>Separado(a) judicialmente</option><option>Viúvo(a)</option><option>Em união estável</option></select></div><div class="fg"><label class="fl">Profissão <span class="req">*</span></label><input type="text" id="a_prof" placeholder="Ex: comerciante" oninput="upd()"></div><div class="fg"><label class="fl">CPF <span class="req">*</span></label><input type="text" id="a_cpf" placeholder="000.000.000-00" oninput="upd()"></div></div>
+      <div class="fr"><div class="fg"><label class="fl">Nome completo <span class="req">*</span></label><input type="text" id="a_nome" placeholder="Nome civil completo" oninput="upd();detectGender()"></div><div class="fg"><label class="fl">Sexo <span class="req">*</span></label><select id="a_sexo" onchange="upd()"><option value="">Selecione</option><option value="M">Masculino</option><option value="F">Feminino</option></select></div></div>
+      <div class="fr"><div class="fg"><label class="fl">Nacionalidade <span class="req">*</span></label><select id="a_nac" onchange="upd()"><option value="brasileiro">Brasileiro(a)</option><option value="brasileiro naturalizado">Brasileiro(a) Naturalizado(a)</option><option value="estrangeiro">Estrangeiro(a)</option></select></div><div class="fg"><label class="fl">Estado civil <span class="req">*</span></label><select id="a_ec" onchange="upd();chkConj()"><option value="">Selecione</option><option>Solteiro(a)</option><option>Casado(a)</option><option>Divorciado(a)</option><option>Separado(a) judicialmente</option><option>Viúvo(a)</option><option>Em união estável</option></select></div></div>
+      <div class="fr"><div class="fg"><label class="fl">Profissão <span class="req">*</span></label><input type="text" id="a_prof" placeholder="Ex: comerciante, faxineira, motorista" oninput="upd()"></div><div class="fg"><label class="fl">CPF <span class="req">*</span></label><input type="text" id="a_cpf" placeholder="000.000.000-00" oninput="upd()"></div></div>
       <div class="fr"><div class="fg"><label class="fl">RG <span class="opt">(recomendado)</span></label><input type="text" id="a_rg" placeholder="00.000.000-0 SSP/UF"></div><div class="fg"><label class="fl">CNPJ <span class="opt">(se P.J.)</span></label><input type="text" id="a_cnpj" placeholder="00.000.000/0001-00"></div></div>
-      <div class="fr f1" id="rw_conj" style="display:none"><div class="fg"><label class="fl">Cônjuge / Companheiro(a)</label><input type="text" id="a_conj" placeholder="Nome completo"></div></div>
-      <div class="fr f1"><div class="fg"><label class="fl">Endereço completo — para intimações <span class="req">*</span></label><input type="text" id="a_end" placeholder="Rua, nº, complemento, bairro, cidade — UF, CEP" oninput="upd()"></div></div>
+      <div class="fr f1" id="rw_conj" style="display:none"><div class="fg"><label class="fl">Cônjuge / Companheiro(a)</label><input type="text" id="a_conj" placeholder="Nome completo do cônjuge"></div></div>
+      <div class="fr f1"><div class="fg"><label class="fl">Endereço completo — para intimações <span class="req">*</span></label><input type="text" id="a_end" placeholder="Rua [nome], nº [nº], [compl.], bairro [bairro], [cidade] — [UF], CEP [CEP]" oninput="upd()"><span class="fh">Informe rua, número, bairro, cidade, UF e CEP</span></div></div>
       <div class="fr"><div class="fg"><label class="fl">E-mail <span class="opt">(intimações)</span></label><input type="email" id="a_email" placeholder="email@exemplo.com.br"></div><div class="fg"><label class="fl">Telefone</label><input type="tel" id="a_tel" placeholder="(11) 99999-0000"></div></div>
     </div>
   </div>
@@ -681,10 +543,14 @@ input.campo-erro,select.campo-erro,textarea.campo-erro{
   <div class="card" id="c2">
     <div class="ch" onclick="tog('c2')"><span class="cnum">02</span><span class="ctit">Qualificação do Réu (Requerido)</span><span class="cst pend" id="s2">Pendente</span><span class="cch">▾</span></div>
     <div class="cb">
-      <div class="fr"><div class="fg"><label class="fl">Nome / Razão Social <span class="req">*</span></label><input type="text" id="r_nome" placeholder="Nome completo ou razão social" oninput="upd()"></div><div class="fg"><label class="fl">Tipo <span class="req">*</span></label><select id="r_tipo" onchange="upd();chkReu()"><option value="">Selecione</option><option value="pf">Pessoa Física</option><option value="pj">Pessoa Jurídica</option><option value="pub">Ente Público / Autarquia</option></select></div></div>
-      <div id="r_pf_f" style="display:none"><div class="fr f3"><div class="fg"><label class="fl">CPF <span class="opt">(se disponível)</span></label><input type="text" id="r_cpf" placeholder="000.000.000-00"></div><div class="fg"><label class="fl">RG <span class="opt">(se disponível)</span></label><input type="text" id="r_rg" placeholder="00.000.000-0"></div><div class="fg"><label class="fl">Qualificação</label><input type="text" id="r_qualif" placeholder="Ex: empresário"></div></div></div>
+      <div class="fr"><div class="fg"><label class="fl">Nome / Razão Social <span class="req">*</span></label><input type="text" id="r_nome" placeholder="Nome completo ou razão social" oninput="upd()"></div><div class="fg"><label class="fl">Tipo <span class="req">*</span></label><select id="r_tipo" onchange="upd();chkReu()"><option value="">Selecione</option><option value="pf_m">Pessoa Física — Masculino</option><option value="pf_f">Pessoa Física — Feminino</option><option value="pj">Pessoa Jurídica</option><option value="pub">Ente Público / Autarquia</option></select></div></div>
+      <div id="r_pf_f" style="display:none"><div class="fr f3"><div class="fg"><label class="fl">Profissão do Réu</label><input type="text" id="r_qualif" placeholder="Ex: empresário, servidor"></div><div class="fg"><label class="fl">CPF <span class="opt">(se disponível)</span></label><input type="text" id="r_cpf" placeholder="000.000.000-00"></div><div class="fg"><label class="fl">RG <span class="opt">(se disponível)</span></label><input type="text" id="r_rg" placeholder="00.000.000-0"></div></div></div>
       <div id="r_pj_f" style="display:none"><div class="fr"><div class="fg"><label class="fl">CNPJ <span class="opt">(se disponível)</span></label><input type="text" id="r_cnpj" placeholder="00.000.000/0001-00"></div><div class="fg"><label class="fl">Representante Legal</label><input type="text" id="r_rep" placeholder="Sócio-administrador, diretor..."></div></div></div>
-      <div class="fr f1"><div class="fg"><label class="fl">Endereço para citação <span class="req">*</span></label><input type="text" id="r_end" placeholder="Endereço completo com CEP" oninput="upd()"></div></div>
+      <div class="fr f1"><div class="fg"><label class="fl">Endereço para citação <span class="req">*</span></label><input type="text" id="r_end" placeholder="Endereço completo com rua, número, cidade, UF e CEP" oninput="upd()"></div></div>
+      <div class="notice" style="margin-top:.5rem;padding:.5rem .7rem;font-size:.68rem">
+        <div class="nbadge" style="font-size:.45rem">Dica</div>
+        <span>Para P.J.: qualifique como "CNPJ nº ___, com sede em ___". Para PF: informe CPF e profissão para qualificação completa no documento.</span>
+      </div>
     </div>
   </div>
 
@@ -694,7 +560,7 @@ input.campo-erro,select.campo-erro,textarea.campo-erro{
     <div class="cb">
       <div class="fr"><div class="fg"><label class="fl">Nome completo <span class="req">*</span></label><input type="text" id="adv_n" placeholder="Nome conforme cadastro OAB" oninput="upd()"></div><div class="fg"><label class="fl">OAB nº <span class="req">*</span></label><input type="text" id="adv_oab" placeholder="Ex: 123.456/SP" oninput="upd()"></div></div>
       <div class="fr"><div class="fg"><label class="fl">Endereço profissional <span class="opt">(intimações)</span></label><input type="text" id="adv_end" placeholder="Rua, nº, sala, cidade — UF, CEP"></div><div class="fg"><label class="fl">E-mail profissional <span class="opt">(PJe)</span></label><input type="email" id="adv_email" placeholder="adv@escritorio.com.br"></div></div>
-      <div class="fr"><div class="fg"><label class="fl">Cidade da assinatura</label><input type="text" id="adv_cidade" placeholder="Ex: São Paulo"></div><div class="fg"><label class="fl">Procuração</label><select id="adv_proc"><option value="juntada">Procuração em anexo</option><option value="ad_judicia">Poderes declarados na petição</option></select></div></div>
+      <div class="fr"><div class="fg"><label class="fl">Cidade da assinatura <span class="req">*</span></label><input type="text" id="adv_cidade" placeholder="Ex: São Paulo" oninput="upd()"></div><div class="fg"><label class="fl">Comarca <span class="req">*</span></label><input type="text" id="adv_comarca" placeholder="Ex: Comarca de São Paulo/SP" oninput="upd()"><span class="fh">Será usada no endereçamento do documento</span></div></div>
     </div>
   </div>
 
@@ -702,8 +568,8 @@ input.campo-erro,select.campo-erro,textarea.campo-erro{
   <div class="card" id="c4">
     <div class="ch" onclick="tog('c4')"><span class="cnum">04</span><span class="ctit">Dados do Processo e Competência</span><span class="cst pend" id="s4">Pendente</span><span class="cch">▾</span></div>
     <div class="cb">
-      <div class="fr"><div class="fg"><label class="fl">Tribunal / Vara / Juízo <span class="req">*</span></label><input type="text" id="p_vara" placeholder="Ex: 3ª Vara Cível — Comarca de SP/SP" oninput="upd()"></div><div class="fg"><label class="fl">Rito processual <span class="req">*</span></label><select id="p_rito" onchange="upd()"><option value="">Selecione</option><option>Procedimento Comum (CPC/2015, art. 318)</option><option>Juizado Especial Cível — JEC (Lei 9.099/1995)</option><option>Juizado Especial Federal — JEF (Lei 10.259/2001)</option><option>Execução de Título Extrajudicial (CPC/2015, art. 824)</option><option>Cumprimento de Sentença (CPC/2015, art. 513)</option><option>Especial — Família (CPC/2015, art. 693)</option><option>Especial — Despejo (Lei 8.245/1991)</option><option>Mandado de Segurança (Lei 12.016/2009)</option><option>Rito Ordinário Trabalhista (CLT, art. 840)</option><option>Rito Sumaríssimo Trabalhista (CLT, art. 852-A)</option></select></div></div>
-      <div class="fr f3"><div class="fg"><label class="fl">Valor da causa (R$) <span class="req">*</span></label><input type="text" id="p_valor" placeholder="15.000,00" oninput="upd()"><span class="fh">CPC/2015, art. 292</span></div><div class="fg"><label class="fl">Data dos fatos</label><input type="date" id="p_data"></div><div class="fg"><label class="fl">Prazo prescricional</label><input type="text" id="p_presc" readonly><span class="fh">Preenchido pela área</span></div></div>
+      <div class="fr"><div class="fg"><label class="fl">Número da Vara / Juízo <span class="req">*</span></label><input type="text" id="p_vara" placeholder="Ex: 3ª Vara de Família" oninput="upd()"><span class="fh">Somente nº e tipo da vara — comarca vem do Card 03</span></div><div class="fg"><label class="fl">Rito processual <span class="req">*</span></label><select id="p_rito" onchange="upd()"><option value="">Selecione</option><option>Procedimento Comum (CPC/2015, art. 318)</option><option>Juizado Especial Cível — JEC (Lei 9.099/1995)</option><option>Juizado Especial Federal — JEF (Lei 10.259/2001)</option><option>Execução de Título Extrajudicial (CPC/2015, art. 824)</option><option>Cumprimento de Sentença (CPC/2015, art. 513)</option><option>Especial — Família (CPC/2015, art. 693)</option><option>Especial — Despejo (Lei 8.245/1991)</option><option>Mandado de Segurança (Lei 12.016/2009)</option><option>Rito Ordinário Trabalhista (CLT, art. 840)</option><option>Rito Sumaríssimo Trabalhista (CLT, art. 852-A)</option></select></div></div>
+      <div class="fr f3"><div class="fg"><label class="fl">Valor da causa (R$) <span class="req">*</span></label><input type="text" id="p_valor" placeholder="15.000,00" oninput="upd()"><span class="fh">CPC/2015, art. 292 — use valor real ou estimado</span></div><div class="fg"><label class="fl">Data dos fatos</label><input type="date" id="p_data"></div><div class="fg"><label class="fl">Prazo prescricional</label><input type="text" id="p_presc" readonly><span class="fh">Preenchido pela área</span></div></div>
       <div class="fr"><div class="fg"><label class="fl">Gratuidade de Justiça?</label><select id="p_grat"><option value="nao">Não requerida</option><option value="sim">Sim — CPC/2015, art. 98</option></select></div><div class="fg"><label class="fl">Tutela de urgência?</label><select id="p_tutela"><option value="nao">Não requerida</option><option value="antecipada">Tutela Antecipada — CPC/2015, art. 300</option><option value="cautelar">Tutela Cautelar — CPC/2015, art. 305</option><option value="evidencia">Tutela da Evidência — CPC/2015, art. 311</option></select></div></div>
       <div class="fr"><div class="fg"><label class="fl">Fundamento da urgência <span class="opt">(se requerida)</span></label><input type="text" id="p_urg" placeholder="Ex: risco de dano irreparável; periculum in mora..."></div><div class="fg"><label class="fl">Audiência de conciliação (CPC/2015, art. 334)</label><select id="p_aud"><option value="sim">Autor não se opõe</option><option value="nao">Autor manifesta desinteresse (art. 334, §4º, I)</option></select></div></div>
     </div>
@@ -719,7 +585,11 @@ input.campo-erro,select.campo-erro,textarea.campo-erro{
   <div class="card" id="c6">
     <div class="ch" onclick="tog('c6')"><span class="cnum">06</span><span class="ctit">Exposição dos Fatos</span><span class="cst pend" id="s6">Pendente</span><span class="cch">▾</span></div>
     <div class="cb">
-      <div class="fr f1"><div class="fg"><label class="fl">Narração cronológica dos fatos <span class="req">*</span></label><textarea id="f_fatos" rows="8" placeholder="Descreva em ordem cronológica: quando ocorreram os fatos, o que aconteceu exatamente, a conduta do réu, os danos sofridos e o nexo de causalidade.&#10;&#10;Seja preciso com datas, valores e eventos. Quanto mais detalhes, mais fundamentada será a petição." oninput="upd();chCt();schedSummary()"></textarea><span class="fh" id="chct">0 caracteres</span></div></div>
+      <div class="notice" style="margin-bottom:.7rem;padding:.5rem .75rem;font-size:.68rem">
+        <div class="nbadge" style="font-size:.45rem">Dica</div>
+        <span><strong>Escreva os fatos em linguagem simples</strong> — o sistema converte automaticamente para linguagem jurídica formal. Informe datas, valores, o que aconteceu e os danos sofridos.</span>
+      </div>
+      <div class="fr f1"><div class="fg"><label class="fl">Narração dos fatos <span class="req">*</span></label><textarea id="f_fatos" rows="8" placeholder="Descreva o que aconteceu: quando, como, o que fez o réu, quais danos você sofreu.&#10;&#10;Exemplo: 'Em janeiro de 2024, o marido passou a xingar e humilhar a autora diariamente. O relacionamento chegou ao fim e o casal decidiu se separar. Não há bens em comum. Existem dois filhos menores: Pedro (8 anos) e Ana (5 anos).'&#10;&#10;Escreva da forma que preferir — o sistema formaliza o texto automaticamente." oninput="upd();chCt();schedSummary()"></textarea><span class="fh" id="chct">0 caracteres — mínimo 100</span></div></div>
       <div class="fr f1"><div class="fg"><label class="fl">Tentativas extrajudiciais <span class="opt">(se houver)</span></label><textarea id="f_tent" rows="3" placeholder="Ex: Reclamação em [data], protocolo nº ___. Notificação enviada em [data]. Ré não respondeu..."></textarea></div></div>
       <div class="fr f1"><div class="fg"><label class="fl">Documentos que o autor possui</label><input type="text" id="f_docs" placeholder="Ex: contrato, notas fiscais, e-mails, laudo médico, boletim de ocorrência..."><span class="fh">Liste apenas o que existe — não serão inventadas provas</span></div></div>
     </div>
@@ -783,7 +653,7 @@ input.campo-erro,select.campo-erro,textarea.campo-erro{
   <div class="genbar">
     <div class="geninner">
       <button class="bgen" id="btnGen" onclick="generate()">⚖ Gerar com Precisão Máxima</button>
-      <div class="gennote"><strong>Pipeline automático:</strong><br>① Validação + campos específicos<br>② Geração com artigos verificados<br>③ Revisão crítica automática<br>④ Checklist pré-protocolo</div>
+      <div class="gennote"><strong>Pipeline automático:</strong><br>① Validação + qualificação correta das partes<br>② Geração com artigos verificados<br>③ Revisão crítica automática<br>④ Checklist pré-protocolo</div>
     </div>
   </div>
 
@@ -793,7 +663,7 @@ input.campo-erro,select.campo-erro,textarea.campo-erro{
     <div class="lt">Processando...</div>
     <div class="ls" id="ldSub">Iniciando</div>
     <div class="phases">
-      <div class="phase" id="ph0"><span class="pico">📋</span><span class="plbl">Etapa 1 — Validando dados e campos da área</span></div>
+      <div class="phase" id="ph0"><span class="pico">📋</span><span class="plbl">Etapa 1 — Validando dados e qualificação</span></div>
       <div class="phase" id="ph1"><span class="pico">⚖</span><span class="plbl">Etapa 2 — Gerando com artigos verificados</span></div>
       <div class="phase" id="ph2"><span class="pico">🔍</span><span class="plbl">Etapa 3 — Revisão crítica automática</span></div>
       <div class="phase" id="ph3"><span class="pico">✅</span><span class="plbl">Etapa 4 — Gerando checklist pré-protocolo</span></div>
@@ -827,26 +697,25 @@ input.campo-erro,select.campo-erro,textarea.campo-erro{
   </div>
 </main>
 </div>
-
-</div><!-- appShell -->
+</div>
 
 <!-- EXPORT MODAL -->
 <div class="modal-bg" id="exportModal">
   <div class="modal">
     <div class="modal-title">Exportar Documento</div>
-    <div class="modal-sub">Escolha o formato para download do documento gerado.</div>
+    <div class="modal-sub">Escolha o formato para download.</div>
     <div class="modal-btns">
-      <div class="mbt" onclick="doPDF()">
-        <div class="mbt-ico">📄</div>
-        <div><div class="mbt-title">Baixar em PDF</div><div class="mbt-desc">Arquivo pronto para protocolo digital ou impressão</div></div>
-      </div>
-      <div class="mbt" onclick="doWord()">
-        <div class="mbt-ico">📝</div>
-        <div><div class="mbt-title">Baixar em Word (.docx)</div><div class="mbt-desc">Editável no Microsoft Word ou Google Docs</div></div>
-      </div>
+      <div class="mbt" onclick="doPDF()"><div class="mbt-ico">📄</div><div><div class="mbt-title">Baixar em PDF</div><div class="mbt-desc">Abre janela de impressão — salve como PDF</div></div></div>
+      <div class="mbt" onclick="doWord()"><div class="mbt-ico">📝</div><div><div class="mbt-title">Baixar em Word (.docx)</div><div class="mbt-desc">Arquivo editável para Word ou Google Docs</div></div></div>
     </div>
     <button class="modal-cancel" onclick="closeModal()">Cancelar</button>
   </div>
+</div>
+
+<!-- Export overlay -->
+<div class="export-overlay" id="exportOverlay">
+  <div class="lring"></div>
+  <div class="export-msg" id="exportMsg">Preparando documento...</div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -870,6 +739,8 @@ const ARTIGOS={
   indb_trib:['CTN, art. 165','CTN, art. 166','CTN, art. 168','CTN, art. 169','CF/88, art. 150, §6º'],
   ms:['CF/88, art. 5º, LXIX','Lei 12.016/2009, art. 1º','Lei 12.016/2009, art. 7º','Lei 12.016/2009, art. 23'],
   erro_med:['CC/2002, art. 186','CC/2002, art. 927','CC/2002, art. 951','CDC, art. 14, §4º','CF/88, art. 196'],
+  divorcio:['CC/2002, art. 1.571','CC/2002, art. 1.572','CC/2002, art. 1.573','CC/2002, art. 1.574','CC/2002, art. 1.575','CC/2002, art. 1.576','EC 66/2010','CF/88, art. 226, §6º','CPC/2015, art. 693'],
+  alimentos:['CC/2002, art. 1.694','CC/2002, art. 1.695','CC/2002, art. 1.696','CC/2002, art. 1.699','CC/2002, art. 1.700','Lei 5.478/1968, art. 4º','CF/88, art. 229'],
   default:['CC/2002, art. 186','CC/2002, art. 927','CPC/2015, art. 318','CF/88, art. 5º, XXXV']
 };
 
@@ -878,12 +749,12 @@ const ARTIGOS={
 // ══════════════════════
 const SUGESTOES={
   negativacao:{
-    funds:['Art. 6º do CDC — direitos básicos do consumidor','Art. 14 do CDC — fato do serviço','Dano moral presumido (in re ipsa)','Responsabilidade objetiva (CC/2002, art. 927, §único)','Inversão do ônus da prova (CDC, art. 6º, VIII)'],
-    peds:['Retirada imediata do nome dos cadastros restritivos','Indenização por dano moral — não inferior a R$ ___','Tutela de urgência para retirada cautelar do apontamento','Condenação em custas e honorários advocatícios (CPC/2015, art. 85)']
+    funds:['Art. 6º do CDC — direitos básicos do consumidor','Dano moral presumido (in re ipsa)','Responsabilidade objetiva (CC/2002, art. 927, §único)','Inversão do ônus da prova (CDC, art. 6º, VIII)'],
+    peds:['Retirada imediata do nome dos cadastros restritivos (SPC/Serasa)','Indenização por dano moral — não inferior a R$ ___','Tutela de urgência para retirada cautelar imediata do apontamento','Condenação em custas e honorários advocatícios (CPC/2015, art. 85)']
   },
   plano:{
     funds:['Cobertura obrigatória — Rol ANS vigente','Vedação de exclusão de cobertura em urgência/emergência (Lei 9.656/1998, art. 35-C)','Dano moral por negativa abusiva de cobertura','Tutela de urgência — risco de dano irreparável à saúde'],
-    peds:['Autorização imediata do procedimento/tratamento negado','Tutela antecipada para liberação imediata','Indenização por dano moral','Condenação ao pagamento das despesas médicas causadas pela negativa','Condenação em custas e honorários']
+    peds:['Autorização imediata do procedimento/tratamento negado','Tutela antecipada para liberação imediata do procedimento','Indenização por dano moral','Condenação ao pagamento das despesas médicas causadas pela negativa','Condenação em custas e honorários']
   },
   trab_geral:{
     funds:['Verbas rescisórias não quitadas (CLT, art. 477)','FGTS + multa de 40% (CF/88, art. 7º, III)','Horas extras com adicional de 50% (CLT, art. 59)','13º salário proporcional (Lei 4.090/1962)','Férias + 1/3 constitucionais (CF/88, art. 7º, XVII)'],
@@ -902,12 +773,12 @@ const SUGESTOES={
     peds:['Concessão da aposentadoria por incapacidade permanente','Pagamento das parcelas atrasadas desde o requerimento administrativo (DIB)','Correção monetária e juros moratórios sobre as parcelas vencidas','Condenação em honorários (CPC/2015, art. 85)']
   },
   divorcio:{
-    funds:['Direito potestativo ao divórcio — EC 66/2010','Partilha de bens conforme regime adotado','Alimentos transitórios se houver necessidade','Guarda compartilhada — Lei 13.058/2014'],
-    peds:['Dissolução do vínculo conjugal com decretação do divórcio','Partilha igualitária dos bens comuns','Fixação de alimentos — se aplicável','Regulamentação da guarda e visitação dos filhos menores']
+    funds:['Direito potestativo ao divórcio — EC 66/2010 e CF/88, art. 226, §6º','Partilha de bens conforme regime adotado — CC/2002, arts. 1.571 e ss.','Guarda compartilhada — Lei 13.058/2014','Alimentos transitórios se houver necessidade'],
+    peds:['Decretação do divórcio com dissolução do vínculo conjugal','Partilha igualitária dos bens comuns','Regulamentação da guarda e visitação dos filhos menores (se houver)','Fixação de alimentos (se aplicável)','Condenação em custas e honorários']
   },
   alimentos:{
-    funds:['Obrigação alimentar — CC/2002, art. 1.694','Binômio necessidade-possibilidade','Alimentos provisionais — Lei 5.478/1968, art. 4º','Prisão civil em caso de inadimplemento — CF/88, art. 5º, LXVII'],
-    peds:['Fixação de alimentos no valor de R$ ___ mensais','Tutela de urgência para alimentos provisionais imediatos','Desconto em folha de pagamento do alimentante','Multa por atraso no pagamento']
+    funds:['Obrigação alimentar — CC/2002, art. 1.694','Binômio necessidade-possibilidade — CC/2002, art. 1.695','Alimentos provisionais — Lei 5.478/1968, art. 4º','Responsabilidade dos pais — CF/88, art. 229'],
+    peds:['Fixação de alimentos no valor de R$ ___ mensais','Tutela de urgência para alimentos provisionais imediatos','Desconto em folha de pagamento do alimentante','Citação do réu para responder a ação']
   }
 };
 
@@ -937,26 +808,27 @@ const AF={
   ]},
   divorcio:{title:'Informações sobre o Divórcio',fields:[
     {id:'af_cas',label:'Data do casamento',type:'date',req:true},
-    {id:'af_reg',label:'Regime de bens',type:'text',placeholder:'Ex: comunhão parcial, separação total',req:true},
-    {id:'af_tipo_div',label:'Divórcio consensual ou litigioso?',type:'text',placeholder:'Ex: litigioso — cônjuge recusa',req:true},
-    {id:'af_filhos_div',label:'Filhos menores? Nomes e idades',type:'text',placeholder:'Ex: Pedro, 8 anos; Ana, 5 anos',req:false},
+    {id:'af_reg',label:'Regime de bens',type:'text',placeholder:'Ex: comunhão parcial de bens',req:true},
+    {id:'af_tipo_div',label:'Tipo: consensual ou litigioso?',type:'text',placeholder:'Consensual (ambos concordam) ou Litigioso (um se opõe)',req:true},
+    {id:'af_bens_div',label:'Há bens a partilhar? Quais?',type:'text',placeholder:'Ex: Não há bens / Imóvel na Rua X, automóvel placa Y',req:true},
+    {id:'af_filhos_div',label:'Filhos menores? Nomes e idades',type:'text',placeholder:'Ex: Pedro, 8 anos; Ana, 5 anos / Não há filhos',req:true},
   ]},
   negativacao:{title:'Informações sobre a Negativação',fields:[
     {id:'af_orgao',label:'Órgão de proteção (SPC, Serasa...)',type:'text',placeholder:'Ex: Serasa Experian',req:true},
     {id:'af_val_neg',label:'Valor da dívida negativada (R$)',type:'text',placeholder:'Ex: 2.350,00',req:true},
     {id:'af_orig_neg',label:'Origem da dívida (conforme consta)',type:'text',placeholder:'Ex: suposto débito de empréstimo nº 123',req:true},
-    {id:'af_rel_neg',label:'Havia relação contratual com o réu?',type:'text',placeholder:'Ex: Não houve nenhum contrato',req:true},
+    {id:'af_rel_neg',label:'Havia relação contratual com o réu?',type:'text',placeholder:'Ex: Não houve nenhum contrato celebrado',req:true},
   ]},
   plano:{title:'Informações sobre o Plano de Saúde',fields:[
     {id:'af_plano_nm',label:'Nome do plano / operadora',type:'text',placeholder:'Ex: Bradesco Saúde; Unimed; Amil',req:true},
-    {id:'af_proc_neg',label:'Procedimento / tratamento negado',type:'text',placeholder:'Ex: cirurgia, quimioterapia, internação',req:true},
+    {id:'af_proc_neg',label:'Procedimento / tratamento negado',type:'text',placeholder:'Ex: cirurgia, quimioterapia, internação UTI',req:true},
     {id:'af_cid_plano',label:'CID / diagnóstico médico',type:'text',placeholder:'Ex: CID C50 — neoplasia mamária',req:true},
-    {id:'af_mot_neg',label:'Fundamento da negativa pelo plano',type:'text',placeholder:'Ex: "procedimento não coberto"',req:true},
+    {id:'af_mot_neg',label:'Fundamento da negativa pelo plano',type:'text',placeholder:'Ex: "procedimento não coberto pelo contrato"',req:true},
   ]},
   apo_inv:{title:'Informações para Aposentadoria por Invalidez',fields:[
     {id:'af_nit',label:'NIT / PIS / PASEP do segurado',type:'text',placeholder:'Número de inscrição no INSS',req:true},
     {id:'af_doenca_p',label:'Doença / incapacidade / CID',type:'text',placeholder:'Ex: hérnia lombar — CID M51.1',req:true},
-    {id:'af_pericia',label:'Realizou perícia no INSS? Resultado?',type:'text',placeholder:'Ex: Sim — indeferido em [data]',req:true},
+    {id:'af_pericia',label:'Realizou perícia no INSS? Resultado?',type:'text',placeholder:'Ex: Sim — indeferido em dd/mm/aaaa',req:true},
     {id:'af_nb',label:'Número do benefício / NB (se houver)',type:'text',placeholder:'Ex: NB 123.456.789-0',req:false},
   ]},
   loas:{title:'Informações para BPC/LOAS',fields:[
@@ -989,8 +861,21 @@ const CL={
     {t:'<strong>Contrato / apólice do plano de saúde</strong> — cláusulas de cobertura',o:true},
     {t:'<strong>Solicitação médica e negativa formal</strong> do plano (carta, e-mail, portal)',o:true},
     {t:'<strong>Laudo médico</strong> com CID e justificativa de necessidade',o:true},
-    {t:'Verificar Rol de Procedimentos ANS atualizados',o:false},
+    {t:'Verificar Rol de Procedimentos ANS atualizado',o:false},
     {t:'Se urgência/emergência: verificar Lei 9.656/1998, art. 35-C',o:false},
+  ],
+  divorcio:[
+    {t:'<strong>Certidão de casamento</strong> — original ou cópia autenticada',o:true},
+    {t:'<strong>Documentos dos bens</strong> a partilhar (escritura, CRLV, extrato de conta)',o:false},
+    {t:'<strong>Certidão de nascimento dos filhos menores</strong>',o:false},
+    {t:'Verificar regime de bens no cartório de registro de imóveis',o:true},
+    {t:'Se litigioso: confirmar fundamento do art. 1.572 do CC/2002',o:false},
+  ],
+  alimentos:[
+    {t:'<strong>Certidão de nascimento</strong> do alimentando',o:true},
+    {t:'<strong>Comprovante de renda</strong> do alimentante (holerite, IR, CNIS)',o:true},
+    {t:'<strong>Comprovante de despesas</strong> do alimentando (escola, saúde, moradia)',o:true},
+    {t:'Verificar se há acordo extrajudicial anterior',o:false},
   ],
   apo_inv:[
     {t:'<strong>Carta de indeferimento do INSS</strong> com número do NB e fundamento',o:true},
@@ -1018,12 +903,70 @@ let SA='',SL='',SP='',SK='',SR='',DOC='peticao',pedN=0;
 let _summaryTimer=null;
 
 // ══════════════════════
+// GENDER DETECTION
+// ══════════════════════
+// Terminations that strongly indicate feminine
+const femEndings=['a','iane','iane','iana','ine','eia','eia','ela'];
+
+function detectGender(){
+  const nome=vEl('a_nome').trim();
+  if(!nome)return;
+  const sexEl=gEl('a_sexo');
+  if(sexEl.value)return; // don't override manual selection
+  const first=nome.split(' ')[0].toLowerCase();
+  // Common feminine endings
+  if(/([aáâãà]|iane|iana|ine|eia|ela|isa|issa|ícia|ice|ize|ize|iene|iene)$/.test(first)){
+    sexEl.value='F';
+  } else if(/(o|os|or|im|ão|on|el|er|eu|eus|us|to|do|ro|lo|no)$/.test(first)){
+    sexEl.value='M';
+  }
+}
+
+// Returns gendered forms based on sex field
+function G(m,f){
+  const s=vEl('a_sexo')||'M';
+  return s==='F'?f:m;
+}
+
+// Fix nationality with gender
+function getNac(){
+  const nac=vEl('a_nac');
+  const s=vEl('a_sexo')||'M';
+  if(nac==='brasileiro')return s==='F'?'brasileira':'brasileiro';
+  if(nac==='brasileiro naturalizado')return s==='F'?'brasileira naturalizada':'brasileiro naturalizado';
+  return s==='F'?'estrangeira':'estrangeiro';
+}
+
+// Fix estado civil with gender
+function getEC(){
+  const ec=vEl('a_ec');
+  if(!ec)return '';
+  const s=vEl('a_sexo')||'M';
+  return ec.replace('(a)',s==='F'?'a':'o');
+}
+
+// Get réu gender pronoun
+function getReuGenero(){
+  const tipo=vEl('r_tipo');
+  if(tipo==='pf_f')return'F';
+  if(tipo==='pf_m')return'M';
+  return'N'; // neutro (PJ/pub)
+}
+
+function RG(m,f,n){
+  const g=getReuGenero();
+  if(g==='F')return f;
+  if(g==='N')return n||m;
+  return m;
+}
+
+// ══════════════════════
 // WELCOME SCREEN
 // ══════════════════════
 let wsSelectedArea=null;
 
 function wsSelect(card,area,lei,rito,presc){
-  document.querySelectorAll('.ws-card').forEach(c=>{c.classList.remove('selected');c.querySelector('.wc-ico').style.filter='';});
+  document.querySelectorAll('.ws-card').forEach(c=>c.classList.remove('selected'));
   card.classList.add('selected');
   wsSelectedArea={area,lei,rito,presc,key:card.dataset.key};
   gEl('wsBtnIniciar').disabled=false;
@@ -1037,7 +980,6 @@ function wsIniciar(){
   setTimeout(()=>{
     gEl('welcomeScreen').style.display='none';
     gEl('appShell').style.display='block';
-    // Activate the area in sidebar
     const btn=document.querySelector(`.ab[data-key="${wsSelectedArea.key}"]`);
     if(btn){selA(btn);}
     else{
@@ -1045,7 +987,6 @@ function wsIniciar(){
       document.getElementById('p_presc').value=SP;
       renderAF(SK);showAutoSuggestions(SK);upd();
     }
-    gEl('appShell').style.animation='wsIn .4s ease';
   },300);
 }
 
@@ -1066,7 +1007,7 @@ function switchDoc(type,btn){
   DOC=type;
   document.querySelectorAll('.dtab').forEach(t=>t.classList.remove('on'));
   btn.classList.add('on');
-  const labels={peticao:['LexForge PRO v4 · Petição Inicial · CPC/2015','Gerador de Petição Inicial'],contestacao:['LexForge PRO v4 · Contestação','Gerador de Contestação'],apelacao:['LexForge PRO v4 · Recurso de Apelação','Gerador de Recurso de Apelação'],agravo:['LexForge PRO v4 · Agravo de Instrumento','Gerador de Agravo de Instrumento']};
+  const labels={peticao:['LexForge PRO v5 · Petição Inicial · CPC/2015','Gerador de Petição Inicial'],contestacao:['LexForge PRO v5 · Contestação','Gerador de Contestação'],apelacao:['LexForge PRO v5 · Recurso de Apelação','Gerador de Recurso de Apelação'],agravo:['LexForge PRO v5 · Agravo de Instrumento','Gerador de Agravo de Instrumento']};
   const l=labels[type]||labels.peticao;
   document.getElementById('docTypeLabel').textContent=l[0];
   document.getElementById('docTitle').textContent=l[1];
@@ -1091,9 +1032,7 @@ function selA(btn){
   document.getElementById('atTxt').textContent=SA;
   document.getElementById('p_presc').value=SP;
   if(SR&&!document.getElementById('p_rito').value)document.getElementById('p_rito').value=SR;
-  renderAF(SK);
-  showAutoSuggestions(SK);
-  upd();
+  renderAF(SK);showAutoSuggestions(SK);upd();
 }
 
 // ══════════════════════
@@ -1104,8 +1043,8 @@ function showAutoSuggestions(key){
   const panel=gEl('autoPanel');
   if(!s){panel.classList.remove('show');return;}
   const fundsEl=gEl('autoFunds');const pedsEl=gEl('autoPeds');
-  fundsEl.innerHTML=s.funds.map((f,i)=>`<div class="auto-chip" data-type="fund" data-val="${f}" data-idx="${i}" onclick="applyChip(this)">${f}</div>`).join('');
-  pedsEl.innerHTML=s.peds.map((p,i)=>`<div class="auto-chip" data-type="ped" data-val="${p}" data-idx="${i}" onclick="applyChip(this)">${p}</div>`).join('');
+  fundsEl.innerHTML=s.funds.map((f,i)=>`<div class="auto-chip" data-type="fund" data-val="${f}" onclick="applyChip(this)">${f}</div>`).join('');
+  pedsEl.innerHTML=s.peds.map((p,i)=>`<div class="auto-chip" data-type="ped" data-val="${p}" onclick="applyChip(this)">${p}</div>`).join('');
   panel.classList.add('show');
 }
 
@@ -1116,16 +1055,10 @@ function applyChip(el){
     const tags=document.querySelectorAll('#fundGrid .tag');
     let found=false;
     tags.forEach(t=>{if(t.textContent.toLowerCase().includes(val.toLowerCase().split('(')[0].trim())){t.classList.add('on');found=true;}});
-    if(!found){
-      const ex=gEl('f_extra');
-      ex.value=(ex.value?ex.value+'; ':'')+val;
-    }
-    el.classList.add('applied');el.innerHTML='✓ '+val;
-    showToast('✓ Fundamento aplicado');
+    if(!found){const ex=gEl('f_extra');ex.value=(ex.value?ex.value+'; ':'')+val;}
+    el.classList.add('applied');el.innerHTML='✓ '+val;showToast('✓ Fundamento aplicado');
   } else if(type==='ped'){
-    addPWithText(val);
-    el.classList.add('applied');el.innerHTML='✓ '+val;
-    showToast('✓ Pedido adicionado');
+    addPWithText(val);el.classList.add('applied');el.innerHTML='✓ '+val;showToast('✓ Pedido adicionado');
   }
   upd();
 }
@@ -1136,7 +1069,7 @@ function applyAllSuggestions(){
 }
 
 // ══════════════════════
-// AI SUMMARY (opcional — só com API key)
+// AI SUMMARY
 // ══════════════════════
 function schedSummary(){
   clearTimeout(_summaryTimer);
@@ -1170,13 +1103,10 @@ function renderAF(k){
   if(!def){
     wrap.innerHTML=`<p style="font-size:.72rem;color:var(--t3);font-style:italic">✓ Sem campos adicionais obrigatórios para esta área. Preencha os fatos com detalhes específicos.</p>`;
     if(s5){s5.textContent='Sem campos extras';s5.className='cst opt';}
-    // Remove alerta de campos específicos se existir
     const old=document.getElementById('af-alert');if(old)old.remove();
     return;
   }
-  // Sempre abrir card 05 quando há campos obrigatórios
   if(card5){card5.classList.add('open');card5.classList.add('tem-campos-pendentes');}
-
   let h=`<div class="af-box" id="afBox">`;
   h+=`<div class="af-title">⚙ Campos Específicos — ${def.title}</div>`;
   for(let i=0;i<def.fields.length;i+=2){
@@ -1189,18 +1119,13 @@ function renderAF(k){
   h+=`</div>`;
   wrap.innerHTML=h;
   wrap.querySelectorAll('input,textarea').forEach(el=>el.addEventListener('input',upd));
-  if(s5){s5.textContent='⚠ Preencher';s5.className='cst';}
-  if(s5)s5.style.cssText='font-size:.62rem;color:#e0a020;font-weight:600;';
-
-  // Adicionar alerta visual no topo do card 05
+  if(s5){s5.textContent='⚠ Preencher';s5.style.cssText='font-size:.62rem;color:#e0a020;font-weight:600;';}
   const old=document.getElementById('af-alert');if(old)old.remove();
   const alert=document.createElement('div');
   alert.id='af-alert';
   alert.style.cssText='background:rgba(224,160,32,.08);border:1px solid rgba(224,160,32,.3);border-left:3px solid #c0a020;padding:.5rem .85rem;margin-bottom:.7rem;font-size:.72rem;color:#d4b050;display:flex;align-items:center;gap:.5rem;';
   alert.innerHTML=`<span style="font-size:1rem">⚠️</span><span><strong>Preencha os campos abaixo antes de gerar.</strong> São obrigatórios para esta área.</span>`;
   wrap.insertBefore(alert,wrap.firstChild);
-
-  // Scroll suave até o card 05
   setTimeout(()=>card5.scrollIntoView({behavior:'smooth',block:'nearest'}),80);
 }
 
@@ -1222,21 +1147,11 @@ function validAF(){
     const el=document.getElementById(f.id);
     if(!el||!el.value.trim()){
       m.push(f.label+' (campo específico — Card 05)');
-      // marca vermelho
       if(el){
         el.classList.add('campo-erro');
         const fg=el.closest('.fg');
-        if(fg){
-          fg.classList.add('campo-erro-label');
-          if(!fg.querySelector('.campo-erro-msg')){
-            const span=document.createElement('span');
-            span.className='campo-erro-msg';
-            span.textContent='⚠ Obrigatório';
-            fg.appendChild(span);
-          }
-        }
+        if(fg){fg.classList.add('campo-erro-label');if(!fg.querySelector('.campo-erro-msg')){const span=document.createElement('span');span.className='campo-erro-msg';span.textContent='⚠ Obrigatório';fg.appendChild(span);}}
       }
-      // garante card 05 aberto
       const c5=document.getElementById('c5');
       if(c5&&!c5.classList.contains('open'))c5.classList.add('open');
     }
@@ -1249,7 +1164,7 @@ function validAF(){
 // ══════════════════════
 function tog(id){document.getElementById(id).classList.toggle('open');}
 function chkConj(){const v=document.getElementById('a_ec').value;document.getElementById('rw_conj').style.display=(v==='Casado(a)'||v==='Em união estável')?'grid':'none';}
-function chkReu(){const t=document.getElementById('r_tipo').value;document.getElementById('r_pf_f').style.display=t==='pf'?'block':'none';document.getElementById('r_pj_f').style.display=t==='pj'?'block':'none';}
+function chkReu(){const t=document.getElementById('r_tipo').value;const isPF=t==='pf_m'||t==='pf_f';document.getElementById('r_pf_f').style.display=isPF?'block':'none';document.getElementById('r_pj_f').style.display=t==='pj'?'block':'none';}
 function chCt(){const n=document.getElementById('f_fatos').value.length;const el=document.getElementById('chct');el.textContent=n+' car.'+(n>=300?' ✓':n>=100?' — mín. 300':' — insuficiente');el.style.color=n>=300?'var(--g3)':n>=100?'var(--t4)':'var(--red)';}
 const gEl=id=>document.getElementById(id);
 const vEl=id=>{const el=gEl(id);return el?el.value.trim():'';}
@@ -1266,17 +1181,12 @@ function getProvas(){return Array.from(document.querySelectorAll('#c9 .tag.on'))
 // PROGRESS
 // ══════════════════════
 function upd(){
-  // Remove erro visual ao preencher
   document.querySelectorAll('.campo-erro').forEach(el=>{
-    if(el.value&&el.value.trim()){
-      el.classList.remove('campo-erro');
-      const fg=el.closest('.fg');
-      if(fg){fg.classList.remove('campo-erro-label');const m=fg.querySelector('.campo-erro-msg');if(m)m.remove();}
-    }
+    if(el.value&&el.value.trim()){el.classList.remove('campo-erro');const fg=el.closest('.fg');if(fg){fg.classList.remove('campo-erro-label');const m=fg.querySelector('.campo-erro-msg');if(m)m.remove();}}
   });
-  const okA=!!(vEl('a_nome')&&vEl('a_cpf')&&vEl('a_ec')&&vEl('a_prof')&&vEl('a_end'));
+  const okA=!!(vEl('a_nome')&&vEl('a_cpf')&&vEl('a_ec')&&vEl('a_prof')&&vEl('a_end')&&vEl('a_sexo'));
   const okR=!!(vEl('r_nome')&&vEl('r_tipo')&&vEl('r_end'));
-  const okD=!!(vEl('adv_n')&&vEl('adv_oab'));
+  const okD=!!(vEl('adv_n')&&vEl('adv_oab')&&vEl('adv_cidade')&&vEl('adv_comarca'));
   const okP=!!(vEl('p_vara')&&vEl('p_rito')&&vEl('p_valor'));
   const okF=vEl('f_fatos').length>=100;
   const okAF=validAF().ok;
@@ -1286,24 +1196,18 @@ function upd(){
   gEl('pf').style.width=Math.round(checks.filter(Boolean).length/8*100)+'%';
   const st=(id,ok,opt)=>{if(!gEl(id))return;if(opt){gEl(id).textContent=opt;gEl(id).className='cst opt';gEl(id).style.cssText='';return;}gEl(id).textContent=ok?'✓ Completo':'Pendente';gEl(id).className='cst '+(ok?'ok':'pend');gEl(id).style.cssText='';};
   st('s1',okA);st('s2',okR);st('s3',okD);st('s4',okP);st('s6',okF);st('s8',okPed);
-  // card 05 especial
   const s5=gEl('s5');
-  if(s5){
-    const def=AF[SK];
-    if(!def){s5.textContent='Sem campos extras';s5.className='cst opt';s5.style.cssText='';}
-    else if(okAF){s5.textContent='✓ Completo';s5.className='cst ok';s5.style.cssText='';const c5=gEl('c5');if(c5)c5.classList.remove('tem-campos-pendentes');}
-    else{s5.textContent='⚠ Preencher';s5.style.cssText='font-size:.62rem;color:#e0a020;font-weight:600;';}
-  }
+  if(s5){const def=AF[SK];if(!def){s5.textContent='Sem campos extras';s5.className='cst opt';s5.style.cssText='';}else if(okAF){s5.textContent='✓ Completo';s5.className='cst ok';s5.style.cssText='';const c5=gEl('c5');if(c5)c5.classList.remove('tem-campos-pendentes');}else{s5.textContent='⚠ Preencher';s5.style.cssText='font-size:.62rem;color:#e0a020;font-weight:600;';}}
 }
 
 // ══════════════════════
-// COLLECT + PROMPT
+// COLLECT
 // ══════════════════════
 function collect(){
   return{area:SA,lei:SL,presc:SP,key:SK,doc:DOC,
-    a:{nome:vEl('a_nome'),nac:vEl('a_nac'),ec:vEl('a_ec'),prof:vEl('a_prof'),cpf:vEl('a_cpf'),rg:vEl('a_rg'),cnpj:vEl('a_cnpj'),conj:vEl('a_conj'),end:vEl('a_end'),email:vEl('a_email'),tel:vEl('a_tel')},
+    a:{nome:vEl('a_nome'),sexo:vEl('a_sexo'),nac:getNac(),ec:getEC(),prof:vEl('a_prof'),cpf:vEl('a_cpf'),rg:vEl('a_rg'),cnpj:vEl('a_cnpj'),conj:vEl('a_conj'),end:vEl('a_end'),email:vEl('a_email'),tel:vEl('a_tel')},
     r:{nome:vEl('r_nome'),tipo:vEl('r_tipo'),cpf:vEl('r_cpf'),rg:vEl('r_rg'),cnpj:vEl('r_cnpj'),rep:vEl('r_rep'),qualif:vEl('r_qualif'),end:vEl('r_end')},
-    adv:{nome:vEl('adv_n'),oab:vEl('adv_oab'),end:vEl('adv_end'),email:vEl('adv_email'),cidade:vEl('adv_cidade')||'[Cidade]'},
+    adv:{nome:vEl('adv_n'),oab:vEl('adv_oab'),end:vEl('adv_end'),email:vEl('adv_email'),cidade:vEl('adv_cidade')||'[Cidade]',comarca:vEl('adv_comarca')||'[Comarca]'},
     proc:{vara:vEl('p_vara'),rito:vEl('p_rito'),valor:vEl('p_valor'),data:vEl('p_data'),grat:vEl('p_grat'),tutela:vEl('p_tutela'),urg:vEl('p_urg'),aud:vEl('p_aud')},
     fatos:vEl('f_fatos'),tent:vEl('f_tent'),docs:vEl('f_docs'),
     af:getAFvals(),funds:getTags('fundGrid'),provas:getProvas(),peds:getPeds(),extra:vEl('f_extra'),test:vEl('p_test')
@@ -1311,129 +1215,42 @@ function collect(){
 }
 
 const docNames={peticao:'PETIÇÃO INICIAL',contestacao:'CONTESTAÇÃO',apelacao:'RECURSO DE APELAÇÃO',agravo:'AGRAVO DE INSTRUMENTO'};
-const docStructures={
-  peticao:`[SEÇÃO: ENDEREÇAMENTO]\n[SEÇÃO: QUALIFICAÇÃO DAS PARTES]\n[SEÇÃO: I — DOS FATOS]\n[SEÇÃO: II — DO DIREITO]\n[SEÇÃO: III — DOS PEDIDOS]\n[SEÇÃO: DO VALOR DA CAUSA]\n[SEÇÃO: DAS PROVAS]\n[SEÇÃO: FECHO]`,
-  contestacao:`[SEÇÃO: ENDEREÇAMENTO]\n[SEÇÃO: QUALIFICAÇÃO DAS PARTES]\n[SEÇÃO: I — PRELIMINARES]\n[SEÇÃO: II — DO MÉRITO]\n[SEÇÃO: III — DOS PEDIDOS]\n[SEÇÃO: DAS PROVAS]\n[SEÇÃO: FECHO]`,
-  apelacao:`[SEÇÃO: ENDEREÇAMENTO]\n[SEÇÃO: I — DOS FATOS PROCESSUAIS]\n[SEÇÃO: II — DA TEMPESTIVIDADE]\n[SEÇÃO: III — DAS RAZÕES DO RECURSO]\n[SEÇÃO: IV — DO PEDIDO]\n[SEÇÃO: FECHO]`,
-  agravo:`[SEÇÃO: ENDEREÇAMENTO]\n[SEÇÃO: I — DA DECISÃO AGRAVADA]\n[SEÇÃO: II — DOS FUNDAMENTOS]\n[SEÇÃO: III — DO PEDIDO LIMINAR]\n[SEÇÃO: IV — DO PEDIDO]\n[SEÇÃO: FECHO]`
-};
-
-function buildPrompt(d){
-  const dt=d.proc.data?new Date(d.proc.data+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'}):null;
-  const tm={pf:'pessoa física',pj:'pessoa jurídica de direito privado',pub:'ente público / autarquia'};
-  const arts=(ARTIGOS[d.key]||ARTIGOS.default).join('; ');
-  const aQ=[d.a.nome,d.a.nac,d.a.ec,d.a.prof,d.a.cpf?`CPF nº ${d.a.cpf}`:null,d.a.rg?`RG nº ${d.a.rg}`:null,d.a.cnpj?`CNPJ nº ${d.a.cnpj}`:null,d.a.conj?`convivente com ${d.a.conj}`:null,`residente em ${d.a.end}`,d.a.email?`e-mail: ${d.a.email}`:null].filter(Boolean).join(', ');
-  const rQ=[d.r.nome,tm[d.r.tipo]||'',d.r.cpf?`CPF nº ${d.r.cpf}`:null,d.r.cnpj?`CNPJ nº ${d.r.cnpj}`:null,d.r.rep?`representada por ${d.r.rep}`:null,d.r.qualif||null,`endereço: ${d.r.end}`].filter(Boolean).join(', ');
-  const docNm=docNames[d.doc]||'PETIÇÃO INICIAL';
-  const struct=docStructures[d.doc]||docStructures.peticao;
-  return`Você é um advogado sênior com 30 anos de experiência em ${d.area}. Redija uma ${docNm} completa, tecnicamente impecável, conforme CPC/2015 e legislação: ${d.lei}.
-
-PROIBIÇÕES ABSOLUTAS:
-1. ❌ JAMAIS invente fatos não informados
-2. ❌ JAMAIS cite artigos FORA desta lista: ${arts}
-3. ❌ JAMAIS fabrique números de processos, documentos, súmulas
-4. ❌ JAMAIS crie datas não mencionadas
-5. ❌ Campo não informado → OMITA ou escreva [a ser complementado]
-
-ARTIGOS VERIFICADOS: ${arts}; CPC/2015 art. 319 e 320; CF/88, art. 5º, XXXV${d.proc.grat==='sim'?'; CPC/2015, art. 98':''}${d.proc.tutela!=='nao'?'; CPC/2015, arts. 300–311':''}${d.funds.length?'; '+d.funds.join('; '):''}${d.extra?'; '+d.extra:''}
-
-DADOS: Área: ${d.area} | Tribunal: ${d.proc.vara} | Rito: ${d.proc.rito} | Valor: R$ ${d.proc.valor}${dt?'\nData: '+dt:''}${d.presc?'\nPrescrição: '+d.presc:''}
-Tutela: ${d.proc.tutela!=='nao'?d.proc.tutela+(d.proc.urg?' — '+d.proc.urg:''):'Não requerida'}
-AUTOR: ${aQ}
-RÉU: ${rQ}
-ADVOGADO: ${d.adv.nome}, OAB nº ${d.adv.oab}${d.adv.end?', '+d.adv.end:''}
-
-FATOS (USE LITERALMENTE):
-${d.fatos}${d.tent?'\n\nEXTRAJUDICIAL:\n'+d.tent:''}${d.docs?'\n\nDOCUMENTOS: '+d.docs:''}${d.af?'\n\nDADOS ESPECÍFICOS:\n'+d.af:''}
-
-PEDIDOS (REPRODUZA FIELMENTE):
-${d.peds.map((p,i)=>(i+1)+'. '+p).join('\n')}
-
-PROVAS: ${d.provas.join(', ')||'prova documental e demais admitidas'}${d.test?'\nTESTEMUNHAS: '+d.test:''}
-
-ESTRUTURA: ${struct}
-
-REGRAS: parágrafo com recuo 2,5cm; texto justificado; tom formal; 900–1.500 palavras; NÃO use markdown; pedidos em lista numerada; encerrar com "Nesses termos, pede deferimento."`;
-}
 
 // ══════════════════════
-// API KEY
-// ══════════════════════
-function getKey(){return(gEl('apiKeyInput')&&gEl('apiKeyInput').value.trim())||'';}
-
-function saveKey(){
-  const k=getKey();
-  const field=gEl('apiKeyInput')?.closest('.apibar-field');
-  const status=gEl('apiStatus');
-  if(!k){
-    if(status){status.textContent='— sem chave';status.className='apibar-status wait';}
-    if(field)field.classList.remove('has-key');
-    return;
-  }
-  if(k.length>20){
-    if(status){status.textContent='✓ Chave informada';status.className='apibar-status ok';}
-    if(field)field.classList.add('has-key');
-  } else {
-    if(status){status.textContent='⚠ Chave muito curta';status.className='apibar-status err';}
-    if(field)field.classList.remove('has-key');
-  }
-}
-
-function toggleKeyVis(){
-  const inp=gEl('apiKeyInput');if(!inp)return;
-  inp.type=inp.type==='password'?'text':'password';
-}
-
-function apiHeaders(){
-  const key=getKey();
-  const h={'Content-Type':'application/json','anthropic-dangerous-direct-browser-calls':'true'};
-  if(key)h['x-api-key']=key;
-  return h;
-}
-
-// ══════════════════════
-// VALIDATE — marca campos em vermelho
+// VALIDATE
 // ══════════════════════
 function clearErros(){
-  document.querySelectorAll('.campo-erro').forEach(el=>{el.classList.remove('campo-erro');});
-  document.querySelectorAll('.campo-erro-label').forEach(el=>{el.classList.remove('campo-erro-label');});
-  document.querySelectorAll('.campo-erro-msg').forEach(el=>{el.remove();});
+  document.querySelectorAll('.campo-erro').forEach(el=>el.classList.remove('campo-erro'));
+  document.querySelectorAll('.campo-erro-label').forEach(el=>el.classList.remove('campo-erro-label'));
+  document.querySelectorAll('.campo-erro-msg').forEach(el=>el.remove());
 }
 
 function markErro(id,msg){
   const el=gEl(id);if(!el)return;
   el.classList.add('campo-erro');
   const fg=el.closest('.fg');
-  if(fg){
-    fg.classList.add('campo-erro-label');
-    if(!fg.querySelector('.campo-erro-msg')){
-      const span=document.createElement('span');
-      span.className='campo-erro-msg';
-      span.textContent='⚠ '+msg;
-      fg.appendChild(span);
-    }
-  }
-  // Abre o card pai se fechado
-  const card=el.closest('.card');
-  if(card&&!card.classList.contains('open'))card.classList.add('open');
+  if(fg){fg.classList.add('campo-erro-label');if(!fg.querySelector('.campo-erro-msg')){const span=document.createElement('span');span.className='campo-erro-msg';span.textContent='⚠ '+msg;fg.appendChild(span);}}
+  const card=el.closest('.card');if(card&&!card.classList.contains('open'))card.classList.add('open');
 }
 
 function validate(){
   clearErros();
   const e=[];
   if(!SA)e.push('Selecione a área do Direito na barra lateral');
-
   if(!vEl('a_nome')){markErro('a_nome','Obrigatório');e.push('Nome completo do Autor');}
+  if(!vEl('a_sexo')){markErro('a_sexo','Obrigatório');e.push('Sexo do Autor — necessário para qualificação correta');}
   if(!vEl('a_cpf')){markErro('a_cpf','Obrigatório');e.push('CPF do Autor');}
   if(!vEl('a_ec')){markErro('a_ec','Obrigatório');e.push('Estado civil do Autor');}
   if(!vEl('a_prof')){markErro('a_prof','Obrigatório');e.push('Profissão do Autor');}
-  if(!vEl('a_end')){markErro('a_end','Obrigatório');e.push('Endereço do Autor');}
+  if(!vEl('a_end')){markErro('a_end','Obrigatório');e.push('Endereço completo do Autor — incluindo cidade e UF');}
   if(!vEl('r_nome')){markErro('r_nome','Obrigatório');e.push('Nome do Réu');}
   if(!vEl('r_tipo')){markErro('r_tipo','Obrigatório');e.push('Tipo de pessoa do Réu');}
-  if(!vEl('r_end')){markErro('r_end','Obrigatório');e.push('Endereço do Réu');}
+  if(!vEl('r_end')){markErro('r_end','Obrigatório');e.push('Endereço do Réu para citação');}
   if(!vEl('adv_n')){markErro('adv_n','Obrigatório');e.push('Nome do Advogado');}
   if(!vEl('adv_oab')){markErro('adv_oab','Obrigatório');e.push('OAB nº');}
-  if(!vEl('p_vara')){markErro('p_vara','Obrigatório');e.push('Tribunal / Vara');}
+  if(!vEl('adv_cidade')){markErro('adv_cidade','Obrigatório');e.push('Cidade da assinatura');}
+  if(!vEl('adv_comarca')){markErro('adv_comarca','Obrigatório — será usada no endereçamento');e.push('Comarca (ex: Comarca de São Paulo/SP)');}
+  if(!vEl('p_vara')){markErro('p_vara','Obrigatório');e.push('Número/tipo da Vara');}
   if(!vEl('p_rito')){markErro('p_rito','Obrigatório');e.push('Rito processual');}
   if(!vEl('p_valor')){markErro('p_valor','Obrigatório');e.push('Valor da causa');}
   const f=vEl('f_fatos');
@@ -1452,66 +1269,113 @@ function setPhase(i,state){
 }
 
 // ══════════════════════
-// GERAÇÃO LOCAL POR TEMPLATE (100% offline, sem API)
+// GERAÇÃO LOCAL (Template completo e correto)
 // ══════════════════════
+function formalizarFatos(texto){
+  // Transforma linguagem informal em formal
+  // Mantém o conteúdo, apenas formaliza expressões comuns
+  return texto
+    .replace(/\bja deu ruim\b/gi,'encontra-se irremediavelmente comprometido')
+    .replace(/\bjaá deu ruim\b/gi,'encontra-se irremediavelmente comprometido')
+    .replace(/\bdeu ruim\b/gi,'deteriorou-se completamente')
+    .replace(/\bmeu marido\b/gi,'o Requerido')
+    .replace(/\bminha esposa\b/gi,'a Requerida')
+    .replace(/\bmeu patrão\b/gi,'o empregador')
+    .replace(/\bfui demitido\b/gi,'foi demitido')
+    .replace(/\bfui demitida\b/gi,'foi demitida')
+    .replace(/\bnão pagaram\b/gi,'deixaram de quitar')
+    .replace(/\bnão pagou\b/gi,'deixou de quitar')
+    .replace(/\bxinga\b/gi,'profere ofensas e insultos contra')
+    .replace(/\bxingou\b/gi,'proferiu ofensas e insultos contra')
+    .replace(/\bhumilha\b/gi,'submete a situações vexatórias e humilhantes')
+    .replace(/\bhumilhou\b/gi,'submeteu a situações vexatórias e humilhantes')
+    .replace(/\bbateu\b/gi,'agrediu fisicamente')
+    .replace(/\bnão quis pagar\b/gi,'recusou-se a efetuar o pagamento')
+    .replace(/\bbrigamos\b/gi,'as partes entraram em conflito')
+    .replace(/\bme xingou\b/gi,'proferiu ofensas contra a Requerente')
+    .replace(/\b(a gente|a gente)\b/gi,'as partes')
+    .trim();
+}
+
+function buildQualifAutor(d){
+  // Monta qualificação jurídica correta
+  const parts=[d.a.nome, d.a.nac, d.a.ec, d.a.prof];
+  parts.push(`inscrit${d.a.sexo==='F'?'a':'o'} no CPF nº ${d.a.cpf}`);
+  if(d.a.rg) parts.push(`portador${d.a.sexo==='F'?'a':'o'} do RG nº ${d.a.rg}`);
+  if(d.a.cnpj) parts.push(`inscrit${d.a.sexo==='F'?'a':'o'} no CNPJ nº ${d.a.cnpj}`);
+  if(d.a.conj) parts.push(`convivente com ${d.a.conj}`);
+  parts.push(`residente e domiciliad${d.a.sexo==='F'?'a':'o'} em ${d.a.end}`);
+  if(d.a.email) parts.push(`e-mail: ${d.a.email}`);
+  return parts.join(', ');
+}
+
+function buildQualifReu(d){
+  const tipo=d.r.tipo;
+  const parts=[d.r.nome];
+  if(tipo==='pj'||tipo==='pub'){
+    parts.push(tipo==='pub'?'ente público':'pessoa jurídica de direito privado');
+    if(d.r.cnpj) parts.push(`inscrita no CNPJ nº ${d.r.cnpj}`);
+    if(d.r.rep) parts.push(`representada por ${d.r.rep}`);
+  } else {
+    const gen=tipo==='pf_f'?'F':'M';
+    parts.push(tipo==='pf_f'?'pessoa física':'pessoa física');
+    if(d.r.qualif) parts.push(d.r.qualif);
+    if(d.r.cpf) parts.push(`inscrit${gen==='F'?'a':'o'} no CPF nº ${d.r.cpf}`);
+    if(d.r.rg) parts.push(`portador${gen==='F'?'a':'o'} do RG nº ${d.r.rg}`);
+  }
+  parts.push(`com endereço em ${d.r.end}`);
+  return parts.join(', ');
+}
+
 function gerarTextoLocal(d){
   const hoje=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
   const arts=(ARTIGOS[d.key]||ARTIGOS.default).join('; ');
-  const tm={pf:'pessoa física',pj:'pessoa jurídica de direito privado',pub:'ente público / autarquia'};
-  const tipoReu=tm[d.r.tipo]||'pessoa jurídica';
   const tutela=d.proc.tutela!=='nao';
   const grat=d.proc.grat==='sim';
   const peds=d.peds;
   const funds=d.funds.length?d.funds:[];
-  const af=d.af?d.af.split('\n').filter(Boolean):[]; 
+  const af=d.af?d.af.split('\n').filter(Boolean):[];
 
-  // Qualificação autor
-  let qAutor=`${d.a.nome}, ${d.a.nac}, ${d.a.ec}, ${d.a.prof}, portador(a) do CPF nº ${d.a.cpf}`;
-  if(d.a.rg)qAutor+=`, RG nº ${d.a.rg}`;
-  if(d.a.conj)qAutor+=`, convivente com ${d.a.conj}`;
-  qAutor+=`, residente e domiciliado(a) em ${d.a.end}`;
-  if(d.a.email)qAutor+=`, e-mail: ${d.a.email}`;
+  const qAutor=buildQualifAutor(d);
+  const qReu=buildQualifReu(d);
 
-  // Qualificação réu
-  let qReu=`${d.r.nome}, ${tipoReu}`;
-  if(d.r.cnpj)qReu+=`, inscrito(a) no CNPJ nº ${d.r.cnpj}`;
-  if(d.r.cpf)qReu+=`, CPF nº ${d.r.cpf}`;
-  if(d.r.rep)qReu+=`, representado(a) por ${d.r.rep}`;
-  qReu+=`, com endereço em ${d.r.end}`;
+  // Pronomes corretos do autor
+  const sg=d.a.sexo==='F';
+  const ele=sg?'ela':'ele';
+  const oA=sg?'a':'o';
+  const dA=sg?'da':'do';
+  const sA=sg?'sua':'seu';
+
+  // Fatos formalizados
+  const fatosFormalizados=formalizarFatos(d.fatos);
 
   // Fundamentos adicionais
-  const fundsExtra=funds.length?`\n\nAplicam-se ainda ao caso concreto os seguintes fundamentos: ${funds.join('; ')}.`:'';
-  const extraArt=d.extra?` Igualmente aplicável ao caso: ${d.extra}.`:'';
+  const fundsExtra=funds.length?`\n\nAplicam-se ainda ao caso concreto os seguintes fundamentos jurídicos: ${funds.join('; ')}.`:'';
+  const extraArt=d.extra?` Igualmente aplicável: ${d.extra}.`:'';
+  const afTxt=af.length?`\n\nInformações complementares da área em questão: ${af.join('; ')}.`:'';
+  const docsTxt=d.docs?`\n\nO${oA} Autor${sg?'a':''} possui os seguintes documentos probatórios: ${d.docs}.`:'';
+  const tentTxt=d.tent?`\n\nAntes de recorrer ao Judiciário, ${oA} Autor${sg?'a':''} envidou esforços para solucionar a controvérsia pela via extrajudicial, consoante se demonstra: ${d.tent}. Contudo, a tentativa restou infrutífera, tornando necessária a tutela jurisdicional.`:'';
 
-  // Dados específicos da área formatados
-  const afTxt=af.length?`\n\nRelativamente aos dados específicos da área, consigna-se: ${af.join('; ')}.`:'';
-
-  // Documentos
-  const docsTxt=d.docs?`\n\nO(A) Autor(a) possui os seguintes documentos probatórios: ${d.docs}.`:'';
-
-  // Tentativas extrajudiciais
-  const tentTxt=d.tent?`\n\nAntes de recorrer ao Judiciário, o(a) Autor(a) envidou esforços para solucionar a questão pela via extrajudicial, consoante se depreende dos seguintes atos: ${d.tent}. Contudo, a tentativa restou infrutífera, tornando necessária a tutela jurisdicional.`:'';
-
-  // Provas
   const provasTxt=d.provas.join(', ')||'prova documental e demais admitidas em direito';
   const testTxt=d.test?` Rol de testemunhas: ${d.test}.`:'';
 
-  // Tutela
-  const tutelaSec=tutela?`\n\n<strong>DA TUTELA DE URGÊNCIA</strong>\n\nRequer o(a) Autor(a), com fundamento no art. 300 do CPC/2015, a concessão de tutela de urgência, haja vista a presença dos requisitos legais: probabilidade do direito (fumus boni iuris) e perigo de dano ou risco ao resultado útil do processo (periculum in mora).${d.proc.urg?` Especificamente: ${d.proc.urg}.`:''} Requer seja o pedido apreciado liminarmente, antes da citação da parte contrária.`:'';
+  const tutelaSec=tutela?`\n\nDA TUTELA DE URGÊNCIA\n\nRequer ${oA} Autor${sg?'a':''}, com fundamento no art. 300 do CPC/2015, a concessão de tutela de urgência, diante da presença dos requisitos legais: probabilidade do direito (<em>fumus boni iuris</em>) e perigo de dano ou risco ao resultado útil do processo (<em>periculum in mora</em>).${d.proc.urg?` Especificamente: ${d.proc.urg}.':''} Requer seja o pedido apreciado liminarmente, antes da citação da parte contrária.`:'';
 
-  // Gratuidade
-  const gratSec=grat?`\n\nO(A) Autor(a) declara, sob as penas da lei, que não possui condições de arcar com as custas processuais e os honorários advocatícios sem prejuízo próprio e de sua família, requerendo, por isso, a concessão dos benefícios da gratuidade da justiça, nos termos do art. 98 do CPC/2015.`:'';
+  const gratSec=grat?`\n\n${oA.toUpperCase()} Autor${sg?'a':''} declara, sob as penas da lei, que não possui condições de arcar com as custas processuais e os honorários advocatícios sem prejuízo próprio e de ${sg?'sua':'sua'} família, requerendo, por isso, a concessão dos benefícios da gratuidade da justiça, nos termos do art. 98 do CPC/2015.`:'';
 
-  // Audiência
-  const audSec=d.proc.aud==='nao'?`\n\nO(A) Autor(a) manifesta, desde já, o desinteresse na realização de audiência de conciliação ou de mediação, nos termos do art. 334, §4º, inciso I, do CPC/2015, por ser o litígio inviável de autocomposição.`:'\n\nO(A) Autor(a) não se opõe à realização de audiência de conciliação ou de mediação, conforme previsto no art. 334 do CPC/2015.';
+  const audSec=d.proc.aud==='nao'?`\n\n${oA.toUpperCase()} Autor${sg?'a':''} manifesta, desde já, o desinteresse na realização de audiência de conciliação ou de mediação, nos termos do art. 334, §4º, inciso I, do CPC/2015, por entender que a natureza do litígio inviabiliza a autocomposição.`:'\n\nO(A) Autor(a) não se opõe à realização de audiência de conciliação ou de mediação, conforme previsto no art. 334 do CPC/2015.';
+
+  // Comarca para endereçamento
+  const comarca=d.adv.comarca||'[Comarca]';
+  const vara=d.proc.vara||'[Vara]';
 
   const html=`
 <div class="dh">
   <div class="dj">Excelentíssimo(a) Senhor(a) Doutor(a) Juiz(a) de Direito</div>
-  <div class="dv">${d.proc.vara}</div>
+  <div class="dv">${vara} — ${comarca}</div>
 </div>
 
-<p>${qAutor}, por seu(sua) advogado(a) que esta subscreve, com escritório profissional no endereço indicado no rodapé${d.adv.end?` (${d.adv.end})`:''}${d.adv.email?`, e-mail ${d.adv.email}`:', onde recebe intimações'}, vem, respeitosamente, à presença de Vossa Excelência, com fundamento no art. 319 e seguintes do Código de Processo Civil (Lei 13.105/2015) e nos termos de ${arts}, propor a presente</p>
+<p>${qAutor}, por seu${sg?'sua':''} advogad${sg?'a':'o'} que esta subscreve, com escritório profissional${d.adv.end?' no endereço indicado abaixo':' cujo endereço consta da procuração'}${d.adv.email?', e-mail '+d.adv.email:', onde recebe intimações'}, vem, respeitosamente, à presença de Vossa Excelência, com fundamento nos arts. 319 e 320 do Código de Processo Civil (Lei n.º 13.105/2015) e nos termos de ${arts}, propor a presente</p>
 
 <div class="ds">PETIÇÃO INICIAL</div>
 
@@ -1519,33 +1383,35 @@ function gerarTextoLocal(d){
 
 <div class="ds">I — DOS FATOS</div>
 
-<p>${d.fatos.replace(/\n\n/g,'</p><p>').replace(/\n/g,' ')}</p>${tentTxt}${afTxt}${docsTxt}
+<p>${fatosFormalizados.replace(/\n\n/g,'</p><p>').replace(/\n/g,' ')}</p>${tentTxt}${afTxt}${docsTxt}
 
 <div class="ds">II — DO DIREITO</div>
 
-<p>A pretensão deduzida nesta exordial encontra amparo na legislação vigente, especificamente em: <strong>${arts}</strong>.${extraArt}</p>
+<p>A pretensão deduzida na presente peça exordial encontra amparo na legislação vigente, especificamente em: <strong>${arts}</strong>.${extraArt}</p>
 
-<p>Com efeito, a conduta perpetrada pelo(a) Requerido(a) configura violação às normas acima elencadas, causando ao(à) Autor(a) danos que merecem integral reparação pelo Poder Judiciário, nos termos do art. 5º, inciso XXXV, da Constituição Federal de 1988, que assegura a inafastabilidade da jurisdição.</p>${fundsExtra?`<p>${fundsExtra}</p>`:''}${tutelaSec?`<p>${tutelaSec}</p>`:''}${gratSec?`<p>${gratSec}</p>`:''}
+<p>Com efeito, a conduta perpetrada pel${getReuGenero()==='F'?'a':'o'} Requerid${getReuGenero()==='F'?'a':'o'} configura violação frontal às normas acima elencadas, causando ${oA} Autor${sg?'a':''} prejuízos que merecem integral reparação pelo Poder Judiciário, em prestígio ao princípio da inafastabilidade da jurisdição, esculpido no art. 5º, inciso XXXV, da Constituição Federal de 1988.</p>${fundsExtra?`\n\n<p>${fundsExtra}</p>`:''}${tutelaSec?`\n\n<p>${tutelaSec}</p>`:''}${gratSec?`\n\n<p>${gratSec}</p>`:''}
 
 <div class="ds">III — DOS PEDIDOS</div>
 
-<p>Diante do exposto, requer o(a) Autor(a) que Vossa Excelência se digne a:</p>
+<p>Diante do exposto, requer ${oA} Autor${sg?'a':''} que Vossa Excelência se digne a:</p>
 <ol class="pl">
 ${peds.map(p=>`<li>${p};</li>`).join('\n')}
-<li>A condenação do(a) Requerido(a) ao pagamento das custas processuais e dos honorários advocatícios, nos termos do art. 85 do CPC/2015;</li>
-<li>A produção de ${provasTxt}, especialmente ${provasTxt.split(',')[0]}, e todas as demais admitidas em direito.${testTxt}</li>
+<li>A citação ${getReuGenero()==='N'?'da empresa':'d'+RG('o','a','a')} Requerid${getReuGenero()==='F'?'a':'o'} para, querendo, contestar a presente ação no prazo legal, sob pena de revelia;</li>
+<li>A condenação ${getReuGenero()==='N'?'da empresa':'d'+RG('o','a','a')} Requerid${getReuGenero()==='F'?'a':'o'} ao pagamento das custas processuais e dos honorários advocatícios de sucumbência, nos termos do art. 85 do CPC/2015;</li>
+<li>A produção de ${provasTxt}.${testTxt}</li>
 </ol>
 
 <div class="ds">DO VALOR DA CAUSA</div>
 
-<p>Dá-se à causa o valor de <strong>R$ ${d.proc.valor}</strong>, nos termos do art. 292 do CPC/2015.</p>${audSec?`<p>${audSec}</p>`:''}
+<p>Dá-se à causa o valor de <strong>R$ ${d.proc.valor}</strong>, nos termos do art. 292 do CPC/2015.</p>${audSec?`\n\n<p>${audSec}</p>`:''}
 
 <div class="sig">
   <p class="ct" style="margin-bottom:1.8rem">Nesses termos, pede deferimento.</p>
-  <p class="ct">${d.adv.cidade||'[Cidade]'}, ${hoje}.</p>
+  <p class="ct">${d.adv.cidade}, ${hoje}.</p>
   <div class="sl"></div>
   <p class="sn">${d.adv.nome}</p>
   <p class="so">OAB nº ${d.adv.oab}</p>
+  ${d.adv.end?`<p class="so">${d.adv.end}</p>`:''}
   ${d.adv.email?`<p class="so">${d.adv.email}</p>`:''}
 </div>`;
 
@@ -1553,7 +1419,7 @@ ${peds.map(p=>`<li>${p};</li>`).join('\n')}
 }
 
 // ══════════════════════
-// GENERATE — local + API opcional
+// GENERATE
 // ══════════════════════
 async function generate(){
   const erros=validate();
@@ -1572,12 +1438,10 @@ async function generate(){
 
   const d=collect();
 
-  // ETAPA 1 — validação
-  setPhase(0,'active');gEl('ldSub').textContent='Etapa 1 — Validando dados...';
+  setPhase(0,'active');gEl('ldSub').textContent='Etapa 1 — Validando e qualificando partes...';
   await new Promise(r=>setTimeout(r,350));setPhase(0,'done');
 
-  // ETAPA 2 — geração local imediata
-  setPhase(1,'active');gEl('ldSub').textContent='Etapa 2 — Montando documento...';
+  setPhase(1,'active');gEl('ldSub').textContent='Etapa 2 — Montando documento jurídico...';
   await new Promise(r=>setTimeout(r,200));
 
   const docHtml=gerarTextoLocal(d);
@@ -1585,22 +1449,17 @@ async function generate(){
   renderDireto(docHtml,d);
   setPhase(1,'done');
 
-  // ETAPA 3 — revisão (só se tiver API key)
   setPhase(2,'active');gEl('ldSub').textContent='Etapa 3 — Revisão...';
   const key=getKey();
   if(key){
-    await reviewAuto(docHtml,d);
+    await reviewAuto(gEl('theDoc').innerText,d);
   } else {
     const panel=gEl('revPanel'),body=gEl('revBody');
     panel.classList.add('show');
-    body.innerHTML=`<div style="font-size:.72rem;color:var(--t3);padding:.3rem 0">
-      <span style="color:var(--g3)">ℹ</span> Revisão automática disponível com chave de API.
-      Sem a chave, revise manualmente os artigos citados antes de protocolar.
-    </div>`;
+    body.innerHTML=`<div style="font-size:.72rem;color:var(--t3);padding:.3rem 0"><span style="color:var(--g3)">ℹ</span> Revisão automática disponível com chave de API Anthropic. Sem a chave, revise manualmente os artigos antes de protocolar.</div>`;
   }
   setPhase(2,'done');
 
-  // ETAPA 4 — checklist
   setPhase(3,'active');gEl('ldSub').textContent='Etapa 4 — Gerando checklist...';
   await new Promise(r=>setTimeout(r,200));
   renderCL(d.key);setPhase(3,'done');
@@ -1610,9 +1469,6 @@ async function generate(){
   setTimeout(()=>gEl('outSec').scrollIntoView({behavior:'smooth'}),100);
 }
 
-// ══════════════════════
-// RENDER DIRETO (HTML já montado)
-// ══════════════════════
 function renderDireto(docHtml,d){
   gEl('outSec').classList.add('show');
   gEl('theDoc').innerHTML=docHtml;
@@ -1629,11 +1485,10 @@ async function reviewAuto(raw,d){
   panel.classList.add('show');
   body.innerHTML=`<div class="revld"><div class="rspin"></div>Analisando artigos, estrutura e qualidade...</div>`;
   const arts=(ARTIGOS[d.key]||ARTIGOS.default).join(', ');
-  const p=`Revisor jurídico sênior. Analise esta ${docNames[d.doc]||'petição'} de ${d.area} e retorne APENAS JSON válido, sem texto externo.
+  const p=`Revisor jurídico sênior. Analise esta ${docNames[d.doc]||'petição'} de ${d.area} e retorne APENAS JSON válido.
 ARTIGOS PERMITIDOS: ${arts}
-DOCUMENTO (primeiros 3500 caracteres):
-${raw.slice(0,3500)}
-JSON: {"score":0-100,"nivel":"Excelente|Bom|Adequado|Requer revisão","cpc_ok":true_ou_false,"cpc_obs":"observação","artigos_ok":true_ou_false,"artigos_obs":"artigos fora da lista ou OK","positivos":["máx 3"],"atencao":["máx 3"],"sugestoes":["máx 3"],"conclusao":"Uma frase"}`;
+DOCUMENTO (primeiros 3500 chars): ${raw.slice(0,3500)}
+JSON: {"score":0-100,"nivel":"Excelente|Bom|Adequado|Requer revisão","cpc_ok":true_ou_false,"cpc_obs":"obs","artigos_ok":true_ou_false,"artigos_obs":"obs","positivos":["máx 3"],"atencao":["máx 3"],"sugestoes":["máx 3"],"conclusao":"frase"}`;
   try{
     const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:apiHeaders(),body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,messages:[{role:'user',content:p}]})});
     if(!res.ok)throw new Error('HTTP '+res.status);
@@ -1680,24 +1535,127 @@ function toggleCL(i,total){
 }
 
 // ══════════════════════
-// EXPORT
+// API KEY
+// ══════════════════════
+function getKey(){return(gEl('apiKeyInput')&&gEl('apiKeyInput').value.trim())||'';}
+
+function saveKey(){
+  const k=getKey();
+  const field=gEl('apiKeyInput')?.closest('.apibar-field');
+  const status=gEl('apiStatus');
+  if(!k){if(status){status.textContent='— sem chave';status.className='apibar-status wait';}if(field)field.classList.remove('has-key');return;}
+  if(k.length>20){if(status){status.textContent='✓ Chave informada';status.className='apibar-status ok';}if(field)field.classList.add('has-key');}
+  else{if(status){status.textContent='⚠ Chave muito curta';status.className='apibar-status err';}if(field)field.classList.remove('has-key');}
+}
+
+function toggleKeyVis(){const inp=gEl('apiKeyInput');if(!inp)return;inp.type=inp.type==='password'?'text':'password';}
+
+function apiHeaders(){
+  const key=getKey();
+  const h={'Content-Type':'application/json','anthropic-dangerous-direct-browser-calls':'true'};
+  if(key)h['x-api-key']=key;
+  return h;
+}
+
+// ══════════════════════
+// EXPORT — FUNCIONAL
 // ══════════════════════
 function exportPDF(){openModal('pdf');}
 function exportWord(){openModal('word');}
 function openModal(t){gEl('exportModal').classList.add('show');gEl('exportModal').dataset.type=t;}
 function closeModal(){gEl('exportModal').classList.remove('show');}
-function doPDF(){closeModal();printDoc();showToast('📄 Abrindo para salvar como PDF...');}
+
+function doPDF(){
+  closeModal();
+  showToast('📄 Abrindo janela de impressão...');
+  setTimeout(()=>printDoc(),300);
+}
+
 function doWord(){
   closeModal();
-  const d=window._dat;if(!d){showToast('Gere o documento primeiro');return;}
-  const txt=gEl('theDoc').innerText;
-  const today=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
-  const docx=`MIME-Version: 1.0\nContent-Type: multipart/related; type="text/html"\n\n<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word'><head><meta charset='utf-8'><style>body{font-family:'Times New Roman',serif;font-size:12pt;line-height:2;margin:3cm 2.5cm}p{text-indent:2.5cm;text-align:justify;margin:.3rem 0}.center{text-align:center;text-indent:0}h2{font-size:11pt;font-weight:bold;text-transform:uppercase;text-align:center;border-bottom:1px solid #bbb;margin:2rem 0 .7rem}.sig{margin-top:3cm;text-align:center}.sl{width:8cm;border-top:1px solid #000;margin:.4cm auto}</style></head><body>${gEl('theDoc').innerHTML}</body></html>`;
-  const blob=new Blob([docx],{type:'application/msword'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download='lexforge_'+SK+'_'+Date.now()+'.doc';
-  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
-  showToast('📝 Documento Word baixado!');
+  const d=window._dat;
+  if(!d){showToast('⚠ Gere o documento primeiro');return;}
+
+  showExportOverlay('Preparando Word...');
+
+  try{
+    const hoje=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+    const docContent=gEl('theDoc');
+    if(!docContent){hideExportOverlay();showToast('⚠ Documento não encontrado');return;}
+
+    // Constrói HTML limpo para o Word (formato RTF-HTML compatível)
+    const innerHtml=docContent.innerHTML;
+
+    // CSS para o documento Word
+    const wordCSS=`
+      body { font-family: 'Times New Roman', Times, serif; font-size: 12pt; line-height: 2; margin: 3cm 2.5cm 3cm 3cm; color: #000; }
+      .dh { text-align: center; margin-bottom: 2.5cm; }
+      .dj { font-size: 11.5pt; font-weight: bold; text-transform: uppercase; letter-spacing: 0.07em; border-bottom: 2px solid #000; padding-bottom: 0.3cm; margin-bottom: 0.4cm; }
+      .dv { font-size: 10.5pt; color: #444; font-style: italic; }
+      .ds { font-size: 11pt; font-weight: bold; text-align: center; text-transform: uppercase; letter-spacing: 0.05em; margin: 2.5cm 0 0.7cm; border-bottom: 1px solid #bbb; padding-bottom: 0.25cm; page-break-after: avoid; }
+      p { text-indent: 2.5cm; text-align: justify; margin-bottom: 0.3cm; font-size: 12pt; }
+      p.ct { text-align: center; text-indent: 0; }
+      ol.pl { margin: 0.3cm 0 0.3cm 3.5cm; padding: 0; }
+      ol.pl li { font-size: 12pt; line-height: 2; text-align: justify; margin-bottom: 0.1cm; }
+      .sig { margin-top: 3cm; text-align: center; page-break-inside: avoid; }
+      .sl { width: 8cm; border-top: 1px solid #000; margin: 0.4cm auto; }
+      .sn { font-weight: bold; text-align: center; }
+      .so { font-style: italic; text-align: center; color: #555; font-size: 11pt; }
+      strong { font-weight: bold; }
+      em { font-style: italic; }
+    `;
+
+    const fullHtml=`<!DOCTYPE html>
+<html xmlns:o='urn:schemas-microsoft-com:office:office'
+      xmlns:w='urn:schemas-microsoft-com:office:word'
+      xmlns='http://www.w3.org/TR/REC-html40'>
+<head>
+<meta charset='UTF-8'>
+<meta name='ProgId' content='Word.Document'>
+<meta name='Generator' content='LexForge PRO v5'>
+<title>Peticao_${SK}_${Date.now()}</title>
+<!--[if gte mso 9]>
+<xml>
+  <w:WordDocument>
+    <w:View>Print</w:View>
+    <w:Zoom>100</w:Zoom>
+    <w:DoNotOptimizeForBrowser/>
+  </w:WordDocument>
+</xml>
+<![endif]-->
+<style>${wordCSS}</style>
+</head>
+<body>${innerHtml}</body>
+</html>`;
+
+    const blob=new Blob(['\ufeff'+fullHtml],{type:'application/msword;charset=utf-8'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;
+    a.download=`LexForge_${SA.split('—')[0].trim().replace(/\s+/g,'_').substring(0,30)}_${new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')}.doc`;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
+
+    hideExportOverlay();
+    showToast('📝 Word baixado com sucesso!');
+  } catch(err){
+    hideExportOverlay();
+    showToast('⚠ Erro ao gerar Word: '+err.message);
+    console.error('Word export error:',err);
+  }
+}
+
+function showExportOverlay(msg){
+  const ov=gEl('exportOverlay');
+  const emsg=gEl('exportMsg');
+  if(ov){ov.classList.add('show');}
+  if(emsg)emsg.textContent=msg||'Preparando...';
+}
+
+function hideExportOverlay(){
+  const ov=gEl('exportOverlay');
+  if(ov)ov.classList.remove('show');
 }
 
 // ══════════════════════
@@ -1705,19 +1663,55 @@ function doWord(){
 // ══════════════════════
 function copyDoc(){
   const txt=gEl('theDoc').innerText;
-  (navigator.clipboard?navigator.clipboard.writeText(txt).then(()=>showToast('✓ Documento copiado')):Promise.reject()).catch(()=>{const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);showToast('✓ Documento copiado');});
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(txt).then(()=>showToast('✓ Documento copiado')).catch(()=>copyFallback(txt));
+  } else {
+    copyFallback(txt);
+  }
+}
+
+function copyFallback(txt){
+  const ta=document.createElement('textarea');
+  ta.value=txt;ta.style.position='fixed';ta.style.left='-9999px';
+  document.body.appendChild(ta);ta.select();
+  try{document.execCommand('copy');showToast('✓ Documento copiado');}
+  catch{showToast('⚠ Não foi possível copiar');}
+  document.body.removeChild(ta);
 }
 
 function printDoc(){
   const body=gEl('theDoc').innerHTML;
-  const w=window.open('','_blank');
-  w.document.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Documento Jurídico — LexForge PRO</title><style>@page{margin:3cm 2.5cm 3cm 3cm;size:A4}body{font-family:'Times New Roman',Times,serif;font-size:12pt;color:#000;background:#fff;line-height:2}.dh{text-align:center;margin-bottom:2.5rem}.dj{font-size:11.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.07em;border-bottom:2px solid #000;padding-bottom:.28rem}.dv{font-size:10.5pt;color:#555;font-style:italic;margin-top:.3rem}.ds{font-size:11pt;font-weight:700;text-align:center;text-transform:uppercase;letter-spacing:.05em;margin:2.5rem 0 .7rem;border-bottom:1px solid #bbb;padding-bottom:.25rem;page-break-after:avoid}p{text-indent:2.5cm;text-align:justify;hyphens:auto;margin-bottom:.3rem;font-size:12pt}p.ct{text-indent:0;text-align:center}ol.pl{margin:.32rem 0 .32rem 3.5cm;padding:0}ol.pl li{font-size:12pt;line-height:2;text-align:justify}.sig{margin-top:3cm;text-align:center;page-break-inside:avoid}.sl{width:8cm;height:1px;background:#000;margin:.42rem auto}.sn{font-weight:700}.so{font-style:italic;color:#555;font-size:11pt}</style></head><body>${body}</body></html>`);
-  w.document.close();setTimeout(()=>w.print(),500);
+  const w=window.open('','_blank','width=800,height=600');
+  if(!w){showToast('⚠ Pop-up bloqueado — permita pop-ups para imprimir');return;}
+  w.document.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>LexForge PRO — Documento Jurídico</title><style>
+@page{margin:3cm 2.5cm 3cm 3cm;size:A4}
+*{box-sizing:border-box}
+body{font-family:'Times New Roman',Times,serif;font-size:12pt;color:#000;background:#fff;line-height:2}
+.dh{text-align:center;margin-bottom:2.5rem}
+.dj{font-size:11.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.07em;border-bottom:2px solid #000;padding-bottom:.28rem;margin-bottom:.38rem}
+.dv{font-size:10.5pt;color:#555;font-style:italic;margin-top:.3rem}
+.ds{font-size:11pt;font-weight:700;text-align:center;text-transform:uppercase;letter-spacing:.05em;margin:2.5rem 0 .7rem;border-bottom:1px solid #bbb;padding-bottom:.25rem;page-break-after:avoid}
+p{text-indent:2.5cm;text-align:justify;hyphens:auto;margin-bottom:.3rem;font-size:12pt}
+p.ct{text-indent:0;text-align:center}
+ol.pl{margin:.32rem 0 .32rem 3.5cm;padding:0}
+ol.pl li{font-size:12pt;line-height:2;text-align:justify;margin-bottom:.1rem}
+.sig{margin-top:3cm;text-align:center;page-break-inside:avoid}
+.sl{width:8cm;border-top:1px solid #000;margin:.42rem auto}
+.sn{font-weight:700;text-align:center}
+.so{font-style:italic;text-align:center;color:#555;font-size:11pt}
+strong{font-weight:700}em{font-style:italic}
+</style></head><body>${body}</body></html>`);
+  w.document.close();
+  w.onload=()=>{setTimeout(()=>w.print(),400);};
 }
 
 function resetAll(){if(confirm('Iniciar novo documento? Os dados serão perdidos.'))location.reload();}
 
-function showToast(msg){const t=gEl('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+function showToast(msg){
+  const t=gEl('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
 
 // INIT
 addP();upd();
