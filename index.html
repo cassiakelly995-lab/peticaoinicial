@@ -226,6 +226,9 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--k);color:var(--
 .cnum{font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.07em;background:var(--g3);color:var(--k);padding:.09rem .36rem;font-weight:500;flex-shrink:0}
 .ctit{font-size:.78rem;font-weight:600;color:var(--t1);flex:1}
 .cst{font-size:.62rem}.cst.ok{color:var(--g3)}.cst.pend{color:var(--t4)}.cst.opt{color:var(--t4);font-style:italic}
+/* Card 05 destaque quando tem campos pendentes */
+#c5.tem-campos-pendentes{border-color:rgba(224,160,32,.4);animation:card5pulse 2s ease-in-out 3;}
+@keyframes card5pulse{0%,100%{box-shadow:0 1px 3px rgba(0,0,0,.35)}50%{box-shadow:0 0 0 4px rgba(224,160,32,.15),0 4px 20px rgba(0,0,0,.3)}}
 .cch{font-size:.58rem;color:var(--t4);transition:transform .18s}
 .card:not(.open) .cch{transform:rotate(-90deg)}
 .cb{padding:.88rem;display:none}
@@ -1129,8 +1132,19 @@ async function genSummary(txt){
 // ══════════════════════
 function renderAF(k){
   const wrap=document.getElementById('afWrap'),def=AF[k],s5=document.getElementById('s5');
-  if(!def){wrap.innerHTML=`<p style="font-size:.7rem;color:var(--t3);font-style:italic">Preencha os fatos com detalhes específicos desta área. Não há campos adicionais obrigatórios.</p>`;if(s5){s5.textContent='Área selecionada';s5.className='cst opt';}return;}
-  let h=`<div class="af-box"><div class="af-title">⚙ Campos Específicos: ${def.title}</div>`;
+  const card5=document.getElementById('c5');
+  if(!def){
+    wrap.innerHTML=`<p style="font-size:.72rem;color:var(--t3);font-style:italic">✓ Sem campos adicionais obrigatórios para esta área. Preencha os fatos com detalhes específicos.</p>`;
+    if(s5){s5.textContent='Sem campos extras';s5.className='cst opt';}
+    // Remove alerta de campos específicos se existir
+    const old=document.getElementById('af-alert');if(old)old.remove();
+    return;
+  }
+  // Sempre abrir card 05 quando há campos obrigatórios
+  if(card5){card5.classList.add('open');card5.classList.add('tem-campos-pendentes');}
+
+  let h=`<div class="af-box" id="afBox">`;
+  h+=`<div class="af-title">⚙ Campos Específicos — ${def.title}</div>`;
   for(let i=0;i<def.fields.length;i+=2){
     const f1=def.fields[i],f2=def.fields[i+1];
     const isTA=f1.type==='textarea';
@@ -1138,9 +1152,22 @@ function renderAF(k){
     h+=rF(f1);if(f2&&!isTA)h+=rF(f2);
     h+=`</div>`;
   }
-  h+=`</div>`;wrap.innerHTML=h;
+  h+=`</div>`;
+  wrap.innerHTML=h;
   wrap.querySelectorAll('input,textarea').forEach(el=>el.addEventListener('input',upd));
-  if(s5){s5.textContent='Pendente';s5.className='cst pend';}
+  if(s5){s5.textContent='⚠ Preencher';s5.className='cst';}
+  if(s5)s5.style.cssText='font-size:.62rem;color:#e0a020;font-weight:600;';
+
+  // Adicionar alerta visual no topo do card 05
+  const old=document.getElementById('af-alert');if(old)old.remove();
+  const alert=document.createElement('div');
+  alert.id='af-alert';
+  alert.style.cssText='background:rgba(224,160,32,.08);border:1px solid rgba(224,160,32,.3);border-left:3px solid #c0a020;padding:.5rem .85rem;margin-bottom:.7rem;font-size:.72rem;color:#d4b050;display:flex;align-items:center;gap:.5rem;';
+  alert.innerHTML=`<span style="font-size:1rem">⚠️</span><span><strong>Preencha os campos abaixo antes de gerar.</strong> São obrigatórios para esta área.</span>`;
+  wrap.insertBefore(alert,wrap.firstChild);
+
+  // Scroll suave até o card 05
+  setTimeout(()=>card5.scrollIntoView({behavior:'smooth',block:'nearest'}),80);
 }
 
 function rF(f){
@@ -1156,7 +1183,30 @@ function getAFvals(){
 
 function validAF(){
   const def=AF[SK];if(!def)return{ok:true,m:[]};
-  const m=def.fields.filter(f=>f.req&&(!document.getElementById(f.id)||!document.getElementById(f.id).value.trim())).map(f=>f.label+' (campo específico)');
+  const m=[];
+  def.fields.filter(f=>f.req).forEach(f=>{
+    const el=document.getElementById(f.id);
+    if(!el||!el.value.trim()){
+      m.push(f.label+' (campo específico — Card 05)');
+      // marca vermelho
+      if(el){
+        el.classList.add('campo-erro');
+        const fg=el.closest('.fg');
+        if(fg){
+          fg.classList.add('campo-erro-label');
+          if(!fg.querySelector('.campo-erro-msg')){
+            const span=document.createElement('span');
+            span.className='campo-erro-msg';
+            span.textContent='⚠ Obrigatório';
+            fg.appendChild(span);
+          }
+        }
+      }
+      // garante card 05 aberto
+      const c5=document.getElementById('c5');
+      if(c5&&!c5.classList.contains('open'))c5.classList.add('open');
+    }
+  });
   return{ok:m.length===0,m};
 }
 
@@ -1200,8 +1250,16 @@ function upd(){
   const checks=[!!SA,okA,okR,okD,okP,okF,okAF,okPed];
   ['pd0','pd1','pd2','pd3','pd4','pd5','pd6','pd7'].forEach((id,i)=>gEl(id).className='pd'+(checks[i]?' ok':''));
   gEl('pf').style.width=Math.round(checks.filter(Boolean).length/8*100)+'%';
-  const st=(id,ok,opt)=>{if(!gEl(id))return;if(opt){gEl(id).textContent=opt;gEl(id).className='cst opt';return;}gEl(id).textContent=ok?'✓ Completo':'Pendente';gEl(id).className='cst '+(ok?'ok':'pend');};
-  st('s1',okA);st('s2',okR);st('s3',okD);st('s4',okP);st('s5',okAF);st('s6',okF);st('s8',okPed);
+  const st=(id,ok,opt)=>{if(!gEl(id))return;if(opt){gEl(id).textContent=opt;gEl(id).className='cst opt';gEl(id).style.cssText='';return;}gEl(id).textContent=ok?'✓ Completo':'Pendente';gEl(id).className='cst '+(ok?'ok':'pend');gEl(id).style.cssText='';};
+  st('s1',okA);st('s2',okR);st('s3',okD);st('s4',okP);st('s6',okF);st('s8',okPed);
+  // card 05 especial
+  const s5=gEl('s5');
+  if(s5){
+    const def=AF[SK];
+    if(!def){s5.textContent='Sem campos extras';s5.className='cst opt';s5.style.cssText='';}
+    else if(okAF){s5.textContent='✓ Completo';s5.className='cst ok';s5.style.cssText='';const c5=gEl('c5');if(c5)c5.classList.remove('tem-campos-pendentes');}
+    else{s5.textContent='⚠ Preencher';s5.style.cssText='font-size:.62rem;color:#e0a020;font-weight:600;';}
+  }
 }
 
 // ══════════════════════
