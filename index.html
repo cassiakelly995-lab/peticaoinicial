@@ -251,6 +251,17 @@ select option{background:var(--k3);color:var(--t1)}
 textarea{resize:vertical;min-height:82px;line-height:1.6}
 input[readonly]{background:var(--k4);color:var(--t4);cursor:default}
 
+/* CAMPO COM ERRO */
+input.campo-erro,select.campo-erro,textarea.campo-erro{
+  border-color:#c0392b !important;
+  box-shadow:0 0 0 3px rgba(192,57,43,.18) !important;
+  background:rgba(192,57,43,.06) !important;
+}
+.fg.campo-erro-label .fl{color:#e08080;}
+.fg.campo-erro-label .fl .req{color:#ff6b6b;}
+.campo-erro-msg{font-size:.58rem;color:#e08080;margin-top:.15rem;display:none;}
+.fg.campo-erro-label .campo-erro-msg{display:block;}
+
 /* PEDIDOS */
 .pr{display:flex;align-items:center;gap:.35rem;margin-bottom:.35rem}
 .pn{font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--t4);width:15px;text-align:right;flex-shrink:0}
@@ -1105,7 +1116,7 @@ async function genSummary(txt){
   gEl('aisSpin').style.display='block';
   gEl('aiSummaryBody').textContent='Gerando resumo...';
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,messages:[{role:'user',content:`Em 2 frases objetivas, faça um RESUMO DO CASO para o advogado, descrevendo o que aconteceu e o que o cliente quer. Sem formalidades. Use linguagem direta. Fatos: ${txt.slice(0,600)}`}]})});
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-calls':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,messages:[{role:'user',content:`Em 2 frases objetivas, faça um RESUMO DO CASO para o advogado, descrevendo o que aconteceu e o que o cliente quer. Sem formalidades. Use linguagem direta. Fatos: ${txt.slice(0,600)}`}]})});
     const d=await res.json();
     const result=d.content.map(b=>b.text||'').join('');
     gEl('aisSpin').style.display='none';
@@ -1171,6 +1182,14 @@ function getProvas(){return Array.from(document.querySelectorAll('#c9 .tag.on'))
 // PROGRESS
 // ══════════════════════
 function upd(){
+  // Remove erro visual ao preencher
+  document.querySelectorAll('.campo-erro').forEach(el=>{
+    if(el.value&&el.value.trim()){
+      el.classList.remove('campo-erro');
+      const fg=el.closest('.fg');
+      if(fg){fg.classList.remove('campo-erro-label');const m=fg.querySelector('.campo-erro-msg');if(m)m.remove();}
+    }
+  });
   const okA=!!(vEl('a_nome')&&vEl('a_cpf')&&vEl('a_ec')&&vEl('a_prof')&&vEl('a_end'));
   const okR=!!(vEl('r_nome')&&vEl('r_tipo')&&vEl('r_end'));
   const okD=!!(vEl('adv_n')&&vEl('adv_oab'));
@@ -1246,29 +1265,55 @@ REGRAS: parágrafo com recuo 2,5cm; texto justificado; tom formal; 900–1.500 p
 }
 
 // ══════════════════════
-// VALIDATE
+// VALIDATE — marca campos em vermelho
 // ══════════════════════
+function clearErros(){
+  document.querySelectorAll('.campo-erro').forEach(el=>{el.classList.remove('campo-erro');});
+  document.querySelectorAll('.campo-erro-label').forEach(el=>{el.classList.remove('campo-erro-label');});
+  document.querySelectorAll('.campo-erro-msg').forEach(el=>{el.remove();});
+}
+
+function markErro(id,msg){
+  const el=gEl(id);if(!el)return;
+  el.classList.add('campo-erro');
+  const fg=el.closest('.fg');
+  if(fg){
+    fg.classList.add('campo-erro-label');
+    if(!fg.querySelector('.campo-erro-msg')){
+      const span=document.createElement('span');
+      span.className='campo-erro-msg';
+      span.textContent='⚠ '+msg;
+      fg.appendChild(span);
+    }
+  }
+  // Abre o card pai se fechado
+  const card=el.closest('.card');
+  if(card&&!card.classList.contains('open'))card.classList.add('open');
+}
+
 function validate(){
+  clearErros();
   const e=[];
   if(!SA)e.push('Selecione a área do Direito na barra lateral');
-  if(!vEl('a_nome'))e.push('Nome completo do Autor');
-  if(!vEl('a_cpf'))e.push('CPF do Autor');
-  if(!vEl('a_ec'))e.push('Estado civil do Autor');
-  if(!vEl('a_prof'))e.push('Profissão do Autor');
-  if(!vEl('a_end'))e.push('Endereço do Autor');
-  if(!vEl('r_nome'))e.push('Nome do Réu');
-  if(!vEl('r_tipo'))e.push('Tipo de pessoa do Réu');
-  if(!vEl('r_end'))e.push('Endereço do Réu');
-  if(!vEl('adv_n'))e.push('Nome do Advogado');
-  if(!vEl('adv_oab'))e.push('OAB nº');
-  if(!vEl('p_vara'))e.push('Tribunal / Vara');
-  if(!vEl('p_rito'))e.push('Rito processual');
-  if(!vEl('p_valor'))e.push('Valor da causa');
+
+  if(!vEl('a_nome')){markErro('a_nome','Obrigatório');e.push('Nome completo do Autor');}
+  if(!vEl('a_cpf')){markErro('a_cpf','Obrigatório');e.push('CPF do Autor');}
+  if(!vEl('a_ec')){markErro('a_ec','Obrigatório');e.push('Estado civil do Autor');}
+  if(!vEl('a_prof')){markErro('a_prof','Obrigatório');e.push('Profissão do Autor');}
+  if(!vEl('a_end')){markErro('a_end','Obrigatório');e.push('Endereço do Autor');}
+  if(!vEl('r_nome')){markErro('r_nome','Obrigatório');e.push('Nome do Réu');}
+  if(!vEl('r_tipo')){markErro('r_tipo','Obrigatório');e.push('Tipo de pessoa do Réu');}
+  if(!vEl('r_end')){markErro('r_end','Obrigatório');e.push('Endereço do Réu');}
+  if(!vEl('adv_n')){markErro('adv_n','Obrigatório');e.push('Nome do Advogado');}
+  if(!vEl('adv_oab')){markErro('adv_oab','Obrigatório');e.push('OAB nº');}
+  if(!vEl('p_vara')){markErro('p_vara','Obrigatório');e.push('Tribunal / Vara');}
+  if(!vEl('p_rito')){markErro('p_rito','Obrigatório');e.push('Rito processual');}
+  if(!vEl('p_valor')){markErro('p_valor','Obrigatório');e.push('Valor da causa');}
   const f=vEl('f_fatos');
-  if(!f)e.push('Narração dos fatos (obrigatória)');
-  else if(f.length<100)e.push('Fatos muito curtos — mínimo 100 caracteres');
+  if(!f){markErro('f_fatos','Obrigatório');e.push('Narração dos fatos (obrigatória)');}
+  else if(f.length<100){markErro('f_fatos','Mínimo 100 caracteres');e.push('Fatos muito curtos — mínimo 100 caracteres');}
   validAF().m.forEach(m=>e.push(m));
-  if(getPeds().length===0)e.push('Informe ao menos um pedido');
+  if(getPeds().length===0)e.push('Informe ao menos um pedido no Card 08');
   return e;
 }
 
@@ -1301,7 +1346,7 @@ async function generate(){
   setPhase(1,'active');gEl('ldSub').textContent='Etapa 2 — Gerando documento com artigos verificados...';
   let raw='';
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:4096,messages:[{role:'user',content:buildPrompt(d)}]})});
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-calls':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:4096,messages:[{role:'user',content:buildPrompt(d)}]})});
     if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.error?.message||'HTTP '+res.status);}
     const result=await res.json();
     raw=result.content.map(b=>b.text||'').join('\n');
@@ -1363,7 +1408,7 @@ DOCUMENTO (primeiros 3500 caracteres):
 ${raw.slice(0,3500)}
 JSON: {"score":0-100,"nivel":"Excelente|Bom|Adequado|Requer revisão","cpc_ok":true_ou_false,"cpc_obs":"observação","artigos_ok":true_ou_false,"artigos_obs":"artigos fora da lista ou OK","positivos":["máx 3"],"atencao":["máx 3"],"sugestoes":["máx 3"],"conclusao":"Uma frase"}`;
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,messages:[{role:'user',content:p}]})});
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-calls':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,messages:[{role:'user',content:p}]})});
     if(!res.ok)throw new Error('HTTP '+res.status);
     const result=await res.json();
     let txt=result.content.map(b=>b.text||'').join('').replace(/```json|```/g,'').trim();
