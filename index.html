@@ -1136,22 +1136,24 @@ function applyAllSuggestions(){
 }
 
 // ══════════════════════
-// AI SUMMARY
+// AI SUMMARY (opcional — só com API key)
 // ══════════════════════
 function schedSummary(){
   clearTimeout(_summaryTimer);
   const txt=vEl('f_fatos');
-  if(txt.length<150){gEl('aiSummary').classList.remove('show');return;}
+  if(txt.length<150||!getKey()){gEl('aiSummary').classList.remove('show');return;}
   _summaryTimer=setTimeout(()=>genSummary(txt),1800);
 }
 
 async function genSummary(txt){
+  if(!getKey()){gEl('aiSummary').classList.remove('show');return;}
   const s=gEl('aiSummary');
   s.classList.add('show');
   gEl('aisSpin').style.display='block';
   gEl('aiSummaryBody').textContent='Gerando resumo...';
   try{
     const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:apiHeaders(),body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,messages:[{role:'user',content:`Em 2 frases objetivas, faça um RESUMO DO CASO para o advogado, descrevendo o que aconteceu e o que o cliente quer. Sem formalidades. Use linguagem direta. Fatos: ${txt.slice(0,600)}`}]})});
+    if(!res.ok)throw new Error();
     const d=await res.json();
     const result=d.content.map(b=>b.text||'').join('');
     gEl('aisSpin').style.display='none';
@@ -1444,12 +1446,114 @@ function validate(){
 
 function setPhase(i,state){
   const el=gEl('ph'+i);if(!el)return;
-  const ico={idle:'',active:'⏳',done:'✅',error:'❌'};
-  el.className='phase '+state;el.querySelector('.pico').textContent=ico[state]||ico.idle;
+  const ico={idle:'○',active:'⏳',done:'✅',error:'❌'};
+  el.className='phase '+state;
+  const pico=el.querySelector('.pico');if(pico)pico.textContent=ico[state]||'○';
 }
 
 // ══════════════════════
-// GENERATE
+// GERAÇÃO LOCAL POR TEMPLATE (100% offline, sem API)
+// ══════════════════════
+function gerarTextoLocal(d){
+  const hoje=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+  const arts=(ARTIGOS[d.key]||ARTIGOS.default).join('; ');
+  const tm={pf:'pessoa física',pj:'pessoa jurídica de direito privado',pub:'ente público / autarquia'};
+  const tipoReu=tm[d.r.tipo]||'pessoa jurídica';
+  const tutela=d.proc.tutela!=='nao';
+  const grat=d.proc.grat==='sim';
+  const peds=d.peds;
+  const funds=d.funds.length?d.funds:[];
+  const af=d.af?d.af.split('\n').filter(Boolean):[]; 
+
+  // Qualificação autor
+  let qAutor=`${d.a.nome}, ${d.a.nac}, ${d.a.ec}, ${d.a.prof}, portador(a) do CPF nº ${d.a.cpf}`;
+  if(d.a.rg)qAutor+=`, RG nº ${d.a.rg}`;
+  if(d.a.conj)qAutor+=`, convivente com ${d.a.conj}`;
+  qAutor+=`, residente e domiciliado(a) em ${d.a.end}`;
+  if(d.a.email)qAutor+=`, e-mail: ${d.a.email}`;
+
+  // Qualificação réu
+  let qReu=`${d.r.nome}, ${tipoReu}`;
+  if(d.r.cnpj)qReu+=`, inscrito(a) no CNPJ nº ${d.r.cnpj}`;
+  if(d.r.cpf)qReu+=`, CPF nº ${d.r.cpf}`;
+  if(d.r.rep)qReu+=`, representado(a) por ${d.r.rep}`;
+  qReu+=`, com endereço em ${d.r.end}`;
+
+  // Fundamentos adicionais
+  const fundsExtra=funds.length?`\n\nAplicam-se ainda ao caso concreto os seguintes fundamentos: ${funds.join('; ')}.`:'';
+  const extraArt=d.extra?` Igualmente aplicável ao caso: ${d.extra}.`:'';
+
+  // Dados específicos da área formatados
+  const afTxt=af.length?`\n\nRelativamente aos dados específicos da área, consigna-se: ${af.join('; ')}.`:'';
+
+  // Documentos
+  const docsTxt=d.docs?`\n\nO(A) Autor(a) possui os seguintes documentos probatórios: ${d.docs}.`:'';
+
+  // Tentativas extrajudiciais
+  const tentTxt=d.tent?`\n\nAntes de recorrer ao Judiciário, o(a) Autor(a) envidou esforços para solucionar a questão pela via extrajudicial, consoante se depreende dos seguintes atos: ${d.tent}. Contudo, a tentativa restou infrutífera, tornando necessária a tutela jurisdicional.`:'';
+
+  // Provas
+  const provasTxt=d.provas.join(', ')||'prova documental e demais admitidas em direito';
+  const testTxt=d.test?` Rol de testemunhas: ${d.test}.`:'';
+
+  // Tutela
+  const tutelaSec=tutela?`\n\n<strong>DA TUTELA DE URGÊNCIA</strong>\n\nRequer o(a) Autor(a), com fundamento no art. 300 do CPC/2015, a concessão de tutela de urgência, haja vista a presença dos requisitos legais: probabilidade do direito (fumus boni iuris) e perigo de dano ou risco ao resultado útil do processo (periculum in mora).${d.proc.urg?` Especificamente: ${d.proc.urg}.`:''} Requer seja o pedido apreciado liminarmente, antes da citação da parte contrária.`:'';
+
+  // Gratuidade
+  const gratSec=grat?`\n\nO(A) Autor(a) declara, sob as penas da lei, que não possui condições de arcar com as custas processuais e os honorários advocatícios sem prejuízo próprio e de sua família, requerendo, por isso, a concessão dos benefícios da gratuidade da justiça, nos termos do art. 98 do CPC/2015.`:'';
+
+  // Audiência
+  const audSec=d.proc.aud==='nao'?`\n\nO(A) Autor(a) manifesta, desde já, o desinteresse na realização de audiência de conciliação ou de mediação, nos termos do art. 334, §4º, inciso I, do CPC/2015, por ser o litígio inviável de autocomposição.`:'\n\nO(A) Autor(a) não se opõe à realização de audiência de conciliação ou de mediação, conforme previsto no art. 334 do CPC/2015.';
+
+  const html=`
+<div class="dh">
+  <div class="dj">Excelentíssimo(a) Senhor(a) Doutor(a) Juiz(a) de Direito</div>
+  <div class="dv">${d.proc.vara}</div>
+</div>
+
+<p>${qAutor}, por seu(sua) advogado(a) que esta subscreve, com escritório profissional no endereço indicado no rodapé${d.adv.end?` (${d.adv.end})`:''}${d.adv.email?`, e-mail ${d.adv.email}`:', onde recebe intimações'}, vem, respeitosamente, à presença de Vossa Excelência, com fundamento no art. 319 e seguintes do Código de Processo Civil (Lei 13.105/2015) e nos termos de ${arts}, propor a presente</p>
+
+<div class="ds">PETIÇÃO INICIAL</div>
+
+<p>em face de ${qReu}, pelos fatos e fundamentos de direito a seguir expostos.</p>
+
+<div class="ds">I — DOS FATOS</div>
+
+<p>${d.fatos.replace(/\n\n/g,'</p><p>').replace(/\n/g,' ')}</p>${tentTxt}${afTxt}${docsTxt}
+
+<div class="ds">II — DO DIREITO</div>
+
+<p>A pretensão deduzida nesta exordial encontra amparo na legislação vigente, especificamente em: <strong>${arts}</strong>.${extraArt}</p>
+
+<p>Com efeito, a conduta perpetrada pelo(a) Requerido(a) configura violação às normas acima elencadas, causando ao(à) Autor(a) danos que merecem integral reparação pelo Poder Judiciário, nos termos do art. 5º, inciso XXXV, da Constituição Federal de 1988, que assegura a inafastabilidade da jurisdição.</p>${fundsExtra?`<p>${fundsExtra}</p>`:''}${tutelaSec?`<p>${tutelaSec}</p>`:''}${gratSec?`<p>${gratSec}</p>`:''}
+
+<div class="ds">III — DOS PEDIDOS</div>
+
+<p>Diante do exposto, requer o(a) Autor(a) que Vossa Excelência se digne a:</p>
+<ol class="pl">
+${peds.map(p=>`<li>${p};</li>`).join('\n')}
+<li>A condenação do(a) Requerido(a) ao pagamento das custas processuais e dos honorários advocatícios, nos termos do art. 85 do CPC/2015;</li>
+<li>A produção de ${provasTxt}, especialmente ${provasTxt.split(',')[0]}, e todas as demais admitidas em direito.${testTxt}</li>
+</ol>
+
+<div class="ds">DO VALOR DA CAUSA</div>
+
+<p>Dá-se à causa o valor de <strong>R$ ${d.proc.valor}</strong>, nos termos do art. 292 do CPC/2015.</p>${audSec?`<p>${audSec}</p>`:''}
+
+<div class="sig">
+  <p class="ct" style="margin-bottom:1.8rem">Nesses termos, pede deferimento.</p>
+  <p class="ct">${d.adv.cidade||'[Cidade]'}, ${hoje}.</p>
+  <div class="sl"></div>
+  <p class="sn">${d.adv.nome}</p>
+  <p class="so">OAB nº ${d.adv.oab}</p>
+  ${d.adv.email?`<p class="so">${d.adv.email}</p>`:''}
+</div>`;
+
+  return html;
+}
+
+// ══════════════════════
+// GENERATE — local + API opcional
 // ══════════════════════
 async function generate(){
   const erros=validate();
@@ -1459,72 +1563,62 @@ async function generate(){
     gEl('vbox').scrollIntoView({behavior:'smooth',block:'center'});
     return;
   }
-  // Verifica API key
-  if(!getKey()){
-    gEl('vlist').innerHTML=`<li>⚠ Informe sua chave de API Anthropic na barra superior (campo 🔑)</li><li>Acesse <strong>console.anthropic.com/settings/keys</strong> para obter sua chave</li>`;
-    gEl('vbox').classList.add('show');
-    gEl('vbox').scrollIntoView({behavior:'smooth',block:'center'});
-    gEl('apiKeyInput')?.focus();
-    return;
-  }
   gEl('vbox').classList.remove('show');
   gEl('btnGen').disabled=true;
   gEl('outSec').classList.remove('show');
   gEl('ldState').classList.add('show');
   gEl('ldState').scrollIntoView({behavior:'smooth'});
   [0,1,2,3].forEach(i=>setPhase(i,''));
+
   const d=collect();
+
+  // ETAPA 1 — validação
   setPhase(0,'active');gEl('ldSub').textContent='Etapa 1 — Validando dados...';
-  await new Promise(r=>setTimeout(r,400));setPhase(0,'done');
-  setPhase(1,'active');gEl('ldSub').textContent='Etapa 2 — Gerando documento com artigos verificados...';
-  let raw='';
-  try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:apiHeaders(),body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:4096,messages:[{role:'user',content:buildPrompt(d)}]})});
-    if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.error?.message||'HTTP '+res.status);}
-    const result=await res.json();
-    raw=result.content.map(b=>b.text||'').join('\n');
-    window._raw=raw;window._dat=d;
-    setPhase(1,'done');
-  }catch(err){
-    setPhase(1,'error');gEl('ldState').classList.remove('show');gEl('btnGen').disabled=false;
-    gEl('vlist').innerHTML=`<li>Erro: ${err.message}</li>`;gEl('vbox').classList.add('show');return;
+  await new Promise(r=>setTimeout(r,350));setPhase(0,'done');
+
+  // ETAPA 2 — geração local imediata
+  setPhase(1,'active');gEl('ldSub').textContent='Etapa 2 — Montando documento...';
+  await new Promise(r=>setTimeout(r,200));
+
+  const docHtml=gerarTextoLocal(d);
+  window._dat=d;
+  renderDireto(docHtml,d);
+  setPhase(1,'done');
+
+  // ETAPA 3 — revisão (só se tiver API key)
+  setPhase(2,'active');gEl('ldSub').textContent='Etapa 3 — Revisão...';
+  const key=getKey();
+  if(key){
+    await reviewAuto(docHtml,d);
+  } else {
+    const panel=gEl('revPanel'),body=gEl('revBody');
+    panel.classList.add('show');
+    body.innerHTML=`<div style="font-size:.72rem;color:var(--t3);padding:.3rem 0">
+      <span style="color:var(--g3)">ℹ</span> Revisão automática disponível com chave de API.
+      Sem a chave, revise manualmente os artigos citados antes de protocolar.
+    </div>`;
   }
-  render(raw,d);
-  setPhase(2,'active');gEl('ldSub').textContent='Etapa 3 — Revisão crítica automática...';
-  await reviewAuto(raw,d);setPhase(2,'done');
+  setPhase(2,'done');
+
+  // ETAPA 4 — checklist
   setPhase(3,'active');gEl('ldSub').textContent='Etapa 4 — Gerando checklist...';
-  await new Promise(r=>setTimeout(r,300));
+  await new Promise(r=>setTimeout(r,200));
   renderCL(d.key);setPhase(3,'done');
-  gEl('ldState').classList.remove('show');gEl('btnGen').disabled=false;
+
+  gEl('ldState').classList.remove('show');
+  gEl('btnGen').disabled=false;
   setTimeout(()=>gEl('outSec').scrollIntoView({behavior:'smooth'}),100);
 }
 
 // ══════════════════════
-// RENDER DOCUMENT
+// RENDER DIRETO (HTML já montado)
 // ══════════════════════
-function render(raw,d){
+function renderDireto(docHtml,d){
   gEl('outSec').classList.add('show');
-  const today=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
-  const lines=raw.split('\n');
-  let html=`<div class="dh"><div class="dj">Excelentíssimo(a) Senhor(a) Doutor(a) Juiz(a) de Direito</div><div class="dv">${d.proc.vara}</div></div>`;
-  if(d.doc==='apelacao')html=`<div class="dh"><div class="dj">Egrégio Tribunal de Justiça</div><div class="dv">${d.proc.vara}</div></div>`;
-  if(d.doc==='agravo')html=`<div class="dh"><div class="dj">Egrégio Tribunal de Justiça — Agravo de Instrumento</div><div class="dv">${d.proc.vara}</div></div>`;
-  let pm=false,pi=[];
-  for(const ln of lines){
-    const l=ln.trim();if(!l)continue;
-    const sm=l.match(/^\[SEÇÃO:\s*(.+)\]$/i);
-    if(sm){if(pm){html+=`<ol class="pl">${pi.map(x=>`<li>${x}</li>`).join('')}</ol>`;pi=[];pm=false;}
-      const t=sm[1].trim();if(/endereçamento|qualificação/i.test(t))continue;if(/fecho/i.test(t))break;
-      html+=`<div class="ds">${t}</div>`;continue;}
-    if(/^\d+\.\s/.test(l)){pm=true;pi.push(l.replace(/^\d+\.\s/,''));continue;}
-    if(pm){html+=`<ol class="pl">${pi.map(x=>`<li>${x}</li>`).join('')}</ol>`;pi=[];pm=false;}
-    html+=`<p>${l}</p>`;
-  }
-  if(pm&&pi.length)html+=`<ol class="pl">${pi.map(x=>`<li>${x}</li>`).join('')}</ol>`;
-  html+=`<div class="sig"><p class="ct" style="margin-bottom:1.8rem">Nesses termos, pede deferimento.</p><p class="ct">${d.adv.cidade}, ${today}.</p><div class="sl"></div><p class="sn">${d.adv.nome}</p><p class="so">OAB nº ${d.adv.oab}</p>${d.adv.email?`<p class="so">${d.adv.email}</p>`:''}</div>`;
-  gEl('theDoc').innerHTML=html;
-  const wc=raw.split(/\s+/).length;
-  gEl('docMeta').innerHTML=`<span class="mc">Palavras: <strong>${wc.toLocaleString('pt-BR')}</strong></span><span class="mc">Área: <strong>${d.area.split('—')[0].trim()}</strong></span><span class="mc">Tipo: <strong>${docNames[d.doc]}</strong></span><span class="mc">Rito: <strong>${d.proc.rito.split(' (')[0]}</strong></span><span class="mc">Valor: <strong>R$ ${d.proc.valor}</strong></span><span class="mc">Gerado: <strong>${new Date().toLocaleTimeString('pt-BR')}</strong></span>`;
+  gEl('theDoc').innerHTML=docHtml;
+  const wc=gEl('theDoc').innerText.split(/\s+/).length;
+  gEl('docMeta').innerHTML=`<span class="mc">Palavras: <strong>~${wc.toLocaleString('pt-BR')}</strong></span><span class="mc">Área: <strong>${d.area.split('—')[0].trim()}</strong></span><span class="mc">Tipo: <strong>${docNames[d.doc]||'PETIÇÃO INICIAL'}</strong></span><span class="mc">Rito: <strong>${(d.proc.rito||'').split(' (')[0]}</strong></span><span class="mc">Valor: <strong>R$ ${d.proc.valor}</strong></span><span class="mc">Gerado: <strong>${new Date().toLocaleTimeString('pt-BR')}</strong></span>`;
+  window._raw=gEl('theDoc').innerText;
 }
 
 // ══════════════════════
