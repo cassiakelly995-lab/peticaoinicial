@@ -235,22 +235,27 @@ input.err-f,select.err-f,textarea.err-f{border-color:#c0392b!important;box-shado
 .ba.blue{background:rgba(74,128,208,.1);border-color:rgba(74,128,208,.28);color:#7aabf0}
 .ba.blue:hover{background:rgba(74,128,208,.2)}
 
-/* DOCUMENT */
-.doc{background:#fff;border:1px solid var(--gl);padding:3.5rem 4.5rem 4.5rem;font-family:'Times New Roman',Times,serif;font-size:12pt;color:#111;line-height:2;box-shadow:0 8px 32px rgba(0,0,0,.4),0 0 20px rgba(201,168,76,.08);position:relative}
+/* DOCUMENT — Formatação conforme ABNT e praxe forense brasileira */
+/* Margens: esq 3cm, dir 2cm, sup 3cm, inf 2cm (ABNT NBR 14724) */
+/* Fonte: Times New Roman 12pt; Espaçamento: 1,5; Recuo: 1,25cm */
+.doc{background:#fff;border:1px solid var(--gl);padding:3cm 2cm 2cm 3cm;font-family:'Times New Roman',Times,serif;font-size:12pt;color:#111;line-height:1.5;box-shadow:0 8px 32px rgba(0,0,0,.4),0 0 20px rgba(201,168,76,.08);position:relative}
 .doc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--g3),var(--g),var(--g3))}
-@media(max-width:640px){.doc{padding:2rem 1.2rem 2.5rem}}
-.doc .dh{text-align:center;margin-bottom:2.5rem}
-.doc .dj{font-size:11.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.07em;border-bottom:2px solid #111;padding-bottom:.28rem;margin-bottom:.38rem}
-.doc .dv{font-size:10.5pt;color:#444;font-style:italic}
-.doc .ds{font-size:11pt;font-weight:700;text-align:center;text-transform:uppercase;letter-spacing:.05em;margin:2.5rem 0 .7rem;border-bottom:1px solid #bbb;padding-bottom:.25rem}
-.doc p{text-indent:2.5cm;text-align:justify;hyphens:auto;margin-bottom:.3rem;font-size:12pt}
+@media(max-width:640px){.doc{padding:1.5rem 1rem 2rem}}
+.doc .dh{text-align:center;margin-bottom:1.8rem}
+/* CPC/2015 art.319,I — endereço ao JUÍZO (instituição), não ao juiz */
+.doc .dj{font-size:12pt;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.3rem;text-align:center}
+.doc .dv{font-size:11.5pt;color:#222;font-weight:600;text-align:center}
+.doc .ds{font-size:12pt;font-weight:700;text-align:center;text-transform:uppercase;letter-spacing:.04em;margin:1.8rem 0 .6rem;border-bottom:1.5px solid #333;padding-bottom:.2rem}
+/* Recuo 1,25cm padrão forense — parágrafos justificados */
+.doc p{text-indent:1.25cm;text-align:justify;hyphens:auto;margin-bottom:.4rem;font-size:12pt;line-height:1.5}
 .doc p.ct{text-align:center;text-indent:0}
-.doc ol.pl{margin:.32rem 0 .32rem 3.5cm;padding:0}
-.doc ol.pl li{font-size:12pt;line-height:2;text-align:justify;margin-bottom:.1rem}
-.doc .sig{margin-top:3rem;text-align:center}
-.doc .sl{width:260px;height:1px;background:#222;margin:.42rem auto}
+.doc p.intro{text-indent:0;text-align:justify}
+.doc ol.pl{margin:.3rem 0 .3rem 2cm;padding:0}
+.doc ol.pl li{font-size:12pt;line-height:1.5;text-align:justify;margin-bottom:.3rem}
+.doc .sig{margin-top:2.5rem;text-align:center}
+.doc .sl{width:200px;height:1px;background:#222;margin:.4rem auto}
 .doc .sn{font-weight:700;text-align:center;text-indent:0;font-size:12pt}
-.doc .so{font-style:italic;text-align:center;text-indent:0;color:#555;font-size:11pt}
+.doc .so{font-style:normal;text-align:center;text-indent:0;color:#333;font-size:11pt}
 .dmeta{background:var(--k3);border:1px solid var(--gl);border-top:none;padding:.4rem .8rem;display:flex;gap:.9rem;flex-wrap:wrap;align-items:center}
 .mc{font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.07em;text-transform:uppercase;color:var(--t4)}
 .mc strong{color:var(--t3);margin-left:.14rem}
@@ -513,6 +518,7 @@ input.err-f,select.err-f,textarea.err-f{border-color:#c0392b!important;box-shado
       <div id="r_pf_f" style="display:none"><div class="fr f3"><div class="fg"><label class="fl">Profissão do Réu</label><input type="text" id="r_qualif" placeholder="Ex: empresário, servidor"></div><div class="fg"><label class="fl">CPF <span class="opt">(se disponível)</span></label><input type="text" id="r_cpf" placeholder="000.000.000-00"></div><div class="fg"><label class="fl">RG <span class="opt">(se disponível)</span></label><input type="text" id="r_rg" placeholder="00.000.000-0"></div></div></div>
       <div id="r_pj_f" style="display:none"><div class="fr"><div class="fg"><label class="fl">CNPJ <span class="opt">(se disponível)</span></label><input type="text" id="r_cnpj" placeholder="00.000.000/0001-00"></div><div class="fg"><label class="fl">Representante Legal</label><input type="text" id="r_rep" placeholder="Sócio-administrador, diretor..."></div></div></div>
       <div class="fr f1"><div class="fg"><label class="fl">Endereço para citação <span class="req">*</span></label><input type="text" id="r_end" placeholder="Endereço completo com rua, número, cidade, UF e CEP" oninput="upd()"></div></div>
+      <div class="fr"><div class="fg"><label class="fl">E-mail do Réu <span class="opt">(CPC/2015, art. 319, II)</span></label><input type="email" id="r_email" placeholder="email@réu.com.br ou 'desconhecido'"><span class="fh">Se desconhecido, informe "desconhecido" — art. 319, §1º permite requerer ao juiz</span></div></div>
     </div>
   </div>
 
@@ -1045,7 +1051,7 @@ function upd(){
 function collect(){
   return{area:SA,lei:SL,presc:SP,key:SK,doc:DOC,
     a:{nome:V('a_nome'),sexo:V('a_sexo'),nac:getNac(),ec:getEC(),prof:V('a_prof'),cpf:V('a_cpf'),rg:V('a_rg'),cnpj:V('a_cnpj'),conj:V('a_conj'),end:V('a_end'),email:V('a_email'),tel:V('a_tel')},
-    r:{nome:V('r_nome'),tipo:V('r_tipo'),cpf:V('r_cpf'),rg:V('r_rg'),cnpj:V('r_cnpj'),rep:V('r_rep'),qualif:V('r_qualif'),end:V('r_end')},
+    r:{nome:V('r_nome'),tipo:V('r_tipo'),cpf:V('r_cpf'),rg:V('r_rg'),cnpj:V('r_cnpj'),rep:V('r_rep'),qualif:V('r_qualif'),end:V('r_end'),email:V('r_email')},
     adv:{nome:V('adv_n'),oab:V('adv_oab'),end:V('adv_end'),email:V('adv_email'),cidade:V('adv_cidade')||'[Cidade]',comarca:V('adv_comarca')||'[Comarca]'},
     proc:{vara:V('p_vara'),rito:V('p_rito'),valor:V('p_valor'),data:V('p_data'),grat:V('p_grat'),tutela:V('p_tutela'),urg:V('p_urg'),aud:V('p_aud')},
     fatos:G('f_fatos').value.trim(),tent:V('f_tent'),docs:V('f_docs'),
@@ -1129,6 +1135,7 @@ function buildQReu(d){
     if(d.r.rg)parts.push(`portador${gen==='F'?'a':'o'} do RG nº ${d.r.rg}`);
   }
   parts.push(`com endereço para citação em ${d.r.end}`);
+  if(d.r.email)parts.push(`e-mail: ${d.r.email}`);
   return parts.join(', ');
 }
 
@@ -1260,7 +1267,7 @@ ${d.test?`**TESTEMUNHAS:** ${d.test}`:''}
 ## INSTRUÇÕES RIGOROSAS:
 
 1. **ESTRUTURA OBRIGATÓRIA (em HTML):**
-   - Endereçamento: "Excelentíssimo(a) Senhor(a) Doutor(a) Juiz(a) de Direito / ${d.proc.vara} — ${d.adv.comarca}"
+   - Endereçamento (CPC/2015, art. 319, I): ao JUÍZO (órgão), não à pessoa do juiz. Use: "${d.proc.vara} — ${d.adv.comarca}" (sem "Excelentíssimo Senhor Doutor Juiz" — endereça-se ao JUÍZO conforme CPC/2015)
    - Qualificação das partes com os dados EXATOS fornecidos
    - Seção "I — DOS FATOS": transforme os fatos em linguagem jurídica formal e técnica, em 4-7 parágrafos bem desenvolvidos
    - Seção "II — DO DIREITO": fundamentos jurídicos com os artigos fornecidos, doutrina e jurisprudência pertinentes
@@ -1340,11 +1347,11 @@ function gerarLocal(d){
     .replace(/\n/g,' ');
 
   return `<div class="dh">
-  <div class="dj">Excelentíssimo(a) Senhor(a) Doutor(a) Juiz(a) de Direito</div>
-  <div class="dv">${d.proc.vara} — ${d.adv.comarca}</div>
+  <div class="dj">${d.proc.vara}</div>
+  <div class="dv">${d.adv.comarca}</div>
 </div>
 
-<p>${qAutor}, por seu advogado que esta subscreve${d.adv.end?', com endereço profissional em '+d.adv.end:''}${d.adv.email?', e-mail '+d.adv.email+', onde recebe intimações':''}, vem, respeitosamente, à presença de Vossa Excelência, com fundamento nos arts. 319 e 320 do Código de Processo Civil (Lei n.º 13.105/2015) e nos termos de ${arts}, propor a presente</p>
+<p class="intro">${qAutor}, por seu${f?'sua':''} advogad${f?'a':'o'} que esta subscreve${d.adv.end?', com endereço profissional em '+d.adv.end:''}${d.adv.email?', e-mail '+d.adv.email+', onde recebe intimações':''}, vem, respeitosamente, à presença de Vossa Excelência, com fundamento nos arts. 319 e 320 do Código de Processo Civil (Lei n.º 13.105/2015) e nos termos de ${arts}, propor a presente</p>
 
 <div class="ds">PETIÇÃO INICIAL</div>
 
@@ -1483,21 +1490,22 @@ function printDoc(){
   const w=window.open('','_blank','width=800,height=700');
   if(!w){toast('⚠ Pop-up bloqueado — permita pop-ups');return;}
   w.document.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>LexForge PRO — Petição</title><style>
-@page{margin:3cm 2.5cm 3cm 3cm;size:A4}
+@page{margin:3cm 2cm 2cm 3cm;size:A4}
 *{box-sizing:border-box}
-body{font-family:'Times New Roman',Times,serif;font-size:12pt;color:#000;background:#fff;line-height:2}
-.dh{text-align:center;margin-bottom:2.5rem}
-.dj{font-size:11.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.07em;border-bottom:2px solid #000;padding-bottom:.28rem;margin-bottom:.38rem}
-.dv{font-size:10.5pt;color:#555;font-style:italic;margin-top:.3rem}
-.ds{font-size:11pt;font-weight:700;text-align:center;text-transform:uppercase;letter-spacing:.05em;margin:2.5rem 0 .7rem;border-bottom:1px solid #bbb;padding-bottom:.25rem;page-break-after:avoid}
-p{text-indent:2.5cm;text-align:justify;hyphens:auto;margin-bottom:.3rem;font-size:12pt}
+body{font-family:'Times New Roman',Times,serif;font-size:12pt;color:#000;background:#fff;line-height:1.5}
+.dh{text-align:center;margin-bottom:1.8cm}
+.dj{font-size:12pt;font-weight:700;text-transform:uppercase;letter-spacing:.04em;text-align:center;margin-bottom:.3cm}
+.dv{font-size:11.5pt;color:#222;font-weight:600;text-align:center}
+.ds{font-size:12pt;font-weight:700;text-align:center;text-transform:uppercase;letter-spacing:.04em;margin:1.8cm 0 .6cm;border-bottom:1.5px solid #333;padding-bottom:.2cm;page-break-after:avoid}
+p{text-indent:1.25cm;text-align:justify;hyphens:auto;margin-bottom:.4cm;font-size:12pt;line-height:1.5}
 p.ct{text-indent:0;text-align:center}
-ol.pl{margin:.32rem 0 .32rem 3.5cm;padding:0}
-ol.pl li{font-size:12pt;line-height:2;text-align:justify;margin-bottom:.1rem}
-.sig{margin-top:3cm;text-align:center;page-break-inside:avoid}
-.sl{width:8cm;border-top:1px solid #000;margin:.42rem auto}
+p.intro{text-indent:0;text-align:justify}
+ol.pl{margin:.3cm 0 .3cm 2cm;padding:0}
+ol.pl li{font-size:12pt;line-height:1.5;text-align:justify;margin-bottom:.3cm}
+.sig{margin-top:2.5cm;text-align:center;page-break-inside:avoid}
+.sl{width:6cm;border-top:1px solid #000;margin:.4cm auto}
 .sn{font-weight:700;text-align:center;text-indent:0}
-.so{font-style:italic;text-align:center;text-indent:0;color:#555;font-size:11pt}
+.so{font-style:normal;text-align:center;text-indent:0;color:#333;font-size:11pt}
 strong{font-weight:700}em{font-style:italic}
 </style></head><body>${body}</body></html>`);
   w.document.close();
@@ -1510,7 +1518,7 @@ function exportWord(){
   try{
     const docEl=G('theDoc');if(!docEl){hideOv();toast('⚠ Documento não encontrado');return;}
     const innerHtml=docEl.innerHTML;
-    const wordCSS=`body{font-family:'Times New Roman',Times,serif;font-size:12pt;line-height:2;margin:3cm 2.5cm 3cm 3cm;color:#000}.dh{text-align:center;margin-bottom:2.5cm}.dj{font-size:11.5pt;font-weight:bold;text-transform:uppercase;letter-spacing:0.07em;border-bottom:2px solid #000;padding-bottom:0.3cm;margin-bottom:0.4cm}.dv{font-size:10.5pt;color:#444;font-style:italic}.ds{font-size:11pt;font-weight:bold;text-align:center;text-transform:uppercase;letter-spacing:0.05em;margin:2.5cm 0 0.7cm;border-bottom:1px solid #bbb;padding-bottom:0.25cm;page-break-after:avoid}p{text-indent:2.5cm;text-align:justify;margin-bottom:0.3cm;font-size:12pt}p.ct{text-align:center;text-indent:0}ol.pl{margin:0.3cm 0 0.3cm 3.5cm;padding:0}ol.pl li{font-size:12pt;line-height:2;text-align:justify;margin-bottom:0.1cm}.sig{margin-top:3cm;text-align:center;page-break-inside:avoid}.sl{width:8cm;border-top:1px solid #000;margin:0.4cm auto}.sn{font-weight:bold;text-align:center}.so{font-style:italic;text-align:center;color:#555;font-size:11pt}strong{font-weight:bold}em{font-style:italic}`;
+    const wordCSS=`body{font-family:'Times New Roman',Times,serif;font-size:12pt;line-height:1.5;margin:3cm 2cm 2cm 3cm;color:#000}.dh{text-align:center;margin-bottom:1.8cm}.dj{font-size:12pt;font-weight:bold;text-transform:uppercase;letter-spacing:0.04em;text-align:center;margin-bottom:0.3cm}.dv{font-size:11.5pt;color:#222;font-weight:bold;text-align:center}.ds{font-size:12pt;font-weight:bold;text-align:center;text-transform:uppercase;letter-spacing:0.04em;margin:1.8cm 0 0.6cm;border-bottom:1.5px solid #333;padding-bottom:0.2cm;page-break-after:avoid}p{text-indent:1.25cm;text-align:justify;margin-bottom:0.4cm;font-size:12pt;line-height:1.5}p.ct{text-align:center;text-indent:0}p.intro{text-indent:0;text-align:justify}ol.pl{margin:0.3cm 0 0.3cm 2cm;padding:0}ol.pl li{font-size:12pt;line-height:1.5;text-align:justify;margin-bottom:0.3cm}.sig{margin-top:2.5cm;text-align:center;page-break-inside:avoid}.sl{width:6cm;border-top:1px solid #000;margin:0.4cm auto}.sn{font-weight:bold;text-align:center}.so{font-style:normal;text-align:center;color:#333;font-size:11pt}strong{font-weight:bold}em{font-style:italic}`;
     const fullHtml=`<!DOCTYPE html><html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='UTF-8'><meta name='ProgId' content='Word.Document'><title>Peticao_${SK}_${Date.now()}</title><!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom></w:WordDocument></xml><![endif]--><style>${wordCSS}</style></head><body>${innerHtml}</body></html>`;
     const blob=new Blob(['\ufeff'+fullHtml],{type:'application/msword;charset=utf-8'});
     const url=URL.createObjectURL(blob);
