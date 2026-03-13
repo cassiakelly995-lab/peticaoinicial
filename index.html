@@ -3,271 +3,242 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LexForge PRO v5 — Legal Document Automation System</title>
+<title>LexForge PRO v6 — Petições Jurídicas com IA</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --k:#0a0a0c;--k2:#111115;--k3:#18181d;--k4:#202026;--k5:#28282f;
+  --k:#08080a;--k2:#0f0f13;--k3:#16161c;--k4:#1c1c24;--k5:#24242e;
   --g:#c9a84c;--g2:#e2c06a;--g3:#a07830;--g4:#f0d88a;
-  --gd:rgba(201,168,76,.1);--gl:rgba(201,168,76,.16);
-  --t1:#f0ece0;--t2:#c4c0b0;--t3:#7a7870;--t4:#484640;
-  --red:#c0392b;--redbg:rgba(192,57,43,.08);
-  --green:#27ae60;--greenbg:rgba(39,174,96,.08);
-  --blue:#4a80d0;--bluebg:rgba(74,128,208,.08);
-  --sw:270px;--sh:54px;
+  --gd:rgba(201,168,76,.08);--gl:rgba(201,168,76,.14);
+  --t1:#f2ece0;--t2:#c8c4b2;--t3:#7e7c74;--t4:#4c4a44;
+  --red:#c0392b;--redbg:rgba(192,57,43,.07);
+  --green:#27ae60;--greenbg:rgba(39,174,96,.07);
+  --blue:#4a80d0;--bluebg:rgba(74,128,208,.07);
+  --sw:280px;--sh:52px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;font-size:15px}
 body{font-family:'DM Sans',system-ui,sans-serif;background:var(--k);color:var(--t1);min-height:100vh;-webkit-font-smoothing:antialiased}
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:var(--k2)}
-::-webkit-scrollbar-thumb{background:var(--k5);border-radius:2px}
+::-webkit-scrollbar-thumb{background:var(--k5)}
 ::-webkit-scrollbar-thumb:hover{background:var(--g3)}
 
-/* WELCOME SCREEN */
-#welcomeScreen{position:fixed;inset:0;z-index:1000;background:var(--k);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;overflow-y:auto;}
-.ws-bg{position:fixed;inset:0;pointer-events:none;overflow:hidden;}
-.ws-bg::before{content:'';position:absolute;top:-20%;left:-10%;width:55%;height:70%;background:radial-gradient(ellipse,rgba(201,168,76,.05) 0%,transparent 70%);}
-.ws-bg::after{content:'';position:absolute;bottom:-10%;right:-5%;width:50%;height:60%;background:radial-gradient(ellipse,rgba(201,168,76,.04) 0%,transparent 70%);}
-.ws-content{max-width:900px;width:100%;position:relative;animation:wsIn .7s cubic-bezier(.22,1,.36,1)}
-@keyframes wsIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-.ws-top{text-align:center;margin-bottom:3rem}
-.ws-badge{display:inline-flex;align-items:center;gap:.5rem;font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--g3);border:1px solid var(--gl);padding:.28rem .85rem;margin-bottom:1.5rem;background:rgba(201,168,76,.04);}
-.ws-logo{font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:700;color:var(--g2);letter-spacing:.04em;line-height:1;margin-bottom:.6rem;}
+/* WELCOME */
+#ws{position:fixed;inset:0;z-index:1000;background:var(--k);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;overflow-y:auto;}
+.ws-bg{position:fixed;inset:0;pointer-events:none}
+.ws-bg::before{content:'';position:absolute;top:-10%;left:-5%;width:50%;height:60%;background:radial-gradient(ellipse,rgba(201,168,76,.06) 0%,transparent 70%)}
+.ws-bg::after{content:'';position:absolute;bottom:-10%;right:-5%;width:45%;height:55%;background:radial-gradient(ellipse,rgba(201,168,76,.04) 0%,transparent 70%)}
+.ws-wrap{max-width:920px;width:100%;position:relative;animation:fadeUp .6s cubic-bezier(.22,1,.36,1)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.ws-head{text-align:center;margin-bottom:2.5rem}
+.ws-badge{display:inline-flex;align-items:center;gap:.4rem;font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:var(--g3);border:1px solid var(--gl);padding:.25rem .8rem;margin-bottom:1.4rem;background:rgba(201,168,76,.03)}
+.ws-logo{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:700;color:var(--g2);letter-spacing:.04em;line-height:1;margin-bottom:.5rem}
 .ws-logo span{color:var(--g3)}
-.ws-sub{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:var(--t4);margin-bottom:.9rem;}
-.ws-desc{font-size:.82rem;color:var(--t3);line-height:1.65;max-width:500px;margin:0 auto}
-.ws-divider{width:60px;height:1px;background:linear-gradient(90deg,transparent,var(--g3),transparent);margin:1.5rem auto}
-.ws-step{font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.15em;text-transform:uppercase;color:var(--t4);margin-bottom:1rem;text-align:center;}
-.ws-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.65rem;margin-bottom:2rem}
-.ws-card{background:var(--k2);border:1px solid rgba(201,168,76,.1);padding:1.1rem;cursor:pointer;transition:all .18s;display:flex;flex-direction:column;gap:.5rem;position:relative;overflow:hidden;}
-.ws-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--g3);transform:scaleX(0);transition:transform .18s;transform-origin:left}
-.ws-card:hover{border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.04);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
-.ws-card:hover::before{transform:scaleX(1)}
-.ws-card.selected{border-color:var(--g);background:rgba(201,168,76,.08)}
-.ws-card.selected::before{transform:scaleX(1)}
-.wc-ico{font-size:1.4rem}.wc-title{font-size:.78rem;font-weight:600;color:var(--t1);line-height:1.3}
-.wc-sub{font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.08em;text-transform:uppercase;color:var(--g3)}
-.wc-desc{font-size:.65rem;color:var(--t4);line-height:1.45}
-.ws-actions{display:flex;justify-content:center;gap:.8rem;flex-wrap:wrap;margin-bottom:2rem}
-.ws-btn-main{display:inline-flex;align-items:center;gap:.5rem;background:var(--g3);color:var(--k);border:none;font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;letter-spacing:.04em;padding:.75rem 2.2rem;cursor:pointer;transition:all .18s;}
-.ws-btn-main:hover{background:var(--g);box-shadow:0 6px 22px rgba(201,168,76,.3);transform:translateY(-1px)}
-.ws-btn-main:disabled{opacity:.35;pointer-events:none}
-.ws-btn-sec{display:inline-flex;align-items:center;gap:.42rem;background:transparent;border:1px solid var(--gl);color:var(--t2);font-family:'DM Sans',sans-serif;font-size:.78rem;padding:.7rem 1.4rem;cursor:pointer;transition:all .15s;}
-.ws-btn-sec:hover{border-color:var(--g3);color:var(--g2)}
-.ws-feats{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.55rem}
-.wf{background:rgba(201,168,76,.03);border:1px solid var(--gl);padding:.65rem .85rem;display:flex;gap:.5rem;align-items:flex-start}
-.wf-ico{font-size:.9rem;flex-shrink:0;margin-top:1px}
-.wf-title{font-size:.72rem;font-weight:600;color:var(--t2)}
-.wf-desc{font-size:.62rem;color:var(--t4);line-height:1.4;margin-top:.12rem}
+.ws-sub{font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.25em;text-transform:uppercase;color:var(--t4);margin-bottom:.8rem}
+.ws-desc{font-size:.8rem;color:var(--t3);line-height:1.7;max-width:480px;margin:0 auto}
+.ws-div{width:50px;height:1px;background:linear-gradient(90deg,transparent,var(--g3),transparent);margin:1.4rem auto}
+.ws-step{font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;color:var(--t4);margin-bottom:.9rem;text-align:center}
+.ws-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:.55rem;margin-bottom:2rem}
+.wc{background:var(--k2);border:1px solid rgba(201,168,76,.09);padding:1rem;cursor:pointer;transition:all .16s;display:flex;flex-direction:column;gap:.45rem;position:relative;overflow:hidden}
+.wc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--g3);transform:scaleX(0);transition:transform .16s;transform-origin:left}
+.wc:hover{border-color:rgba(201,168,76,.28);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.wc:hover::after{transform:scaleX(1)}
+.wc.sel{border-color:var(--g);background:rgba(201,168,76,.07)}
+.wc.sel::after{transform:scaleX(1)}
+.wci{font-size:1.3rem}.wct{font-size:.76rem;font-weight:600;color:var(--t1);line-height:1.3}
+.wcc{font-family:'JetBrains Mono',monospace;font-size:.47rem;letter-spacing:.08em;text-transform:uppercase;color:var(--g3)}
+.wcd{font-size:.63rem;color:var(--t4);line-height:1.4}
+.ws-acts{display:flex;justify-content:center;gap:.7rem;flex-wrap:wrap;margin-bottom:2rem}
+.ws-btn{display:inline-flex;align-items:center;gap:.45rem;background:var(--g3);color:var(--k);border:none;font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;letter-spacing:.04em;padding:.7rem 2rem;cursor:pointer;transition:all .16s}
+.ws-btn:hover:not(:disabled){background:var(--g);box-shadow:0 6px 20px rgba(201,168,76,.28);transform:translateY(-1px)}
+.ws-btn:disabled{opacity:.3;pointer-events:none}
+.ws-btn2{display:inline-flex;align-items:center;gap:.35rem;background:transparent;border:1px solid var(--gl);color:var(--t2);font-size:.76rem;padding:.65rem 1.3rem;cursor:pointer;transition:all .14s}
+.ws-btn2:hover{border-color:var(--g3);color:var(--g2)}
+.ws-feats{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.45rem}
+.wf{background:rgba(201,168,76,.025);border:1px solid var(--gl);padding:.6rem .8rem;display:flex;gap:.45rem;align-items:flex-start}
+.wfi{font-size:.85rem;flex-shrink:0;margin-top:1px}
+.wft{font-size:.7rem;font-weight:600;color:var(--t2)}
+.wfd{font-size:.6rem;color:var(--t4);line-height:1.4;margin-top:.1rem}
 
 /* API BAR */
-.apibar{background:#0e0e12;border-bottom:1px solid rgba(201,168,76,.12);padding:.38rem 1.25rem;}
-.apibar-inner{display:flex;align-items:center;gap:.65rem;flex-wrap:wrap}
-.apibar-ico{font-size:.85rem;flex-shrink:0}
-.apibar-lbl{font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--t4);flex-shrink:0}
-.apibar-field{display:flex;align-items:center;background:var(--k3);border:1px solid rgba(201,168,76,.15);flex:1;min-width:220px;max-width:380px}
-.apibar-field input{background:transparent;border:none;color:var(--t2);font-family:'JetBrains Mono',monospace;font-size:.68rem;padding:.3rem .55rem;flex:1;outline:none;letter-spacing:.04em}
-.apibar-field input::placeholder{color:var(--t4);font-style:italic;letter-spacing:0}
-.apibar-eye{background:transparent;border:none;border-left:1px solid rgba(201,168,76,.1);color:var(--t4);padding:.28rem .5rem;cursor:pointer;font-size:.72rem;transition:color .12s;flex-shrink:0}
-.apibar-eye:hover{color:var(--g2)}
-.apibar-status{font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.07em;flex-shrink:0;transition:color .2s}
-.apibar-status.ok{color:var(--green)}.apibar-status.err{color:#e08080}.apibar-status.wait{color:var(--t4)}
-.apibar-link{font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.07em;color:var(--g3);text-decoration:none;opacity:.7;flex-shrink:0}
-.apibar-link:hover{opacity:1;text-decoration:underline}
-.apibar-field.has-key{border-color:rgba(39,174,96,.3);}
+.apibar{background:#0c0c10;border-bottom:1px solid rgba(201,168,76,.1);padding:.35rem 1.2rem}
+.apibar-in{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+.api-lbl{font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--t4);flex-shrink:0}
+.api-field{display:flex;align-items:center;background:var(--k3);border:1px solid rgba(201,168,76,.13);flex:1;min-width:200px;max-width:360px}
+.api-field input{background:transparent;border:none;color:var(--t2);font-family:'JetBrains Mono',monospace;font-size:.66rem;padding:.28rem .5rem;flex:1;outline:none;letter-spacing:.04em}
+.api-field input::placeholder{color:var(--t4);font-style:italic;letter-spacing:0}
+.api-eye{background:transparent;border:none;border-left:1px solid rgba(201,168,76,.1);color:var(--t4);padding:.26rem .45rem;cursor:pointer;font-size:.7rem;transition:color .12s}
+.api-eye:hover{color:var(--g2)}
+.api-status{font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.07em;flex-shrink:0}
+.api-status.ok{color:var(--green)}.api-status.err{color:#e08080}.api-status.wait{color:var(--t4)}
+.api-link{font-family:'JetBrains Mono',monospace;font-size:.5rem;color:var(--g3);text-decoration:none;opacity:.7;flex-shrink:0}
+.api-link:hover{opacity:1;text-decoration:underline}
+.api-field.has-key{border-color:rgba(39,174,96,.28)}
 
 /* TOPBAR */
-#appShell{display:none}
-.tb{position:sticky;top:0;z-index:300;height:var(--sh);background:var(--k2);border-bottom:1px solid var(--gl);display:flex;align-items:center;justify-content:space-between;padding:0 1.25rem;box-shadow:0 2px 16px rgba(0,0,0,.5)}
-.tb-l{display:flex;align-items:center;gap:.8rem}
-.seal{width:32px;height:32px;border:1px solid var(--gl);background:var(--gd);display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--g);flex-shrink:0}
-.brand{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:700;color:var(--g2);letter-spacing:.04em}
-.vsep{width:1px;height:20px;background:var(--gl)}
-.vsub{font-family:'JetBrains Mono',monospace;font-size:.54rem;letter-spacing:.18em;text-transform:uppercase;color:var(--t4)}
-.tb-r{display:flex;gap:.4rem;flex-wrap:wrap;align-items:center}
-.chip{font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;padding:.17rem .5rem;border:1px solid var(--gl);color:var(--g3);background:var(--gd)}
-.chip.red{color:#e07070;border-color:rgba(224,112,112,.25);background:rgba(224,112,112,.06)}
-.tb-home{background:transparent;border:1px solid var(--gl);color:var(--t3);font-family:'DM Sans',sans-serif;font-size:.68rem;padding:.3rem .7rem;cursor:pointer;transition:all .12s}
+#app{display:none}
+.tb{position:sticky;top:0;z-index:300;height:var(--sh);background:var(--k2);border-bottom:1px solid var(--gl);display:flex;align-items:center;justify-content:space-between;padding:0 1.2rem;box-shadow:0 2px 16px rgba(0,0,0,.5)}
+.tb-l{display:flex;align-items:center;gap:.7rem}
+.seal{width:30px;height:30px;border:1px solid var(--gl);background:var(--gd);display:flex;align-items:center;justify-content:center;font-size:.9rem;color:var(--g);flex-shrink:0}
+.brand{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:700;color:var(--g2);letter-spacing:.04em}
+.vsep{width:1px;height:18px;background:var(--gl)}
+.vsub{font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;color:var(--t4)}
+.tb-r{display:flex;gap:.35rem;flex-wrap:wrap;align-items:center}
+.chip{font-family:'JetBrains Mono',monospace;font-size:.47rem;letter-spacing:.1em;text-transform:uppercase;padding:.15rem .45rem;border:1px solid var(--gl);color:var(--g3);background:var(--gd)}
+.chip.red{color:#e07070;border-color:rgba(224,112,112,.22);background:rgba(224,112,112,.05)}
+.tb-home{background:transparent;border:1px solid var(--gl);color:var(--t3);font-size:.66rem;padding:.28rem .65rem;cursor:pointer;transition:all .12s}
 .tb-home:hover{border-color:var(--g3);color:var(--g2)}
 
-/* DOC TABS */
-.doc-tabs{background:var(--k2);border-bottom:1px solid var(--gl);display:flex;padding:0 1.25rem;gap:.15rem}
-.dtab{font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:500;padding:.65rem 1.1rem;color:var(--t4);border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;letter-spacing:.01em}
+/* TABS */
+.doc-tabs{background:var(--k2);border-bottom:1px solid var(--gl);display:flex;padding:0 1.2rem;gap:.1rem}
+.dtab{font-size:.74rem;font-weight:500;padding:.62rem 1rem;color:var(--t4);border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;transition:all .14s}
 .dtab:hover{color:var(--t2)}.dtab.on{color:var(--g2);border-bottom-color:var(--g)}
 
 /* LAYOUT */
-.layout{display:grid;grid-template-columns:var(--sw) 1fr;min-height:calc(100vh - var(--sh) - 40px)}
-.sb{background:var(--k2);border-right:1px solid var(--gl);position:sticky;top:calc(var(--sh) + 40px);height:calc(100vh - var(--sh) - 40px);overflow-y:auto;display:flex;flex-direction:column}
-.sb-top{padding:.7rem .8rem .55rem;border-bottom:1px solid var(--gl);background:var(--k3);flex-shrink:0}
-.sb-inp{width:100%;background:var(--k4);border:1px solid var(--gl);color:var(--t1);font-family:'DM Sans',sans-serif;font-size:.75rem;padding:.4rem .62rem;outline:none;transition:border-color .15s}
+.layout{display:grid;grid-template-columns:var(--sw) 1fr;min-height:calc(100vh - var(--sh) - 38px)}
+.sb{background:var(--k2);border-right:1px solid var(--gl);position:sticky;top:calc(var(--sh) + 38px);height:calc(100vh - var(--sh) - 38px);overflow-y:auto;display:flex;flex-direction:column}
+.sb-top{padding:.65rem .75rem .5rem;border-bottom:1px solid var(--gl);background:var(--k3);flex-shrink:0}
+.sb-inp{width:100%;background:var(--k4);border:1px solid var(--gl);color:var(--t1);font-size:.73rem;padding:.38rem .6rem;outline:none;transition:border-color .14s}
 .sb-inp:focus{border-color:var(--g3)}
 .sb-inp::placeholder{color:var(--t4);font-style:italic}
-.sb-cnt{font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.08em;color:var(--t4);margin-top:.28rem;text-transform:uppercase}
+.sb-cnt{font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.08em;color:var(--t4);margin-top:.25rem;text-transform:uppercase}
 .sb-body{flex:1;overflow-y:auto}
-.sg-l{padding:.42rem .8rem .25rem;font-family:'JetBrains Mono',monospace;font-size:.54rem;letter-spacing:.18em;text-transform:uppercase;color:var(--g3);border-bottom:1px solid rgba(201,168,76,.07);background:rgba(201,168,76,.025);display:flex;align-items:center;gap:.38rem}
-.sg-l::after{content:'';flex:1;height:1px;background:rgba(201,168,76,.08)}
-.ab{display:flex;align-items:center;gap:.42rem;padding:.38rem .8rem;background:transparent;border:none;border-left:2px solid transparent;cursor:pointer;text-align:left;width:100%;font-family:'DM Sans',sans-serif;font-size:.73rem;color:var(--t3);transition:all .11s;line-height:1.3}
+.sg-l{padding:.38rem .75rem .22rem;font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;color:var(--g3);border-bottom:1px solid rgba(201,168,76,.06);background:rgba(201,168,76,.02);display:flex;align-items:center;gap:.35rem}
+.sg-l::after{content:'';flex:1;height:1px;background:rgba(201,168,76,.07)}
+.ab{display:flex;align-items:center;gap:.4rem;padding:.35rem .75rem;background:transparent;border:none;border-left:2px solid transparent;cursor:pointer;text-align:left;width:100%;font-size:.71rem;color:var(--t3);transition:all .1s;line-height:1.3}
 .ab:hover{background:var(--gd);color:var(--t2);border-left-color:var(--g3)}
-.ab.on{background:rgba(201,168,76,.09);border-left-color:var(--g);color:var(--g2)}
-.ab .ico{font-size:.85rem;flex-shrink:0;width:16px;text-align:center}
-.ab .lbl{flex:1}.ab .cod{font-family:'JetBrains Mono',monospace;font-size:.49rem;color:var(--t4);letter-spacing:.05em}
+.ab.on{background:rgba(201,168,76,.08);border-left-color:var(--g);color:var(--g2)}
+.ab .ico{font-size:.82rem;flex-shrink:0;width:15px;text-align:center}
+.ab .lbl{flex:1}.ab .cod{font-family:'JetBrains Mono',monospace;font-size:.47rem;color:var(--t4);letter-spacing:.05em}
 .ab.on .cod{color:var(--g3)}
-.sb-prog{padding:.7rem .8rem;border-top:1px solid var(--gl);background:var(--k3);flex-shrink:0}
-.sp-t{font-family:'JetBrains Mono',monospace;font-size:.53rem;letter-spacing:.13em;text-transform:uppercase;color:var(--t4);margin-bottom:.45rem}
-.pi{display:flex;align-items:center;gap:.38rem;font-size:.67rem;color:var(--t4);padding:.12rem 0}
+.sb-prog{padding:.65rem .75rem;border-top:1px solid var(--gl);background:var(--k3);flex-shrink:0}
+.sp-t{font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.13em;text-transform:uppercase;color:var(--t4);margin-bottom:.4rem}
+.pi{display:flex;align-items:center;gap:.35rem;font-size:.65rem;color:var(--t4);padding:.1rem 0}
 .pd{width:5px;height:5px;border-radius:50%;background:var(--k5);border:1px solid var(--t4);flex-shrink:0;transition:all .2s}
 .pd.ok{background:var(--g3);border-color:var(--g)}
-.ptrack{height:2px;background:var(--k5);margin-top:.48rem;border-radius:1px}
-.pfill{height:100%;background:linear-gradient(90deg,var(--g3),var(--g));border-radius:1px;transition:width .3s}
+.ptrack{height:2px;background:var(--k5);margin-top:.45rem}
+.pfill{height:100%;background:linear-gradient(90deg,var(--g3),var(--g));transition:width .3s}
 
 /* MAIN */
-.main{padding:1.4rem 1.6rem 3rem;max-width:790px}
-.ph{margin-bottom:1.1rem;padding-bottom:.9rem;border-bottom:1px solid var(--gl)}
-.ph-ey{font-family:'JetBrains Mono',monospace;font-size:.53rem;letter-spacing:.2em;text-transform:uppercase;color:var(--g3);margin-bottom:.3rem}
-.ph h1{font-family:'Cormorant Garamond',serif;font-size:1.75rem;font-weight:700;color:var(--g2);line-height:1.1;letter-spacing:.02em}
-.ph p{font-size:.76rem;color:var(--t3);margin-top:.28rem;line-height:1.5}
-.atag{display:inline-flex;align-items:center;gap:.38rem;font-size:.68rem;font-weight:500;border:1px solid var(--gl);padding:.18rem .65rem;color:var(--g2);background:var(--gd);margin-top:.5rem}
-.atag-e{display:inline-flex;align-items:center;gap:.38rem;font-size:.68rem;color:var(--t4);border:1px dashed var(--k5);padding:.18rem .65rem;margin-top:.5rem}
-
-/* AUTO SUGGESTION */
-.auto-panel{display:none;background:rgba(74,128,208,.04);border:1px solid rgba(74,128,208,.2);border-left:3px solid var(--blue);margin-bottom:1rem;overflow:hidden;animation:sugestIn .25s ease;}
-@keyframes sugestIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
-.auto-panel.show{display:block}
-.auto-header{background:rgba(74,128,208,.08);border-bottom:1px solid rgba(74,128,208,.15);padding:.5rem .85rem;display:flex;align-items:center;justify-content:space-between;}
-.auto-title{font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--blue)}
-.auto-close{background:transparent;border:none;color:var(--t4);cursor:pointer;font-size:.8rem;line-height:1}
-.auto-close:hover{color:var(--t2)}
-.auto-body{padding:.75rem .85rem;display:grid;grid-template-columns:1fr 1fr;gap:.65rem}
-.auto-sect{display:flex;flex-direction:column;gap:.35rem}
-.auto-sect-title{font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:.15rem}
-.auto-chip{display:flex;align-items:center;gap:.35rem;font-size:.67rem;color:var(--t2);background:rgba(74,128,208,.07);border:1px solid rgba(74,128,208,.15);padding:.26rem .6rem;cursor:pointer;transition:all .12s;user-select:none;}
-.auto-chip:hover{background:rgba(74,128,208,.15);border-color:rgba(74,128,208,.35)}
-.auto-chip.applied{background:rgba(39,174,96,.08);border-color:rgba(39,174,96,.25);color:var(--green)}
-.auto-chip .aci{font-size:.62rem;flex-shrink:0}
-.auto-apply-all{display:inline-flex;align-items:center;gap:.3rem;background:var(--blue);color:#fff;border:none;font-family:'DM Sans',sans-serif;font-size:.67rem;font-weight:500;padding:.35rem .85rem;cursor:pointer;transition:all .12s;margin-top:.4rem;grid-column:1/-1;width:fit-content;}
-.auto-apply-all:hover{background:#5a90e0}
-
-/* AI SUMMARY */
-.ai-summary{display:none;background:rgba(201,168,76,.03);border:1px solid var(--gl);border-left:3px solid var(--g3);margin-bottom:.85rem;animation:sugestIn .25s ease;}
-.ai-summary.show{display:block}
-.ais-header{background:rgba(201,168,76,.06);border-bottom:1px solid var(--gl);padding:.45rem .85rem;display:flex;align-items:center;gap:.42rem}
-.ais-title{font-family:'JetBrains Mono',monospace;font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--g3)}
-.ais-spin{width:10px;height:10px;border:1px solid var(--k5);border-top-color:var(--g);border-radius:50%;animation:spin .9s linear infinite}
-.ais-body{padding:.7rem .85rem;font-size:.74rem;color:var(--t2);line-height:1.6}
+.main{padding:1.3rem 1.5rem 3rem;max-width:800px}
+.ph{margin-bottom:1rem;padding-bottom:.85rem;border-bottom:1px solid var(--gl)}
+.ph-ey{font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:var(--g3);margin-bottom:.28rem}
+.ph h1{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:700;color:var(--g2);line-height:1.1;letter-spacing:.02em}
+.ph p{font-size:.74rem;color:var(--t3);margin-top:.26rem;line-height:1.5}
+.atag-e{display:inline-flex;align-items:center;gap:.35rem;font-size:.66rem;color:var(--t4);border:1px dashed var(--k5);padding:.16rem .6rem;margin-top:.45rem}
+.atag{display:none;align-items:center;gap:.35rem;font-size:.66rem;font-weight:500;border:1px solid var(--gl);padding:.16rem .6rem;color:var(--g2);background:var(--gd);margin-top:.45rem}
+.atag.vis{display:inline-flex}
 
 /* NOTICE */
-.notice{display:flex;align-items:flex-start;gap:.6rem;background:rgba(201,168,76,.04);border:1px solid var(--gl);border-left:3px solid var(--g3);padding:.68rem .88rem;margin-bottom:1rem;font-size:.72rem;color:var(--t2);line-height:1.5}
-.nbadge{font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.09em;background:var(--g3);color:var(--k);padding:.13rem .4rem;white-space:nowrap;flex-shrink:0;margin-top:2px;font-weight:500;text-transform:uppercase}
+.notice{display:flex;align-items:flex-start;gap:.55rem;background:rgba(201,168,76,.035);border:1px solid var(--gl);border-left:3px solid var(--g3);padding:.62rem .85rem;margin-bottom:.9rem;font-size:.7rem;color:var(--t2);line-height:1.5}
+.nbadge{font-family:'JetBrains Mono',monospace;font-size:.47rem;letter-spacing:.08em;background:var(--g3);color:var(--k);padding:.11rem .38rem;white-space:nowrap;flex-shrink:0;margin-top:2px;font-weight:500;text-transform:uppercase}
 
 /* CARDS */
-.card{background:var(--k2);border:1px solid rgba(201,168,76,.1);margin-bottom:.55rem;box-shadow:0 1px 3px rgba(0,0,0,.35),0 4px 12px rgba(0,0,0,.22)}
-.card.open{border-color:rgba(201,168,76,.2)}
-.ch{display:flex;align-items:center;gap:.55rem;padding:.6rem .88rem;cursor:pointer;user-select:none;border-bottom:1px solid transparent;transition:background .12s}
-.card.open .ch{border-bottom-color:rgba(201,168,76,.1);background:rgba(201,168,76,.03)}
-.ch:hover{background:rgba(201,168,76,.04)}
-.cnum{font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.07em;background:var(--g3);color:var(--k);padding:.09rem .36rem;font-weight:500;flex-shrink:0}
-.ctit{font-size:.78rem;font-weight:600;color:var(--t1);flex:1}
-.cst{font-size:.62rem}.cst.ok{color:var(--g3)}.cst.pend{color:var(--t4)}.cst.opt{color:var(--t4);font-style:italic}
-#c5.tem-campos-pendentes{border-color:rgba(224,160,32,.4);animation:card5pulse 2s ease-in-out 3;}
-@keyframes card5pulse{0%,100%{box-shadow:0 1px 3px rgba(0,0,0,.35)}50%{box-shadow:0 0 0 4px rgba(224,160,32,.15),0 4px 20px rgba(0,0,0,.3)}}
-.cch{font-size:.58rem;color:var(--t4);transition:transform .18s}
+.card{background:var(--k2);border:1px solid rgba(201,168,76,.09);margin-bottom:.5rem;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.card.open{border-color:rgba(201,168,76,.18)}
+.ch{display:flex;align-items:center;gap:.5rem;padding:.56rem .85rem;cursor:pointer;user-select:none;border-bottom:1px solid transparent;transition:background .12s}
+.card.open .ch{border-bottom-color:rgba(201,168,76,.09);background:rgba(201,168,76,.025)}
+.ch:hover{background:rgba(201,168,76,.035)}
+.cnum{font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.06em;background:var(--g3);color:var(--k);padding:.08rem .34rem;font-weight:500;flex-shrink:0}
+.ctit{font-size:.76rem;font-weight:600;color:var(--t1);flex:1}
+.cst{font-size:.6rem}.cst.ok{color:var(--g3)}.cst.pend{color:var(--t4)}.cst.opt{color:var(--t4);font-style:italic}
+.cch{font-size:.56rem;color:var(--t4);transition:transform .16s}
 .card:not(.open) .cch{transform:rotate(-90deg)}
-.cb{padding:.88rem;display:none}
+.cb{padding:.85rem;display:none}
 .card.open .cb{display:block}
 
-/* AF BOX */
-.af-box{background:rgba(201,168,76,.03);border:1px solid var(--gl);border-left:3px solid var(--g3);padding:.8rem .88rem;margin-bottom:.7rem}
-.af-title{font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--g2);margin-bottom:.6rem}
-
 /* FIELDS */
-.fr{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-bottom:.65rem}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.6rem}
 .fr.f3{grid-template-columns:1fr 1fr 1fr}.fr.f1{grid-template-columns:1fr}
 .fr:last-child{margin-bottom:0}
-@media(max-width:580px){.fr,.fr.f3{grid-template-columns:1fr}}
-.fg{display:flex;flex-direction:column;gap:.2rem}
-.fl{font-family:'JetBrains Mono',monospace;font-size:.58rem;font-weight:500;letter-spacing:.06em;color:var(--t2);text-transform:uppercase;display:flex;align-items:center;gap:.26rem}
-.fl .req{color:var(--g)}.fl .opt{font-weight:400;color:var(--t4);font-style:italic;text-transform:none;letter-spacing:0;font-size:.58rem}
-.fh{font-size:.58rem;color:var(--t4);font-style:italic}
-input,select,textarea{font-family:'DM Sans',sans-serif;font-size:.78rem;color:var(--t1);background:var(--k3);border:1px solid rgba(201,168,76,.13);padding:.46rem .65rem;width:100%;outline:none;transition:border-color .15s,box-shadow .15s;-webkit-appearance:none}
-input:focus,select:focus,textarea:focus{border-color:var(--g3);box-shadow:0 0 0 3px rgba(201,168,76,.07)}
-input::placeholder,textarea::placeholder{color:var(--t4);font-style:italic;font-size:.74rem}
+@media(max-width:560px){.fr,.fr.f3{grid-template-columns:1fr}}
+.fg{display:flex;flex-direction:column;gap:.18rem}
+.fl{font-family:'JetBrains Mono',monospace;font-size:.56rem;font-weight:500;letter-spacing:.06em;color:var(--t2);text-transform:uppercase;display:flex;align-items:center;gap:.24rem}
+.fl .req{color:var(--g)}.fl .opt{font-weight:400;color:var(--t4);font-style:italic;text-transform:none;letter-spacing:0;font-size:.56rem}
+.fh{font-size:.56rem;color:var(--t4);font-style:italic}
+input,select,textarea{font-family:'DM Sans',sans-serif;font-size:.76rem;color:var(--t1);background:var(--k3);border:1px solid rgba(201,168,76,.12);padding:.44rem .62rem;width:100%;outline:none;transition:border-color .14s,box-shadow .14s;-webkit-appearance:none}
+input:focus,select:focus,textarea:focus{border-color:var(--g3);box-shadow:0 0 0 3px rgba(201,168,76,.06)}
+input::placeholder,textarea::placeholder{color:var(--t4);font-style:italic;font-size:.72rem}
 select option{background:var(--k3);color:var(--t1)}
-textarea{resize:vertical;min-height:82px;line-height:1.6}
+textarea{resize:vertical;min-height:80px;line-height:1.6}
 input[readonly]{background:var(--k4);color:var(--t4);cursor:default}
-input.campo-erro,select.campo-erro,textarea.campo-erro{border-color:#c0392b !important;box-shadow:0 0 0 3px rgba(192,57,43,.18) !important;background:rgba(192,57,43,.06) !important;}
-.fg.campo-erro-label .fl{color:#e08080;}
-.fg.campo-erro-label .fl .req{color:#ff6b6b;}
-.campo-erro-msg{font-size:.58rem;color:#e08080;margin-top:.15rem;display:none;}
-.fg.campo-erro-label .campo-erro-msg{display:block;}
+input.err-f,select.err-f,textarea.err-f{border-color:#c0392b!important;box-shadow:0 0 0 3px rgba(192,57,43,.16)!important}
+.err-m{font-size:.56rem;color:#e08080;margin-top:.12rem;display:none}
+.fg.err-lbl .fl{color:#e08080}
+.fg.err-lbl .err-m{display:block}
+
+/* AF BOX */
+.af-box{background:rgba(201,168,76,.025);border:1px solid var(--gl);border-left:3px solid var(--g3);padding:.75rem .85rem;margin-bottom:.65rem}
+.af-title{font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:var(--g2);margin-bottom:.55rem}
 
 /* PEDIDOS */
-.pr{display:flex;align-items:center;gap:.35rem;margin-bottom:.35rem}
-.pn{font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--t4);width:15px;text-align:right;flex-shrink:0}
+.pr{display:flex;align-items:center;gap:.32rem;margin-bottom:.32rem}
+.pn{font-family:'JetBrains Mono',monospace;font-size:.54rem;color:var(--t4);width:14px;text-align:right;flex-shrink:0}
 .pr input{flex:1}
-.bdp{background:transparent;border:1px solid rgba(201,168,76,.13);color:var(--t4);padding:.4rem .5rem;cursor:pointer;font-size:.66rem;transition:all .12s;flex-shrink:0}
+.bdp{background:transparent;border:1px solid rgba(201,168,76,.12);color:var(--t4);padding:.38rem .48rem;cursor:pointer;font-size:.64rem;transition:all .12s;flex-shrink:0}
 .bdp:hover{border-color:var(--red);color:var(--red);background:var(--redbg)}
-.bap{display:inline-flex;align-items:center;gap:.28rem;background:transparent;border:1px dashed rgba(201,168,76,.2);color:var(--t3);font-family:'DM Sans',sans-serif;font-size:.7rem;padding:.38rem .82rem;cursor:pointer;transition:all .14s;margin-top:.2rem}
+.bap{display:inline-flex;align-items:center;gap:.25rem;background:transparent;border:1px dashed rgba(201,168,76,.18);color:var(--t3);font-size:.68rem;padding:.36rem .78rem;cursor:pointer;transition:all .13s;margin-top:.18rem}
 .bap:hover{border-color:var(--g3);color:var(--g2);background:var(--gd)}
 
 /* TAGS */
-.tgg{display:flex;flex-wrap:wrap;gap:.26rem}
-.tag{font-family:'DM Sans',sans-serif;font-size:.64rem;padding:.18rem .55rem;border:1px solid rgba(201,168,76,.15);cursor:pointer;transition:all .11s;color:var(--t3);background:transparent}
-.tag:hover{border-color:var(--g3);color:var(--g2)}.tag.on{background:rgba(201,168,76,.12);border-color:var(--g3);color:var(--g2)}
+.tgg{display:flex;flex-wrap:wrap;gap:.24rem}
+.tag{font-size:.62rem;padding:.16rem .52rem;border:1px solid rgba(201,168,76,.13);cursor:pointer;transition:all .1s;color:var(--t3)}
+.tag:hover{border-color:var(--g3);color:var(--g2)}.tag.on{background:rgba(201,168,76,.11);border-color:var(--g3);color:var(--g2)}
 
 /* VALIDATION */
-.vbox{display:none;background:var(--redbg);border:1px solid rgba(192,57,43,.27);border-left:3px solid var(--red);padding:.7rem .88rem;margin-bottom:.85rem}
+.vbox{display:none;background:var(--redbg);border:1px solid rgba(192,57,43,.25);border-left:3px solid var(--red);padding:.65rem .85rem;margin-bottom:.8rem}
 .vbox.show{display:block}
-.vt{font-size:.7rem;font-weight:600;color:#e08080;margin-bottom:.35rem}
+.vt{font-size:.68rem;font-weight:600;color:#e08080;margin-bottom:.32rem}
 .vbox ul{list-style:none;display:flex;flex-direction:column;gap:2px}
-.vbox ul li{font-size:.68rem;color:#b09090;display:flex;align-items:center;gap:.28rem}
+.vbox ul li{font-size:.66rem;color:#b09090;display:flex;align-items:center;gap:.25rem}
 .vbox ul li::before{content:'›';color:var(--red)}
 
 /* GENERATE BAR */
-.genbar{background:var(--k2);border:1px solid var(--gl);padding:.9rem;margin-top:.65rem}
-.geninner{display:flex;align-items:flex-start;gap:1rem;flex-wrap:wrap}
-.bgen{display:inline-flex;align-items:center;gap:.42rem;background:var(--g3);color:var(--k);border:none;font-family:'Cormorant Garamond',serif;font-size:.92rem;font-weight:700;letter-spacing:.04em;padding:.62rem 1.5rem;cursor:pointer;transition:all .18s;flex-shrink:0}
-.bgen:hover{background:var(--g);box-shadow:0 4px 18px rgba(201,168,76,.28);transform:translateY(-1px)}
-.bgen:active{transform:none}.bgen:disabled{opacity:.4;pointer-events:none}
-.gennote{font-size:.68rem;color:var(--t4);line-height:1.55;max-width:310px}
+.genbar{background:var(--k2);border:1px solid var(--gl);padding:.85rem;margin-top:.6rem}
+.geninner{display:flex;align-items:flex-start;gap:.9rem;flex-wrap:wrap}
+.bgen{display:inline-flex;align-items:center;gap:.4rem;background:var(--g3);color:var(--k);border:none;font-family:'Cormorant Garamond',serif;font-size:.9rem;font-weight:700;letter-spacing:.04em;padding:.6rem 1.45rem;cursor:pointer;transition:all .16s;flex-shrink:0}
+.bgen:hover{background:var(--g);box-shadow:0 4px 18px rgba(201,168,76,.26);transform:translateY(-1px)}
+.bgen:disabled{opacity:.4;pointer-events:none}
+.gennote{font-size:.66rem;color:var(--t4);line-height:1.55;max-width:320px}
 .gennote strong{color:var(--t3)}
 
 /* LOADING */
 .loading{display:none;text-align:center;padding:2.5rem 1rem}
-.loading.show{display:block;animation:fu .3s ease}
-.lring{width:34px;height:34px;border:1px solid var(--gl);border-top-color:var(--g);border-radius:50%;animation:spin .9s linear infinite;margin:0 auto 1.1rem}
+.loading.show{display:block}
+.lring{width:32px;height:32px;border:1px solid var(--gl);border-top-color:var(--g);border-radius:50%;animation:spin .9s linear infinite;margin:0 auto 1rem}
 @keyframes spin{to{transform:rotate(360deg)}}
-.lt{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-style:italic;color:var(--t2)}
-.ls{font-size:.68rem;color:var(--t4);margin-top:.25rem}
-.phases{max-width:300px;margin:.9rem auto 0;display:flex;flex-direction:column;gap:3px}
-.phase{display:flex;align-items:center;gap:.42rem;padding:.2rem .45rem;transition:all .22s}
-.phase.active{background:rgba(201,168,76,.07);border:1px solid var(--gl)}
-.phase.done{background:rgba(39,174,96,.06)}.phase.error{background:var(--redbg)}
-.pico{font-size:.72rem;flex-shrink:0;width:15px;text-align:center}
-.plbl{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.04em;color:var(--t4)}
+.lt{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-style:italic;color:var(--t2)}
+.ls{font-size:.66rem;color:var(--t4);margin-top:.22rem}
+.phases{max-width:290px;margin:.85rem auto 0;display:flex;flex-direction:column;gap:3px}
+.phase{display:flex;align-items:center;gap:.4rem;padding:.18rem .42rem;transition:all .2s}
+.phase.active{background:rgba(201,168,76,.06);border:1px solid var(--gl)}
+.phase.done{background:rgba(39,174,96,.05)}.phase.error{background:var(--redbg)}
+.pico{font-size:.7rem;flex-shrink:0;width:14px;text-align:center}
+.plbl{font-family:'JetBrains Mono',monospace;font-size:.56rem;letter-spacing:.04em;color:var(--t4)}
 .phase.active .plbl{color:var(--g2)}.phase.done .plbl{color:var(--green)}
 
 /* OUTPUT */
 .output{display:none}.output.show{display:block;animation:fu .3s ease}
 @keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.obar{background:var(--k2);border:1px solid var(--gl);border-bottom:none;padding:.58rem .88rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.42rem}
-.ol{display:flex;align-items:center;gap:.55rem}
+.obar{background:var(--k2);border:1px solid var(--gl);border-bottom:none;padding:.55rem .85rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.4rem}
+.ol{display:flex;align-items:center;gap:.5rem}
 .odot{width:6px;height:6px;border-radius:50%;background:var(--g)}
-.olbl{font-family:'JetBrains Mono',monospace;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)}
-.oacts{display:flex;gap:.3rem;flex-wrap:wrap}
-.ba{display:inline-flex;align-items:center;gap:.26rem;background:var(--k3);border:1px solid rgba(201,168,76,.15);color:var(--t2);font-family:'DM Sans',sans-serif;font-size:.67rem;font-weight:500;padding:.31rem .68rem;cursor:pointer;transition:all .11s}
+.olbl{font-family:'JetBrains Mono',monospace;font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)}
+.oacts{display:flex;gap:.28rem;flex-wrap:wrap}
+.ba{display:inline-flex;align-items:center;gap:.24rem;background:var(--k3);border:1px solid rgba(201,168,76,.13);color:var(--t2);font-size:.65rem;font-weight:500;padding:.3rem .65rem;cursor:pointer;transition:all .1s}
 .ba:hover{border-color:var(--g3);color:var(--g2);background:var(--gd)}
 .ba.gold{background:var(--g3);border-color:var(--g3);color:var(--k);font-weight:600}
 .ba.gold:hover{background:var(--g)}
-.ba.green{background:rgba(39,174,96,.15);border-color:rgba(39,174,96,.3);color:var(--green)}
-.ba.green:hover{background:rgba(39,174,96,.25)}
-.ba.blue2{background:rgba(74,128,208,.12);border-color:rgba(74,128,208,.3);color:#7aabf0}
-.ba.blue2:hover{background:rgba(74,128,208,.22)}
+.ba.green{background:rgba(39,174,96,.12);border-color:rgba(39,174,96,.28);color:var(--green)}
+.ba.green:hover{background:rgba(39,174,96,.22)}
+.ba.blue{background:rgba(74,128,208,.1);border-color:rgba(74,128,208,.28);color:#7aabf0}
+.ba.blue:hover{background:rgba(74,128,208,.2)}
 
 /* DOCUMENT */
-.doc{background:#fff;border:1px solid var(--gl);padding:3.5rem 4.5rem 4.5rem;font-family:'Times New Roman',Times,serif;font-size:12pt;color:#111;line-height:2;box-shadow:0 8px 32px rgba(0,0,0,.45),0 0 20px rgba(201,168,76,.1);min-height:120px;position:relative}
+.doc{background:#fff;border:1px solid var(--gl);padding:3.5rem 4.5rem 4.5rem;font-family:'Times New Roman',Times,serif;font-size:12pt;color:#111;line-height:2;box-shadow:0 8px 32px rgba(0,0,0,.4),0 0 20px rgba(201,168,76,.08);position:relative}
 .doc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--g3),var(--g),var(--g3))}
-@media(max-width:650px){.doc{padding:2rem 1.2rem 2.5rem}}
+@media(max-width:640px){.doc{padding:2rem 1.2rem 2.5rem}}
 .doc .dh{text-align:center;margin-bottom:2.5rem}
 .doc .dj{font-size:11.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.07em;border-bottom:2px solid #111;padding-bottom:.28rem;margin-bottom:.38rem}
 .doc .dv{font-size:10.5pt;color:#444;font-style:italic}
@@ -280,141 +251,140 @@ input.campo-erro,select.campo-erro,textarea.campo-erro{border-color:#c0392b !imp
 .doc .sl{width:260px;height:1px;background:#222;margin:.42rem auto}
 .doc .sn{font-weight:700;text-align:center;text-indent:0;font-size:12pt}
 .doc .so{font-style:italic;text-align:center;text-indent:0;color:#555;font-size:11pt}
-.dmeta{background:var(--k3);border:1px solid var(--gl);border-top:none;padding:.42rem .82rem;display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
-.mc{font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.07em;text-transform:uppercase;color:var(--t4)}
-.mc strong{color:var(--t3);margin-left:.16rem}
+.dmeta{background:var(--k3);border:1px solid var(--gl);border-top:none;padding:.4rem .8rem;display:flex;gap:.9rem;flex-wrap:wrap;align-items:center}
+.mc{font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.07em;text-transform:uppercase;color:var(--t4)}
+.mc strong{color:var(--t3);margin-left:.14rem}
 
 /* REVIEW */
-.revpanel{display:none;margin-top:.55rem}.revpanel.show{display:block;animation:fu .25s ease}
-.revsec{background:var(--k2);border:1px solid var(--gl);overflow:hidden;margin-bottom:.45rem}
-.revh{background:var(--k3);border-bottom:1px solid var(--gl);padding:.52rem .82rem;font-size:.7rem;font-weight:600;color:var(--t2);display:flex;align-items:center;gap:.42rem}
-.revb{padding:.82rem;font-size:.74rem;color:var(--t2);line-height:1.7}
-.revld{display:flex;align-items:center;gap:.45rem;color:var(--t4);font-style:italic;font-size:.72rem}
+.revpanel{display:none;margin-top:.5rem}.revpanel.show{display:block}
+.revsec{background:var(--k2);border:1px solid var(--gl);overflow:hidden;margin-bottom:.4rem}
+.revh{background:var(--k3);border-bottom:1px solid var(--gl);padding:.5rem .8rem;font-size:.68rem;font-weight:600;color:var(--t2);display:flex;align-items:center;gap:.4rem}
+.revb{padding:.8rem;font-size:.72rem;color:var(--t2);line-height:1.7}
+.revld{display:flex;align-items:center;gap:.42rem;color:var(--t4);font-style:italic;font-size:.7rem}
 .rspin{width:12px;height:12px;border:1px solid var(--k5);border-top-color:var(--blue);border-radius:50%;animation:spin .75s linear infinite;flex-shrink:0}
-.scb{display:inline-flex;align-items:center;gap:.28rem;font-family:'JetBrains Mono',monospace;font-size:.61rem;font-weight:500;padding:.14rem .5rem;margin-bottom:.5rem}
-.sc-ok{background:var(--greenbg);color:var(--green);border:1px solid rgba(39,174,96,.22)}
+.scb{display:inline-flex;align-items:center;gap:.26rem;font-family:'JetBrains Mono',monospace;font-size:.58rem;font-weight:500;padding:.12rem .48rem;margin-bottom:.45rem}
+.sc-ok{background:var(--greenbg);color:var(--green);border:1px solid rgba(39,174,96,.2)}
 .sc-bom{background:var(--gd);color:var(--g2);border:1px solid var(--gl)}
-.sc-attn{background:var(--redbg);color:#e08080;border:1px solid rgba(192,57,43,.27)}
-.rst{font-size:.67rem;font-weight:600;margin:.55rem 0 .25rem}
-.ri{display:flex;gap:.35rem;margin-bottom:.3rem;align-items:flex-start;font-size:.72rem}
+.sc-attn{background:var(--redbg);color:#e08080;border:1px solid rgba(192,57,43,.25)}
+.rst{font-size:.65rem;font-weight:600;margin:.52rem 0 .24rem}
+.ri{display:flex;gap:.32rem;margin-bottom:.28rem;align-items:flex-start;font-size:.7rem}
 
 /* CHECKLIST */
-.clpanel{background:var(--k2);border:1px solid rgba(74,128,208,.22);margin-bottom:.45rem;overflow:hidden}
-.clh{background:rgba(74,128,208,.07);border-bottom:1px solid rgba(74,128,208,.18);padding:.52rem .82rem;font-size:.7rem;font-weight:600;color:var(--t2);display:flex;align-items:center;gap:.42rem}
-.clb{padding:.82rem}
-.clitem{display:flex;align-items:flex-start;gap:.5rem;padding:.32rem 0;border-bottom:1px solid rgba(201,168,76,.05)}
+.clpanel{background:var(--k2);border:1px solid rgba(74,128,208,.2);margin-bottom:.4rem}
+.clh{background:rgba(74,128,208,.06);border-bottom:1px solid rgba(74,128,208,.16);padding:.5rem .8rem;font-size:.68rem;font-weight:600;color:var(--t2);display:flex;align-items:center;gap:.4rem}
+.clb{padding:.8rem}
+.clitem{display:flex;align-items:flex-start;gap:.45rem;padding:.3rem 0;border-bottom:1px solid rgba(201,168,76,.04)}
 .clitem:last-child{border-bottom:none}
-.clck{width:13px;height:13px;border:1px solid var(--gl);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.58rem;margin-top:1px;transition:all .14s;background:transparent}
+.clck{width:13px;height:13px;border:1px solid var(--gl);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.56rem;margin-top:1px;transition:all .13s}
 .clck.checked{background:var(--g3);border-color:var(--g3);color:var(--k)}
-.cltxt{font-size:.72rem;color:var(--t2);line-height:1.5;flex:1}
+.cltxt{font-size:.7rem;color:var(--t2);line-height:1.5;flex:1}
 .cltxt strong{color:var(--g2)}
-.cltag{font-family:'JetBrains Mono',monospace;font-size:.5rem;padding:.09rem .32rem;margin-left:.3rem;vertical-align:middle}
-.ct-o{background:var(--redbg);color:#e08080;border:1px solid rgba(192,57,43,.25)}
+.cltag{font-family:'JetBrains Mono',monospace;font-size:.48rem;padding:.08rem .3rem;margin-left:.28rem;vertical-align:middle}
+.ct-o{background:var(--redbg);color:#e08080;border:1px solid rgba(192,57,43,.22)}
 .ct-r{background:var(--gd);color:var(--g3);border:1px solid var(--gl)}
-.clprog{margin-top:.7rem;padding-top:.55rem;border-top:1px solid rgba(201,168,76,.08);font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--t4);letter-spacing:.06em}
-.clpbar{height:2px;background:var(--k5);margin-top:.3rem;border-radius:1px}
-.clpfill{height:100%;background:var(--green);border-radius:1px;transition:width .25s}
+.clprog{margin-top:.65rem;padding-top:.5rem;border-top:1px solid rgba(201,168,76,.07);font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--t4);letter-spacing:.06em}
+.clpbar{height:2px;background:var(--k5);margin-top:.28rem}
+.clpfill{height:100%;background:var(--green);transition:width .24s}
 
 /* TOAST */
-.toast{position:fixed;bottom:1.1rem;right:1.1rem;z-index:9999;background:var(--k2);border:1px solid var(--gl);color:var(--g2);font-size:.7rem;font-weight:500;padding:.48rem .95rem;box-shadow:0 8px 28px rgba(0,0,0,.4);transform:translateY(70px);opacity:0;transition:all .22s cubic-bezier(.34,1.56,.64,1);display:flex;align-items:center;gap:.35rem;pointer-events:none}
+.toast{position:fixed;bottom:1rem;right:1rem;z-index:9999;background:var(--k2);border:1px solid var(--gl);color:var(--g2);font-size:.68rem;font-weight:500;padding:.45rem .9rem;box-shadow:0 8px 28px rgba(0,0,0,.4);transform:translateY(60px);opacity:0;transition:all .2s cubic-bezier(.34,1.56,.64,1);display:flex;align-items:center;gap:.32rem;pointer-events:none}
 .toast.show{transform:translateY(0);opacity:1}
 
-/* EXPORT MODAL */
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:800;display:none;align-items:center;justify-content:center}
-.modal-bg.show{display:flex}
-.modal{background:var(--k2);border:1px solid var(--gl);padding:1.5rem;max-width:380px;width:90%;animation:fu .22s ease}
-.modal-title{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:700;color:var(--g2);margin-bottom:.3rem}
-.modal-sub{font-size:.72rem;color:var(--t3);margin-bottom:1.1rem;line-height:1.5}
-.modal-btns{display:flex;flex-direction:column;gap:.5rem}
-.mbt{display:flex;align-items:center;gap:.65rem;background:var(--k3);border:1px solid rgba(201,168,76,.13);padding:.75rem 1rem;cursor:pointer;transition:all .14s;text-align:left}
-.mbt:hover{border-color:var(--g3);background:var(--gd)}
-.mbt-ico{font-size:1.2rem;flex-shrink:0}
-.mbt-title{font-size:.78rem;font-weight:600;color:var(--t1)}
-.mbt-desc{font-size:.62rem;color:var(--t4);margin-top:.06rem}
-.modal-cancel{background:transparent;border:none;color:var(--t4);font-size:.7rem;cursor:pointer;margin-top:.7rem;width:100%;text-align:center;padding:.3rem}
-.modal-cancel:hover{color:var(--t2)}
+/* EXPORT OVERLAY */
+.exp-ov{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:900;display:none;align-items:center;justify-content:center;flex-direction:column;gap:1rem}
+.exp-ov.show{display:flex}
+.exp-msg{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--g2)}
 
-/* SPINNER OVERLAY for export */
-.export-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:900;display:none;align-items:center;justify-content:center;flex-direction:column;gap:1rem}
-.export-overlay.show{display:flex}
-.export-msg{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--g2)}
+/* AUTO SUGGESTIONS */
+.auto-panel{display:none;background:rgba(74,128,208,.03);border:1px solid rgba(74,128,208,.18);border-left:3px solid var(--blue);margin-bottom:.9rem;overflow:hidden;animation:fu .22s ease}
+.auto-panel.show{display:block}
+.auto-header{background:rgba(74,128,208,.07);border-bottom:1px solid rgba(74,128,208,.14);padding:.45rem .82rem;display:flex;align-items:center;justify-content:space-between}
+.auto-title{font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:var(--blue)}
+.auto-close{background:transparent;border:none;color:var(--t4);cursor:pointer;font-size:.78rem;line-height:1}
+.auto-body{padding:.7rem .82rem;display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.auto-sect-title{font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:.14rem}
+.auto-chip{display:flex;align-items:center;gap:.32rem;font-size:.65rem;color:var(--t2);background:rgba(74,128,208,.06);border:1px solid rgba(74,128,208,.13);padding:.24rem .58rem;cursor:pointer;transition:all .11s;user-select:none;margin-bottom:.25rem}
+.auto-chip:hover{background:rgba(74,128,208,.14);border-color:rgba(74,128,208,.32)}
+.auto-chip.applied{background:rgba(39,174,96,.07);border-color:rgba(39,174,96,.22);color:var(--green)}
+.auto-apply-all{display:inline-flex;align-items:center;gap:.28rem;background:var(--blue);color:#fff;border:none;font-size:.65rem;font-weight:500;padding:.33rem .82rem;cursor:pointer;transition:all .11s;margin-top:.38rem;grid-column:1/-1;width:fit-content}
+.auto-apply-all:hover{background:#5a90e0}
 
-@media(max-width:760px){.layout{grid-template-columns:1fr}.sb{position:static;height:auto;border-right:none;border-bottom:1px solid var(--gl)}.main{padding:1rem}.auto-body{grid-template-columns:1fr}}
+@media(max-width:760px){.layout{grid-template-columns:1fr}.sb{position:static;height:auto;border-right:none;border-bottom:1px solid var(--gl)}.main{padding:.9rem}.auto-body{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
 <!-- WELCOME SCREEN -->
-<div id="welcomeScreen">
+<div id="ws">
   <div class="ws-bg"></div>
-  <div class="ws-content">
-    <div class="ws-top">
-      <div class="ws-badge">⚖ Sistema Jurídico · Versão 5.0 · Brasil</div>
+  <div class="ws-wrap">
+    <div class="ws-head">
+      <div class="ws-badge">⚖ Sistema Jurídico · v6 · Brasil</div>
       <div class="ws-logo">LexForge <span>PRO</span></div>
       <div class="ws-sub">Legal Document Automation System</div>
-      <div class="ws-divider"></div>
-      <p class="ws-desc">Geração automática de peças processuais com artigos verificados, dupla revisão por IA, linguagem jurídica formal e checklist pré-protocolo.</p>
+      <div class="ws-div"></div>
+      <p class="ws-desc">Geração de petições completas com IA Claude, artigos verificados, qualificação correta das partes e revisão automática pós-geração.</p>
     </div>
     <div class="ws-step">① Selecione a área do direito</div>
-    <div class="ws-grid" id="wsAreaGrid">
-      <div class="ws-card" data-key="resp_civil" onclick="wsSelect(this,'Responsabilidade Civil — Danos Morais e Materiais','CC/2002, arts. 186, 187, 927–954; CF/88, art. 5º, V e X','Procedimento Comum (CPC/2015, art. 318)','3 anos (CC/2002, art. 206, §3º, V)')"><div class="wc-ico">⚖️</div><div class="wc-title">Responsabilidade Civil</div><div class="wc-sub">CC</div><div class="wc-desc">Danos morais, materiais e estéticos</div></div>
-      <div class="ws-card" data-key="negativacao" onclick="wsSelect(this,'Negativação Indevida no SPC/Serasa','CDC, arts. 42 e 42-A; CC/2002, art. 186; Lei 9.507/1997; Súmula 385 STJ','Juizado Especial Cível (Lei 9.099/1995)','5 anos (CDC, art. 27)')"><div class="wc-ico">❌</div><div class="wc-title">Negativação Indevida</div><div class="wc-sub">CDC</div><div class="wc-desc">SPC, Serasa, protestos indevidos</div></div>
-      <div class="ws-card" data-key="plano" onclick="wsSelect(this,'Plano de Saúde — Negativa de Cobertura','Lei 9.656/1998; CDC; CF/88, art. 196; Súmula 102 STJ','Procedimento Comum c/c Tutela de Urgência (CPC/2015, art. 300)','10 anos (CC/2002, art. 205)')"><div class="wc-ico">🏥</div><div class="wc-title">Plano de Saúde</div><div class="wc-sub">ANS</div><div class="wc-desc">Negativa de cobertura e procedimentos</div></div>
-      <div class="ws-card" data-key="trab_geral" onclick="wsSelect(this,'Reclamação Trabalhista — Verbas Rescisórias','CLT (Decreto-Lei 5.452/1943); CF/88, art. 7º; Lei 13.467/2017','Rito Ordinário ou Sumaríssimo (CLT, arts. 852-A–852-I)','2 anos após rescisão; 5 anos no curso do contrato (CF/88, art. 7º, XXIX)')"><div class="wc-ico">⚒️</div><div class="wc-title">Reclamação Trabalhista</div><div class="wc-sub">CLT</div><div class="wc-desc">Verbas rescisórias, horas extras, FGTS</div></div>
-      <div class="ws-card" data-key="bancario" onclick="wsSelect(this,'Direito Bancário — Revisão Contratual e Cobranças Abusivas','CDC (Lei 8.078/1990), arts. 2–54; CC/2002, arts. 591–626; Res. CMN 4.656/2018; Súmula 297 STJ','Juizado Especial Cível (Lei 9.099/1995) ou Procedimento Comum','5 anos (CDC, art. 27)')"><div class="wc-ico">🏦</div><div class="wc-title">Direito Bancário</div><div class="wc-sub">CDC</div><div class="wc-desc">Revisão contratual, cobranças abusivas</div></div>
-      <div class="ws-card" data-key="apo_inv" onclick="wsSelect(this,'Aposentadoria por Incapacidade Permanente (Invalidez)','Lei 8.213/1991, arts. 42–47; Decreto 3.048/1999; CF/88, art. 201, I','Juizado Especial Federal (Lei 10.259/2001) ou Procedimento Comum','10 anos (Decreto 20.910/1932)')"><div class="wc-ico">♿</div><div class="wc-title">Apo. por Invalidez</div><div class="wc-sub">INSS</div><div class="wc-desc">Incapacidade permanente, INSS</div></div>
-      <div class="ws-card" data-key="divorcio" onclick="wsSelect(this,'Divórcio e Separação','CC/2002, arts. 1.511–1.783-A; EC 66/2010; CPC/2015, arts. 693–699','Procedimento Especial — Família (CPC/2015, art. 693)','Imprescritível (estado pessoal)')"><div class="wc-ico">💍</div><div class="wc-title">Divórcio / Separação</div><div class="wc-sub">CC</div><div class="wc-desc">Dissolução do casamento e partilha</div></div>
-      <div class="ws-card" data-key="alimentos" onclick="wsSelect(this,'Ação de Alimentos','CC/2002, arts. 1.694–1.710; Lei 5.478/1968; CPC/2015, arts. 693–699','Procedimento Especial — Alimentos (Lei 5.478/1968)','2 anos (CC/2002, art. 206, §2º)')"><div class="wc-ico">👨‍👩‍👧</div><div class="wc-title">Alimentos</div><div class="wc-sub">CC</div><div class="wc-desc">Fixação e revisão de alimentos</div></div>
+    <div class="ws-grid" id="wsGrid">
+      <div class="wc" data-key="resp_civil" onclick="wsSelArea(this,'Responsabilidade Civil — Danos Morais e Materiais','CC/2002, arts. 186, 187, 927–954; CF/88, art. 5º, V e X','Procedimento Comum (CPC/2015, art. 318)','3 anos (CC/2002, art. 206, §3º, V)')"><div class="wci">⚖️</div><div class="wct">Responsabilidade Civil</div><div class="wcc">CC</div><div class="wcd">Danos morais, materiais e estéticos</div></div>
+      <div class="wc" data-key="negativacao" onclick="wsSelArea(this,'Negativação Indevida no SPC/Serasa','CDC, arts. 42 e 42-A; CC/2002, art. 186; Súmula 385 STJ','Juizado Especial Cível (Lei 9.099/1995)','5 anos (CDC, art. 27)')"><div class="wci">❌</div><div class="wct">Negativação Indevida</div><div class="wcc">CDC</div><div class="wcd">SPC, Serasa, protestos indevidos</div></div>
+      <div class="wc" data-key="plano" onclick="wsSelArea(this,'Plano de Saúde — Negativa de Cobertura','Lei 9.656/1998; CDC; CF/88, art. 196; Súmula 102 STJ','Procedimento Comum c/c Tutela de Urgência (CPC/2015, art. 300)','10 anos (CC/2002, art. 205)')"><div class="wci">🏥</div><div class="wct">Plano de Saúde</div><div class="wcc">ANS</div><div class="wcd">Negativa de cobertura e procedimentos</div></div>
+      <div class="wc" data-key="trab_geral" onclick="wsSelArea(this,'Reclamação Trabalhista — Verbas Rescisórias','CLT (Decreto-Lei 5.452/1943); CF/88, art. 7º; Lei 13.467/2017','Rito Ordinário ou Sumaríssimo (CLT, arts. 852-A–852-I)','2 anos após rescisão; 5 anos no curso do contrato (CF/88, art. 7º, XXIX)')"><div class="wci">⚒️</div><div class="wct">Reclamação Trabalhista</div><div class="wcc">CLT</div><div class="wcd">Verbas rescisórias, horas extras, FGTS</div></div>
+      <div class="wc" data-key="bancario" onclick="wsSelArea(this,'Direito Bancário — Revisão Contratual e Cobranças Abusivas','CDC (Lei 8.078/1990), arts. 2–54; CC/2002, arts. 591–626; Súmula 297 STJ','Juizado Especial Cível (Lei 9.099/1995) ou Procedimento Comum','5 anos (CDC, art. 27)')"><div class="wci">🏦</div><div class="wct">Direito Bancário</div><div class="wcc">CDC</div><div class="wcd">Revisão contratual, cobranças abusivas</div></div>
+      <div class="wc" data-key="apo_inv" onclick="wsSelArea(this,'Aposentadoria por Incapacidade Permanente (Invalidez)','Lei 8.213/1991, arts. 42–47; Decreto 3.048/1999; CF/88, art. 201, I','Juizado Especial Federal (Lei 10.259/2001) ou Procedimento Comum','10 anos (Decreto 20.910/1932)')"><div class="wci">♿</div><div class="wct">Apo. por Invalidez</div><div class="wcc">INSS</div><div class="wcd">Incapacidade permanente, INSS</div></div>
+      <div class="wc" data-key="divorcio" onclick="wsSelArea(this,'Divórcio e Separação','CC/2002, arts. 1.571–1.576; EC 66/2010; CPC/2015, arts. 693–699','Procedimento Especial — Família (CPC/2015, art. 693)','Imprescritível (estado pessoal)')"><div class="wci">💍</div><div class="wct">Divórcio / Separação</div><div class="wcc">CC</div><div class="wcd">Dissolução do casamento e partilha</div></div>
+      <div class="wc" data-key="alimentos" onclick="wsSelArea(this,'Ação de Alimentos','CC/2002, arts. 1.694–1.710; Lei 5.478/1968; CPC/2015, arts. 693–699','Procedimento Especial — Alimentos (Lei 5.478/1968)','2 anos (CC/2002, art. 206, §2º)')"><div class="wci">👨‍👩‍👧</div><div class="wct">Alimentos</div><div class="wcc">CC</div><div class="wcd">Fixação e revisão de alimentos</div></div>
     </div>
-    <div class="ws-actions">
-      <button class="ws-btn-main" id="wsBtnIniciar" onclick="wsIniciar()" disabled>📄 Iniciar Petição →</button>
-      <button class="ws-btn-sec" onclick="wsVerTodos()">Ver todas as áreas</button>
+    <div class="ws-acts">
+      <button class="ws-btn" id="wsBtnIniciar" onclick="wsIniciar()" disabled>📄 Iniciar Petição →</button>
+      <button class="ws-btn2" onclick="wsVerTodos()">Ver todas as áreas</button>
     </div>
     <div class="ws-feats">
-      <div class="wf"><div class="wf-ico">🛡</div><div><div class="wf-title">Zero Invenção</div><div class="wf-desc">Artigos pré-selecionados por área — apenas vigentes e verificados</div></div></div>
-      <div class="wf"><div class="wf-ico">✍️</div><div><div class="wf-title">Linguagem Jurídica Formal</div><div class="wf-desc">Gênero correto, qualificação completa, texto forense</div></div></div>
-      <div class="wf"><div class="wf-ico">🔍</div><div><div class="wf-title">Dupla Revisão IA</div><div class="wf-desc">Revisão crítica automática pós-geração</div></div></div>
-      <div class="wf"><div class="wf-ico">✅</div><div><div class="wf-title">Checklist</div><div class="wf-desc">Lista de verificação pré-protocolo obrigatória</div></div></div>
-      <div class="wf"><div class="wf-ico">📄</div><div><div class="wf-title">Export PDF / Word</div><div class="wf-desc">Download funcional em PDF e DOCX</div></div></div>
-      <div class="wf"><div class="wf-ico">🧠</div><div><div class="wf-title">Resumo do Caso</div><div class="wf-desc">IA gera resumo inteligente dos fatos informados</div></div></div>
+      <div class="wf"><div class="wfi">🤖</div><div><div class="wft">IA Claude Gerando</div><div class="wfd">Petição gerada 100% pelo Claude — linguagem jurídica formal e precisa</div></div></div>
+      <div class="wf"><div class="wfi">🛡</div><div><div class="wft">Zero Invenção</div><div class="wfd">Artigos pré-selecionados por área — apenas vigentes</div></div></div>
+      <div class="wf"><div class="wfi">✍️</div><div><div class="wft">Qualificação Correta</div><div class="wfd">Gênero, CPF, endereço, comarca — tudo automático</div></div></div>
+      <div class="wf"><div class="wfi">🔍</div><div><div class="wft">Dupla Revisão IA</div><div class="wfd">Revisão crítica automática pós-geração</div></div></div>
+      <div class="wf"><div class="wfi">✅</div><div><div class="wft">Checklist Pré-Protocolo</div><div class="wfd">Verificação obrigatória antes de protocolar</div></div></div>
+      <div class="wf"><div class="wfi">📄</div><div><div class="wft">Export PDF / Word</div><div class="wfd">Download funcional nos dois formatos</div></div></div>
     </div>
   </div>
 </div>
 
 <!-- APP SHELL -->
-<div id="appShell">
+<div id="app">
 <header class="tb">
   <div class="tb-l">
     <div class="seal">⚖</div>
     <div class="brand">LexForge PRO</div>
     <div class="vsep"></div>
-    <div class="vsub">Legal Document Automation · v5</div>
+    <div class="vsub">Legal Doc Automation · v6</div>
   </div>
   <div class="tb-r">
     <div class="chip red">🛡 Zero Invenção</div>
     <div class="chip">Artigos Verificados</div>
-    <div class="chip">Dupla Revisão IA</div>
+    <div class="chip">IA Revisora</div>
     <button class="tb-home" onclick="goHome()">⬅ Início</button>
   </div>
 </header>
 
 <div class="apibar" id="apiBar">
-  <div class="apibar-inner">
-    <span class="apibar-ico">🔑</span>
-    <span class="apibar-lbl">Chave de API Anthropic:</span>
-    <div class="apibar-field">
-      <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." autocomplete="off" oninput="saveKey()" onpaste="setTimeout(saveKey,10)">
-      <button class="apibar-eye" onclick="toggleKeyVis()" title="Mostrar/Ocultar">👁</button>
+  <div class="apibar-in">
+    <span style="font-size:.85rem">🔑</span>
+    <span class="api-lbl">Chave de API Anthropic:</span>
+    <div class="api-field" id="apiField">
+      <input type="password" id="apiKey" placeholder="sk-ant-api03-..." autocomplete="off" oninput="saveKey()" onpaste="setTimeout(saveKey,10)">
+      <button class="api-eye" onclick="toggleKeyVis()" title="Mostrar/Ocultar">👁</button>
     </div>
-    <span class="apibar-status" id="apiStatus">—</span>
-    <a class="apibar-link" href="https://console.anthropic.com/settings/keys" target="_blank">Obter chave ↗</a>
+    <span class="api-status wait" id="apiStatus">— sem chave (geração local)</span>
+    <a class="api-link" href="https://console.anthropic.com/settings/keys" target="_blank">Obter chave ↗</a>
   </div>
 </div>
 
 <div class="doc-tabs">
   <button class="dtab on" onclick="switchDoc('peticao',this)">⚖ Petição Inicial</button>
   <button class="dtab" onclick="switchDoc('contestacao',this)">🛡 Contestação</button>
-  <button class="dtab" onclick="switchDoc('apelacao',this)">📋 Recurso de Apelação</button>
+  <button class="dtab" onclick="switchDoc('apelacao',this)">📋 Apelação</button>
   <button class="dtab" onclick="switchDoc('agravo',this)">⚡ Agravo de Instrumento</button>
 </div>
 
@@ -428,7 +398,7 @@ input.campo-erro,select.campo-erro,textarea.campo-erro{border-color:#c0392b !imp
     <div class="sg"><div class="sg-l">Privado — Cível</div>
       <button class="ab" data-area="Responsabilidade Civil — Danos Morais e Materiais" data-lei="CC/2002, arts. 186, 187, 927–954; CF/88, art. 5º, V e X" data-rito="Procedimento Comum (CPC/2015, art. 318)" data-presc="3 anos (CC/2002, art. 206, §3º, V)" data-key="resp_civil" onclick="selA(this)"><span class="ico">⚖️</span><span class="lbl">Responsabilidade Civil</span><span class="cod">CC</span></button>
       <button class="ab" data-area="Direito Civil — Obrigações e Contratos" data-lei="CC/2002, arts. 233–965; CPC/2015, art. 318" data-rito="Procedimento Comum (CPC/2015, art. 318)" data-presc="3 a 10 anos (CC/2002, arts. 205–206)" data-key="civil_contratos" onclick="selA(this)"><span class="ico">📜</span><span class="lbl">Obrigações e Contratos</span><span class="cod">CC</span></button>
-      <button class="ab" data-area="Divórcio e Separação" data-lei="CC/2002, arts. 1.511–1.783-A; EC 66/2010; CPC/2015, arts. 693–699" data-rito="Procedimento Especial — Família (CPC/2015, art. 693)" data-presc="Imprescritível (estado pessoal)" data-key="divorcio" onclick="selA(this)"><span class="ico">💍</span><span class="lbl">Divórcio / Separação</span><span class="cod">CC</span></button>
+      <button class="ab" data-area="Divórcio e Separação" data-lei="CC/2002, arts. 1.571–1.576; EC 66/2010; CPC/2015, arts. 693–699" data-rito="Procedimento Especial — Família (CPC/2015, art. 693)" data-presc="Imprescritível (estado pessoal)" data-key="divorcio" onclick="selA(this)"><span class="ico">💍</span><span class="lbl">Divórcio / Separação</span><span class="cod">CC</span></button>
       <button class="ab" data-area="Ação de Alimentos" data-lei="CC/2002, arts. 1.694–1.710; Lei 5.478/1968; CPC/2015, arts. 693–699" data-rito="Procedimento Especial — Alimentos (Lei 5.478/1968)" data-presc="2 anos (CC/2002, art. 206, §2º)" data-key="alimentos" onclick="selA(this)"><span class="ico">👨‍👩‍👧</span><span class="lbl">Alimentos</span><span class="cod">CC</span></button>
       <button class="ab" data-area="Guarda e Visitação" data-lei="CC/2002, arts. 1.583–1.590; ECA (Lei 8.069/1990); Lei 13.058/2014" data-rito="Procedimento Especial — Família (CPC/2015, art. 693)" data-presc="Imprescritível (tutela de menor)" data-key="guarda" onclick="selA(this)"><span class="ico">🧒</span><span class="lbl">Guarda e Visitação</span><span class="cod">CC</span></button>
       <button class="ab" data-area="União Estável — Reconhecimento e Dissolução" data-lei="CC/2002, arts. 1.723–1.727; Lei 9.278/1996; CF/88, art. 226, §3º" data-rito="Procedimento Comum (CPC/2015, art. 318)" data-presc="10 anos (CC/2002, art. 205)" data-key="uniao" onclick="selA(this)"><span class="ico">💑</span><span class="lbl">União Estável</span><span class="cod">CC</span></button>
@@ -440,12 +410,12 @@ input.campo-erro,select.campo-erro,textarea.campo-erro{border-color:#c0392b !imp
       <button class="ab" data-area="Condomínio e Vizinhança" data-lei="CC/2002, arts. 1.314–1.358-A; Lei 4.591/1964" data-rito="Procedimento Comum (CPC/2015, art. 318)" data-presc="5 anos (CC/2002, art. 206, §5º, I)" data-key="cond" onclick="selA(this)"><span class="ico">🏢</span><span class="lbl">Condomínio / Vizinhança</span><span class="cod">CC</span></button>
     </div>
     <div class="sg"><div class="sg-l">Bancário e Consumidor</div>
-      <button class="ab" data-area="Direito Bancário — Revisão Contratual e Cobranças Abusivas" data-lei="CDC (Lei 8.078/1990), arts. 2–54; CC/2002, arts. 591–626; Res. CMN 4.656/2018; Súmula 297 STJ" data-rito="Juizado Especial Cível (Lei 9.099/1995) ou Procedimento Comum" data-presc="5 anos (CDC, art. 27)" data-key="bancario" onclick="selA(this)"><span class="ico">🏦</span><span class="lbl">Direito Bancário</span><span class="cod">CDC</span></button>
-      <button class="ab" data-area="Negativação Indevida no SPC/Serasa" data-lei="CDC, arts. 42 e 42-A; CC/2002, art. 186; Lei 9.507/1997; Súmula 385 STJ" data-rito="Juizado Especial Cível (Lei 9.099/1995)" data-presc="5 anos (CDC, art. 27)" data-key="negativacao" onclick="selA(this)"><span class="ico">❌</span><span class="lbl">Negativação Indevida</span><span class="cod">CDC</span></button>
+      <button class="ab" data-area="Direito Bancário — Revisão Contratual e Cobranças Abusivas" data-lei="CDC (Lei 8.078/1990), arts. 2–54; CC/2002, arts. 591–626; Súmula 297 STJ" data-rito="Juizado Especial Cível (Lei 9.099/1995) ou Procedimento Comum" data-presc="5 anos (CDC, art. 27)" data-key="bancario" onclick="selA(this)"><span class="ico">🏦</span><span class="lbl">Direito Bancário</span><span class="cod">CDC</span></button>
+      <button class="ab" data-area="Negativação Indevida no SPC/Serasa" data-lei="CDC, arts. 42 e 42-A; CC/2002, art. 186; Súmula 385 STJ" data-rito="Juizado Especial Cível (Lei 9.099/1995)" data-presc="5 anos (CDC, art. 27)" data-key="negativacao" onclick="selA(this)"><span class="ico">❌</span><span class="lbl">Negativação Indevida</span><span class="cod">CDC</span></button>
       <button class="ab" data-area="Produto Defeituoso ou com Vício" data-lei="CDC, arts. 12–17 e 18–25; CDC, art. 26; CDC, art. 27" data-rito="Juizado Especial Cível (Lei 9.099/1995) ou Procedimento Comum" data-presc="5 anos (CDC, art. 27)" data-key="produto" onclick="selA(this)"><span class="ico">🛒</span><span class="lbl">Produto Defeituoso</span><span class="cod">CDC</span></button>
       <button class="ab" data-area="Serviço Defeituoso ou com Vício" data-lei="CDC, arts. 14 e 20–22; CDC, art. 26; CDC, art. 27" data-rito="Juizado Especial Cível (Lei 9.099/1995) ou Procedimento Comum" data-presc="5 anos (CDC, art. 27)" data-key="servico" onclick="selA(this)"><span class="ico">🔧</span><span class="lbl">Serviço Defeituoso</span><span class="cod">CDC</span></button>
       <button class="ab" data-area="Plano de Saúde — Negativa de Cobertura" data-lei="Lei 9.656/1998; CDC; CF/88, art. 196; Súmula 102 STJ" data-rito="Procedimento Comum c/c Tutela de Urgência (CPC/2015, art. 300)" data-presc="10 anos (CC/2002, art. 205)" data-key="plano" onclick="selA(this)"><span class="ico">🏥</span><span class="lbl">Plano de Saúde</span><span class="cod">ANS</span></button>
-      <button class="ab" data-area="Transporte Aéreo — Atraso, Cancelamento ou Extravio" data-lei="CDC; Lei 7.565/1986; Res. ANAC 400/2016; Convenção de Montreal (Dec. 5.910/2006)" data-rito="Juizado Especial Cível (Lei 9.099/1995) ou Procedimento Comum" data-presc="2 anos (Convenção de Montreal, art. 35)" data-key="aereo" onclick="selA(this)"><span class="ico">✈️</span><span class="lbl">Transporte Aéreo</span><span class="cod">ANAC</span></button>
+      <button class="ab" data-area="Transporte Aéreo — Atraso, Cancelamento ou Extravio" data-lei="CDC; Lei 7.565/1986; Res. ANAC 400/2016; Convenção de Montreal (Dec. 5.910/2006)" data-rito="Juizado Especial Cível (Lei 9.099/1995)" data-presc="2 anos (Convenção de Montreal, art. 35)" data-key="aereo" onclick="selA(this)"><span class="ico">✈️</span><span class="lbl">Transporte Aéreo</span><span class="cod">ANAC</span></button>
       <button class="ab" data-area="Construtora e Incorporadora — Vícios e Atraso na Entrega" data-lei="Lei 4.591/1964; CDC; CC/2002, arts. 618 e 927; Lei 13.786/2018" data-rito="Procedimento Comum (CPC/2015, art. 318)" data-presc="20 anos (CC/2002, art. 618); 5 anos (CDC, art. 27)" data-key="construtora" onclick="selA(this)"><span class="ico">🏗️</span><span class="lbl">Construtora / Incorporadora</span><span class="cod">CDC</span></button>
       <button class="ab" data-area="Superendividamento e Renegociação de Dívidas" data-lei="CDC, arts. 54-A–54-G (Lei 14.181/2021); CC/2002, arts. 317 e 394" data-rito="Procedimento Comum (CPC/2015, art. 318)" data-presc="5 anos (CDC, art. 27)" data-key="superdiv" onclick="selA(this)"><span class="ico">💳</span><span class="lbl">Superendividamento</span><span class="cod">CDC</span></button>
     </div>
@@ -495,32 +465,28 @@ input.campo-erro,select.campo-erro,textarea.campo-erro{border-color:#c0392b !imp
 
 <main class="main">
   <div class="ph">
-    <div class="ph-ey" id="docTypeLabel">LexForge PRO v5 · Petição Inicial · CPC/2015</div>
+    <div class="ph-ey" id="docTypeLabel">LexForge PRO v6 · Petição Inicial · CPC/2015</div>
     <h1 id="docTitle">Gerador de Petição Inicial</h1>
-    <p>Formulário dinâmico · Linguagem jurídica formal · Qualificação correta das partes · Dupla revisão IA</p>
-    <div><div class="atag-e" id="atE">← Selecione a área do direito</div><div class="atag" id="atS" style="display:none">⚖ <span id="atTxt"></span></div></div>
+    <p>IA Claude · Linguagem jurídica formal · Qualificação correta · Dupla revisão automática</p>
+    <div><div class="atag-e" id="atE">← Selecione a área do direito</div><div class="atag" id="atS">⚖ <span id="atTxt"></span></div></div>
   </div>
 
+  <!-- AUTO SUGGESTIONS -->
   <div class="auto-panel" id="autoPanel">
     <div class="auto-header">
-      <div class="auto-title">✨ Sugestões Automáticas para a Área</div>
-      <button class="auto-close" onclick="gEl('autoPanel').classList.remove('show')">✕</button>
+      <div class="auto-title">✨ Sugestões para a Área</div>
+      <button class="auto-close" onclick="G('autoPanel').classList.remove('show')">✕</button>
     </div>
     <div class="auto-body">
-      <div class="auto-sect"><div class="auto-sect-title">⚖ Fundamentos Jurídicos</div><div id="autoFunds"></div></div>
-      <div class="auto-sect"><div class="auto-sect-title">📋 Pedidos Sugeridos</div><div id="autoPeds"></div></div>
-      <button class="auto-apply-all" onclick="applyAllSuggestions()">✅ Aplicar todas as sugestões</button>
+      <div><div class="auto-sect-title">⚖ Fundamentos Jurídicos</div><div id="autoFunds"></div></div>
+      <div><div class="auto-sect-title">📋 Pedidos Sugeridos</div><div id="autoPeds"></div></div>
+      <button class="auto-apply-all" onclick="applyAll()">✅ Aplicar todas as sugestões</button>
     </div>
-  </div>
-
-  <div class="ai-summary" id="aiSummary">
-    <div class="ais-header"><div class="ais-spin" id="aisSpin"></div><div class="ais-title">🧠 Resumo Inteligente do Caso</div></div>
-    <div class="ais-body" id="aiSummaryBody">Gerando resumo...</div>
   </div>
 
   <div class="notice">
     <div class="nbadge">🛡 Anti-Invenção</div>
-    <div><strong>Sistema de bloqueio ativo:</strong> Artigos pré-selecionados por área — apenas vigentes. Qualificação corrigida automaticamente: gênero gramatical, "inscrito(a) no CPF", endereço completo e comarca obrigatória.</div>
+    <div><strong>Sistema de bloqueio ativo:</strong> A IA usa apenas artigos pré-selecionados por área. Qualificação automática com gênero correto, CPF e comarca obrigatória.</div>
   </div>
 
   <div class="vbox" id="vbox"><div class="vt">⛔ Campos obrigatórios incompletos:</div><ul id="vlist"></ul></div>
@@ -529,9 +495,9 @@ input.campo-erro,select.campo-erro,textarea.campo-erro{border-color:#c0392b !imp
   <div class="card open" id="c1">
     <div class="ch" onclick="tog('c1')"><span class="cnum">01</span><span class="ctit">Qualificação do Autor (Requerente)</span><span class="cst pend" id="s1">Pendente</span><span class="cch">▾</span></div>
     <div class="cb">
-      <div class="fr"><div class="fg"><label class="fl">Nome completo <span class="req">*</span></label><input type="text" id="a_nome" placeholder="Nome civil completo" oninput="upd();detectGender()"></div><div class="fg"><label class="fl">Sexo <span class="req">*</span></label><select id="a_sexo" onchange="upd()"><option value="">Selecione</option><option value="M">Masculino</option><option value="F">Feminino</option></select></div></div>
+      <div class="fr"><div class="fg"><label class="fl">Nome completo <span class="req">*</span></label><input type="text" id="a_nome" placeholder="Nome civil completo" oninput="upd();dGender()"></div><div class="fg"><label class="fl">Sexo <span class="req">*</span></label><select id="a_sexo" onchange="upd()"><option value="">Selecione</option><option value="M">Masculino</option><option value="F">Feminino</option></select></div></div>
       <div class="fr"><div class="fg"><label class="fl">Nacionalidade <span class="req">*</span></label><select id="a_nac" onchange="upd()"><option value="brasileiro">Brasileiro(a)</option><option value="brasileiro naturalizado">Brasileiro(a) Naturalizado(a)</option><option value="estrangeiro">Estrangeiro(a)</option></select></div><div class="fg"><label class="fl">Estado civil <span class="req">*</span></label><select id="a_ec" onchange="upd();chkConj()"><option value="">Selecione</option><option>Solteiro(a)</option><option>Casado(a)</option><option>Divorciado(a)</option><option>Separado(a) judicialmente</option><option>Viúvo(a)</option><option>Em união estável</option></select></div></div>
-      <div class="fr"><div class="fg"><label class="fl">Profissão <span class="req">*</span></label><input type="text" id="a_prof" placeholder="Ex: comerciante, faxineira, motorista" oninput="upd()"></div><div class="fg"><label class="fl">CPF <span class="req">*</span></label><input type="text" id="a_cpf" placeholder="000.000.000-00" oninput="upd()"></div></div>
+      <div class="fr"><div class="fg"><label class="fl">Profissão <span class="req">*</span></label><input type="text" id="a_prof" placeholder="Ex: comerciante, enfermeira, motorista" oninput="upd()"></div><div class="fg"><label class="fl">CPF <span class="req">*</span></label><input type="text" id="a_cpf" placeholder="000.000.000-00" oninput="upd()"></div></div>
       <div class="fr"><div class="fg"><label class="fl">RG <span class="opt">(recomendado)</span></label><input type="text" id="a_rg" placeholder="00.000.000-0 SSP/UF"></div><div class="fg"><label class="fl">CNPJ <span class="opt">(se P.J.)</span></label><input type="text" id="a_cnpj" placeholder="00.000.000/0001-00"></div></div>
       <div class="fr f1" id="rw_conj" style="display:none"><div class="fg"><label class="fl">Cônjuge / Companheiro(a)</label><input type="text" id="a_conj" placeholder="Nome completo do cônjuge"></div></div>
       <div class="fr f1"><div class="fg"><label class="fl">Endereço completo — para intimações <span class="req">*</span></label><input type="text" id="a_end" placeholder="Rua [nome], nº [nº], [compl.], bairro [bairro], [cidade] — [UF], CEP [CEP]" oninput="upd()"><span class="fh">Informe rua, número, bairro, cidade, UF e CEP</span></div></div>
@@ -547,10 +513,6 @@ input.campo-erro,select.campo-erro,textarea.campo-erro{border-color:#c0392b !imp
       <div id="r_pf_f" style="display:none"><div class="fr f3"><div class="fg"><label class="fl">Profissão do Réu</label><input type="text" id="r_qualif" placeholder="Ex: empresário, servidor"></div><div class="fg"><label class="fl">CPF <span class="opt">(se disponível)</span></label><input type="text" id="r_cpf" placeholder="000.000.000-00"></div><div class="fg"><label class="fl">RG <span class="opt">(se disponível)</span></label><input type="text" id="r_rg" placeholder="00.000.000-0"></div></div></div>
       <div id="r_pj_f" style="display:none"><div class="fr"><div class="fg"><label class="fl">CNPJ <span class="opt">(se disponível)</span></label><input type="text" id="r_cnpj" placeholder="00.000.000/0001-00"></div><div class="fg"><label class="fl">Representante Legal</label><input type="text" id="r_rep" placeholder="Sócio-administrador, diretor..."></div></div></div>
       <div class="fr f1"><div class="fg"><label class="fl">Endereço para citação <span class="req">*</span></label><input type="text" id="r_end" placeholder="Endereço completo com rua, número, cidade, UF e CEP" oninput="upd()"></div></div>
-      <div class="notice" style="margin-top:.5rem;padding:.5rem .7rem;font-size:.68rem">
-        <div class="nbadge" style="font-size:.45rem">Dica</div>
-        <span>Para P.J.: qualifique como "CNPJ nº ___, com sede em ___". Para PF: informe CPF e profissão para qualificação completa no documento.</span>
-      </div>
     </div>
   </div>
 
@@ -560,7 +522,7 @@ input.campo-erro,select.campo-erro,textarea.campo-erro{border-color:#c0392b !imp
     <div class="cb">
       <div class="fr"><div class="fg"><label class="fl">Nome completo <span class="req">*</span></label><input type="text" id="adv_n" placeholder="Nome conforme cadastro OAB" oninput="upd()"></div><div class="fg"><label class="fl">OAB nº <span class="req">*</span></label><input type="text" id="adv_oab" placeholder="Ex: 123.456/SP" oninput="upd()"></div></div>
       <div class="fr"><div class="fg"><label class="fl">Endereço profissional <span class="opt">(intimações)</span></label><input type="text" id="adv_end" placeholder="Rua, nº, sala, cidade — UF, CEP"></div><div class="fg"><label class="fl">E-mail profissional <span class="opt">(PJe)</span></label><input type="email" id="adv_email" placeholder="adv@escritorio.com.br"></div></div>
-      <div class="fr"><div class="fg"><label class="fl">Cidade da assinatura <span class="req">*</span></label><input type="text" id="adv_cidade" placeholder="Ex: São Paulo" oninput="upd()"></div><div class="fg"><label class="fl">Comarca <span class="req">*</span></label><input type="text" id="adv_comarca" placeholder="Ex: Comarca de São Paulo/SP" oninput="upd()"><span class="fh">Será usada no endereçamento do documento</span></div></div>
+      <div class="fr"><div class="fg"><label class="fl">Cidade da assinatura <span class="req">*</span></label><input type="text" id="adv_cidade" placeholder="Ex: São Paulo" oninput="upd()"></div><div class="fg"><label class="fl">Comarca <span class="req">*</span></label><input type="text" id="adv_comarca" placeholder="Ex: Comarca de São Paulo/SP" oninput="upd()"><span class="fh">Usada no endereçamento do documento</span></div></div>
     </div>
   </div>
 
@@ -568,30 +530,30 @@ input.campo-erro,select.campo-erro,textarea.campo-erro{border-color:#c0392b !imp
   <div class="card" id="c4">
     <div class="ch" onclick="tog('c4')"><span class="cnum">04</span><span class="ctit">Dados do Processo e Competência</span><span class="cst pend" id="s4">Pendente</span><span class="cch">▾</span></div>
     <div class="cb">
-      <div class="fr"><div class="fg"><label class="fl">Número da Vara / Juízo <span class="req">*</span></label><input type="text" id="p_vara" placeholder="Ex: 3ª Vara de Família" oninput="upd()"><span class="fh">Somente nº e tipo da vara — comarca vem do Card 03</span></div><div class="fg"><label class="fl">Rito processual <span class="req">*</span></label><select id="p_rito" onchange="upd()"><option value="">Selecione</option><option>Procedimento Comum (CPC/2015, art. 318)</option><option>Juizado Especial Cível — JEC (Lei 9.099/1995)</option><option>Juizado Especial Federal — JEF (Lei 10.259/2001)</option><option>Execução de Título Extrajudicial (CPC/2015, art. 824)</option><option>Cumprimento de Sentença (CPC/2015, art. 513)</option><option>Especial — Família (CPC/2015, art. 693)</option><option>Especial — Despejo (Lei 8.245/1991)</option><option>Mandado de Segurança (Lei 12.016/2009)</option><option>Rito Ordinário Trabalhista (CLT, art. 840)</option><option>Rito Sumaríssimo Trabalhista (CLT, art. 852-A)</option></select></div></div>
-      <div class="fr f3"><div class="fg"><label class="fl">Valor da causa (R$) <span class="req">*</span></label><input type="text" id="p_valor" placeholder="15.000,00" oninput="upd()"><span class="fh">CPC/2015, art. 292 — use valor real ou estimado</span></div><div class="fg"><label class="fl">Data dos fatos</label><input type="date" id="p_data"></div><div class="fg"><label class="fl">Prazo prescricional</label><input type="text" id="p_presc" readonly><span class="fh">Preenchido pela área</span></div></div>
+      <div class="fr"><div class="fg"><label class="fl">Número da Vara / Juízo <span class="req">*</span></label><input type="text" id="p_vara" placeholder="Ex: 3ª Vara Cível / 2º Juizado Especial Cível" oninput="upd()"><span class="fh">Comarca vem do Card 03</span></div><div class="fg"><label class="fl">Rito processual <span class="req">*</span></label><select id="p_rito" onchange="upd()"><option value="">Selecione</option><option>Procedimento Comum (CPC/2015, art. 318)</option><option>Juizado Especial Cível — JEC (Lei 9.099/1995)</option><option>Juizado Especial Federal — JEF (Lei 10.259/2001)</option><option>Execução de Título Extrajudicial (CPC/2015, art. 824)</option><option>Cumprimento de Sentença (CPC/2015, art. 513)</option><option>Especial — Família (CPC/2015, art. 693)</option><option>Especial — Despejo (Lei 8.245/1991)</option><option>Mandado de Segurança (Lei 12.016/2009)</option><option>Rito Ordinário Trabalhista (CLT, art. 840)</option><option>Rito Sumaríssimo Trabalhista (CLT, art. 852-A)</option></select></div></div>
+      <div class="fr f3"><div class="fg"><label class="fl">Valor da causa (R$) <span class="req">*</span></label><input type="text" id="p_valor" placeholder="15.000,00" oninput="upd()"><span class="fh">CPC/2015, art. 292</span></div><div class="fg"><label class="fl">Data dos fatos</label><input type="date" id="p_data"></div><div class="fg"><label class="fl">Prazo prescricional</label><input type="text" id="p_presc" readonly><span class="fh">Preenchido pela área</span></div></div>
       <div class="fr"><div class="fg"><label class="fl">Gratuidade de Justiça?</label><select id="p_grat"><option value="nao">Não requerida</option><option value="sim">Sim — CPC/2015, art. 98</option></select></div><div class="fg"><label class="fl">Tutela de urgência?</label><select id="p_tutela"><option value="nao">Não requerida</option><option value="antecipada">Tutela Antecipada — CPC/2015, art. 300</option><option value="cautelar">Tutela Cautelar — CPC/2015, art. 305</option><option value="evidencia">Tutela da Evidência — CPC/2015, art. 311</option></select></div></div>
-      <div class="fr"><div class="fg"><label class="fl">Fundamento da urgência <span class="opt">(se requerida)</span></label><input type="text" id="p_urg" placeholder="Ex: risco de dano irreparável; periculum in mora..."></div><div class="fg"><label class="fl">Audiência de conciliação (CPC/2015, art. 334)</label><select id="p_aud"><option value="sim">Autor não se opõe</option><option value="nao">Autor manifesta desinteresse (art. 334, §4º, I)</option></select></div></div>
+      <div class="fr"><div class="fg"><label class="fl">Fundamento da urgência <span class="opt">(se requerida)</span></label><input type="text" id="p_urg" placeholder="Ex: risco de dano irreparável; periculum in mora"></div><div class="fg"><label class="fl">Audiência de conciliação (CPC/2015, art. 334)</label><select id="p_aud"><option value="sim">Autor não se opõe</option><option value="nao">Autor manifesta desinteresse (art. 334, §4º, I)</option></select></div></div>
     </div>
   </div>
 
-  <!-- CARD 05 ÁREA ESPECÍFICA -->
+  <!-- CARD 05 ÁREA -->
   <div class="card open" id="c5">
     <div class="ch" onclick="tog('c5')"><span class="cnum">05</span><span class="ctit">Informações Específicas da Área</span><span class="cst opt" id="s5">Selecione a área</span><span class="cch">▾</span></div>
-    <div class="cb"><div id="afWrap"><p style="font-size:.72rem;color:var(--t4);font-style:italic">← Selecione a área do direito para exibir os campos específicos desta etapa.</p></div></div>
+    <div class="cb"><div id="afWrap"><p style="font-size:.7rem;color:var(--t4);font-style:italic">← Selecione a área do direito para exibir os campos específicos.</p></div></div>
   </div>
 
   <!-- CARD 06 FATOS -->
   <div class="card" id="c6">
     <div class="ch" onclick="tog('c6')"><span class="cnum">06</span><span class="ctit">Exposição dos Fatos</span><span class="cst pend" id="s6">Pendente</span><span class="cch">▾</span></div>
     <div class="cb">
-      <div class="notice" style="margin-bottom:.7rem;padding:.5rem .75rem;font-size:.68rem">
-        <div class="nbadge" style="font-size:.45rem">Dica</div>
-        <span><strong>Escreva os fatos em linguagem simples</strong> — o sistema converte automaticamente para linguagem jurídica formal. Informe datas, valores, o que aconteceu e os danos sofridos.</span>
+      <div class="notice" style="margin-bottom:.65rem;padding:.48rem .72rem;font-size:.67rem">
+        <div class="nbadge" style="font-size:.44rem">Dica</div>
+        <span><strong>Escreva em linguagem simples</strong> — a IA transforma automaticamente para linguagem jurídica formal. Informe datas, valores e danos.</span>
       </div>
-      <div class="fr f1"><div class="fg"><label class="fl">Narração dos fatos <span class="req">*</span></label><textarea id="f_fatos" rows="8" placeholder="Descreva o que aconteceu: quando, como, o que fez o réu, quais danos você sofreu.&#10;&#10;Exemplo: 'Em janeiro de 2024, o marido passou a xingar e humilhar a autora diariamente. O relacionamento chegou ao fim e o casal decidiu se separar. Não há bens em comum. Existem dois filhos menores: Pedro (8 anos) e Ana (5 anos).'&#10;&#10;Escreva da forma que preferir — o sistema formaliza o texto automaticamente." oninput="upd();chCt();schedSummary()"></textarea><span class="fh" id="chct">0 caracteres — mínimo 100</span></div></div>
+      <div class="fr f1"><div class="fg"><label class="fl">Narração dos fatos <span class="req">*</span></label><textarea id="f_fatos" rows="8" placeholder="Descreva o que aconteceu: quando, como, o que fez o réu, quais danos você sofreu.&#10;&#10;Exemplo: 'Em janeiro de 2024, o banco cobrou juros abusivos no contrato de empréstimo nº 12345. O cliente pagou R$ 3.500 a mais do que devia. Tentou resolver pelo SAC mas foi ignorado.'&#10;&#10;Escreva como quiser — a IA formaliza automaticamente." oninput="upd();chCt()"></textarea><span class="fh" id="chct">0 caracteres — mínimo 100</span></div></div>
       <div class="fr f1"><div class="fg"><label class="fl">Tentativas extrajudiciais <span class="opt">(se houver)</span></label><textarea id="f_tent" rows="3" placeholder="Ex: Reclamação em [data], protocolo nº ___. Notificação enviada em [data]. Ré não respondeu..."></textarea></div></div>
-      <div class="fr f1"><div class="fg"><label class="fl">Documentos que o autor possui</label><input type="text" id="f_docs" placeholder="Ex: contrato, notas fiscais, e-mails, laudo médico, boletim de ocorrência..."><span class="fh">Liste apenas o que existe — não serão inventadas provas</span></div></div>
+      <div class="fr f1"><div class="fg"><label class="fl">Documentos que o autor possui</label><input type="text" id="f_docs" placeholder="Ex: contrato, notas fiscais, e-mails, laudo médico, BO..."><span class="fh">Liste apenas o que existe — a IA não inventa provas</span></div></div>
     </div>
   </div>
 
@@ -599,7 +561,7 @@ input.campo-erro,select.campo-erro,textarea.campo-erro{border-color:#c0392b !imp
   <div class="card" id="c7">
     <div class="ch" onclick="tog('c7')"><span class="cnum">07</span><span class="ctit">Fundamentos Jurídicos Adicionais</span><span class="cst opt">Automático + Opcional</span><span class="cch">▾</span></div>
     <div class="cb">
-      <p style="font-size:.7rem;color:var(--t3);margin-bottom:.55rem">A legislação da área é incluída automaticamente. Marque o que se aplica ao seu caso:</p>
+      <p style="font-size:.68rem;color:var(--t3);margin-bottom:.5rem">Legislação da área incluída automaticamente. Marque o que se aplica:</p>
       <div class="tgg" id="fundGrid">
         <button class="tag" onclick="tg(this)">Dano moral (CC/2002, art. 186)</button>
         <button class="tag" onclick="tg(this)">Dano material (CC/2002, art. 927)</button>
@@ -617,7 +579,7 @@ input.campo-erro,select.campo-erro,textarea.campo-erro{border-color:#c0392b !imp
         <button class="tag" onclick="tg(this)">Astreintes (CPC/2015, art. 536)</button>
         <button class="tag" onclick="tg(this)">Litigância de má-fé (CPC/2015, art. 80)</button>
       </div>
-      <div class="fr f1" style="margin-top:.7rem"><div class="fg"><label class="fl">Fundamento específico <span class="opt">(somente se tiver certeza)</span></label><input type="text" id="f_extra" placeholder="Ex: Súmula 385 STJ; Tema 660 STJ; art. 42, §único, CDC..."></div></div>
+      <div class="fr f1" style="margin-top:.65rem"><div class="fg"><label class="fl">Fundamento específico <span class="opt">(somente se tiver certeza)</span></label><input type="text" id="f_extra" placeholder="Ex: Súmula 385 STJ; Tema 660 STJ; art. 42, §único, CDC..."></div></div>
     </div>
   </div>
 
@@ -625,7 +587,7 @@ input.campo-erro,select.campo-erro,textarea.campo-erro{border-color:#c0392b !imp
   <div class="card" id="c8">
     <div class="ch" onclick="tog('c8')"><span class="cnum">08</span><span class="ctit">Pedidos</span><span class="cst pend" id="s8">Pendente</span><span class="cch">▾</span></div>
     <div class="cb">
-      <p style="font-size:.7rem;color:var(--t3);margin-bottom:.55rem">Seja específico. Informe valores exatos quando possível.</p>
+      <p style="font-size:.68rem;color:var(--t3);margin-bottom:.5rem">Seja específico. Informe valores exatos quando possível.</p>
       <div id="pedList"></div>
       <button class="bap" onclick="addP()">＋ Adicionar pedido</button>
     </div>
@@ -645,15 +607,15 @@ input.campo-erro,select.campo-erro,textarea.campo-erro{border-color:#c0392b !imp
         <button class="tag" onclick="tg(this)">Exibição de documentos (CPC/2015, art. 396)</button>
         <button class="tag on" onclick="tg(this)">Todas as demais admitidas em direito</button>
       </div>
-      <div class="fr f1" style="margin-top:.7rem"><div class="fg"><label class="fl">Testemunhas <span class="opt">(se já souber)</span></label><input type="text" id="p_test" placeholder="Ex: João da Silva (presencial); Maria Souza (vizinha)"></div></div>
+      <div class="fr f1" style="margin-top:.65rem"><div class="fg"><label class="fl">Testemunhas <span class="opt">(se já souber)</span></label><input type="text" id="p_test" placeholder="Ex: João da Silva (presencial); Maria Souza (vizinha)"></div></div>
     </div>
   </div>
 
   <!-- GENERATE BAR -->
   <div class="genbar">
     <div class="geninner">
-      <button class="bgen" id="btnGen" onclick="generate()">⚖ Gerar com Precisão Máxima</button>
-      <div class="gennote"><strong>Pipeline automático:</strong><br>① Validação + qualificação correta das partes<br>② Geração com artigos verificados<br>③ Revisão crítica automática<br>④ Checklist pré-protocolo</div>
+      <button class="bgen" id="btnGen" onclick="generate()">⚖ Gerar Petição com IA</button>
+      <div class="gennote"><strong>Pipeline automático:</strong><br>① Validação + qualificação das partes<br>② IA Claude gera texto jurídico formal<br>③ Revisão crítica automática (com chave)<br>④ Checklist pré-protocolo</div>
     </div>
   </div>
 
@@ -664,9 +626,9 @@ input.campo-erro,select.campo-erro,textarea.campo-erro{border-color:#c0392b !imp
     <div class="ls" id="ldSub">Iniciando</div>
     <div class="phases">
       <div class="phase" id="ph0"><span class="pico">📋</span><span class="plbl">Etapa 1 — Validando dados e qualificação</span></div>
-      <div class="phase" id="ph1"><span class="pico">⚖</span><span class="plbl">Etapa 2 — Gerando com artigos verificados</span></div>
+      <div class="phase" id="ph1"><span class="pico">⚖</span><span class="plbl">Etapa 2 — IA gerando petição completa</span></div>
       <div class="phase" id="ph2"><span class="pico">🔍</span><span class="plbl">Etapa 3 — Revisão crítica automática</span></div>
-      <div class="phase" id="ph3"><span class="pico">✅</span><span class="plbl">Etapa 4 — Gerando checklist pré-protocolo</span></div>
+      <div class="phase" id="ph3"><span class="pico">✅</span><span class="plbl">Etapa 4 — Checklist pré-protocolo</span></div>
     </div>
   </div>
 
@@ -676,8 +638,7 @@ input.campo-erro,select.campo-erro,textarea.campo-erro{border-color:#c0392b !imp
       <div class="ol"><div class="odot"></div><div class="olbl" id="outLbl">Petição gerada — revise antes de protocolar</div></div>
       <div class="oacts">
         <button class="ba" onclick="copyDoc()">📋 Copiar</button>
-        <button class="ba" onclick="printDoc()">🖨️ Imprimir</button>
-        <button class="ba blue2" onclick="exportPDF()">📄 Baixar PDF</button>
+        <button class="ba" onclick="printDoc()">🖨️ Imprimir / PDF</button>
         <button class="ba green" onclick="exportWord()">📝 Baixar Word</button>
         <button class="ba gold" onclick="resetAll()">↩ Novo</button>
       </div>
@@ -699,31 +660,16 @@ input.campo-erro,select.campo-erro,textarea.campo-erro{border-color:#c0392b !imp
 </div>
 </div>
 
-<!-- EXPORT MODAL -->
-<div class="modal-bg" id="exportModal">
-  <div class="modal">
-    <div class="modal-title">Exportar Documento</div>
-    <div class="modal-sub">Escolha o formato para download.</div>
-    <div class="modal-btns">
-      <div class="mbt" onclick="doPDF()"><div class="mbt-ico">📄</div><div><div class="mbt-title">Baixar em PDF</div><div class="mbt-desc">Abre janela de impressão — salve como PDF</div></div></div>
-      <div class="mbt" onclick="doWord()"><div class="mbt-ico">📝</div><div><div class="mbt-title">Baixar em Word (.docx)</div><div class="mbt-desc">Arquivo editável para Word ou Google Docs</div></div></div>
-    </div>
-    <button class="modal-cancel" onclick="closeModal()">Cancelar</button>
-  </div>
-</div>
-
 <!-- Export overlay -->
-<div class="export-overlay" id="exportOverlay">
+<div class="exp-ov" id="expOv">
   <div class="lring"></div>
-  <div class="export-msg" id="exportMsg">Preparando documento...</div>
+  <div class="exp-msg" id="expMsg">Preparando documento...</div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ══════════════════════
-// BANCO DE ARTIGOS
-// ══════════════════════
+// ══ ARTIGOS ══
 const ARTIGOS={
   resp_civil:['CC/2002, art. 186','CC/2002, art. 187','CC/2002, art. 927','CC/2002, art. 944','CC/2002, art. 945','CC/2002, art. 949','CC/2002, art. 950','CF/88, art. 5º, V','CF/88, art. 5º, X'],
   negativacao:['CDC, art. 42','CDC, art. 42-A','CDC, art. 6º, VI','CC/2002, art. 186','CC/2002, art. 927','CF/88, art. 5º, X','Súmula 385 STJ'],
@@ -744,21 +690,19 @@ const ARTIGOS={
   default:['CC/2002, art. 186','CC/2002, art. 927','CPC/2015, art. 318','CF/88, art. 5º, XXXV']
 };
 
-// ══════════════════════
-// SUGESTÕES AUTOMÁTICAS
-// ══════════════════════
-const SUGESTOES={
+// ══ SUGESTÕES ══
+const SUGE={
   negativacao:{
     funds:['Art. 6º do CDC — direitos básicos do consumidor','Dano moral presumido (in re ipsa)','Responsabilidade objetiva (CC/2002, art. 927, §único)','Inversão do ônus da prova (CDC, art. 6º, VIII)'],
     peds:['Retirada imediata do nome dos cadastros restritivos (SPC/Serasa)','Indenização por dano moral — não inferior a R$ ___','Tutela de urgência para retirada cautelar imediata do apontamento','Condenação em custas e honorários advocatícios (CPC/2015, art. 85)']
   },
   plano:{
-    funds:['Cobertura obrigatória — Rol ANS vigente','Vedação de exclusão de cobertura em urgência/emergência (Lei 9.656/1998, art. 35-C)','Dano moral por negativa abusiva de cobertura','Tutela de urgência — risco de dano irreparável à saúde'],
-    peds:['Autorização imediata do procedimento/tratamento negado','Tutela antecipada para liberação imediata do procedimento','Indenização por dano moral','Condenação ao pagamento das despesas médicas causadas pela negativa','Condenação em custas e honorários']
+    funds:['Cobertura obrigatória — Rol ANS vigente','Vedação de exclusão em urgência/emergência (Lei 9.656/1998, art. 35-C)','Dano moral por negativa abusiva de cobertura','Tutela de urgência — risco de dano irreparável à saúde'],
+    peds:['Autorização imediata do procedimento/tratamento negado','Tutela antecipada para liberação imediata do procedimento','Indenização por dano moral','Condenação ao pagamento das despesas médicas','Condenação em custas e honorários']
   },
   trab_geral:{
     funds:['Verbas rescisórias não quitadas (CLT, art. 477)','FGTS + multa de 40% (CF/88, art. 7º, III)','Horas extras com adicional de 50% (CLT, art. 59)','13º salário proporcional (Lei 4.090/1962)','Férias + 1/3 constitucionais (CF/88, art. 7º, XVII)'],
-    peds:['Pagamento do saldo de salário','Aviso prévio proporcional ao tempo de serviço','FGTS de todo o período + multa de 40%','Horas extras e reflexos','13º salário e férias com 1/3 proporcionais','Declaração de rescisão para fins de seguro-desemprego']
+    peds:['Pagamento do saldo de salário','Aviso prévio proporcional ao tempo de serviço','FGTS de todo o período + multa de 40%','Horas extras e reflexos','13º salário e férias com 1/3 proporcionais']
   },
   resp_civil:{
     funds:['Responsabilidade subjetiva — ato ilícito (CC/2002, art. 186)','Dano moral comprovado — abalo psicológico e moral','Nexo de causalidade entre a conduta e o dano','Dever de reparação integral (CC/2002, art. 944)'],
@@ -773,8 +717,8 @@ const SUGESTOES={
     peds:['Concessão da aposentadoria por incapacidade permanente','Pagamento das parcelas atrasadas desde o requerimento administrativo (DIB)','Correção monetária e juros moratórios sobre as parcelas vencidas','Condenação em honorários (CPC/2015, art. 85)']
   },
   divorcio:{
-    funds:['Direito potestativo ao divórcio — EC 66/2010 e CF/88, art. 226, §6º','Partilha de bens conforme regime adotado — CC/2002, arts. 1.571 e ss.','Guarda compartilhada — Lei 13.058/2014','Alimentos transitórios se houver necessidade'],
-    peds:['Decretação do divórcio com dissolução do vínculo conjugal','Partilha igualitária dos bens comuns','Regulamentação da guarda e visitação dos filhos menores (se houver)','Fixação de alimentos (se aplicável)','Condenação em custas e honorários']
+    funds:['Direito potestativo ao divórcio — EC 66/2010 e CF/88, art. 226, §6º','Partilha de bens conforme regime adotado','Guarda compartilhada — Lei 13.058/2014'],
+    peds:['Decretação do divórcio com dissolução do vínculo conjugal','Partilha igualitária dos bens comuns','Regulamentação da guarda e visitação dos filhos menores','Fixação de alimentos (se aplicável)','Condenação em custas e honorários']
   },
   alimentos:{
     funds:['Obrigação alimentar — CC/2002, art. 1.694','Binômio necessidade-possibilidade — CC/2002, art. 1.695','Alimentos provisionais — Lei 5.478/1968, art. 4º','Responsabilidade dos pais — CF/88, art. 229'],
@@ -782,66 +726,61 @@ const SUGESTOES={
   }
 };
 
-// ══════════════════════
-// CAMPOS DINÂMICOS
-// ══════════════════════
+// ══ CAMPOS DINÂMICOS ══
 const AF={
   trab_geral:{title:'Informações Trabalhistas',fields:[
     {id:'af_adm',label:'Data de admissão',type:'date',req:true},
     {id:'af_dem',label:'Data de demissão / rescisão',type:'date',req:false},
     {id:'af_sal',label:'Último salário (R$)',type:'text',placeholder:'Ex: 3.500,00',req:true},
     {id:'af_cargo',label:'Cargo / função exercida',type:'text',placeholder:'Ex: auxiliar administrativo',req:true},
-    {id:'af_ctps',label:'CTPS nº / Série',type:'text',placeholder:'Ex: 12345 / Série 001-SP',req:false},
-    {id:'af_verbas',label:'Verbas não pagas',type:'text',placeholder:'Ex: horas extras, FGTS, aviso prévio, 13º, férias',req:true},
+    {id:'af_verbas',label:'Verbas não pagas',type:'text',placeholder:'Ex: horas extras, FGTS, aviso prévio, 13º, férias',req:true}
   ]},
   acidente:{title:'Informações do Acidente de Trabalho',fields:[
     {id:'af_data_ac',label:'Data do acidente ou diagnóstico',type:'date',req:true},
     {id:'af_local_ac',label:'Local do acidente',type:'text',placeholder:'Ex: linha de produção, obra',req:true},
     {id:'af_lesao',label:'Lesão sofrida / CID',type:'text',placeholder:'Ex: fratura no punho — CID S62.0',req:true},
-    {id:'af_cat',label:'CAT emitida? Número',type:'text',placeholder:'Sim, CAT nº ___ / Não foi emitida',req:false},
+    {id:'af_cat',label:'CAT emitida? Número',type:'text',placeholder:'Sim, CAT nº ___ / Não foi emitida',req:false}
   ]},
   alimentos:{title:'Informações sobre Alimentos',fields:[
     {id:'af_alim',label:'Nome do alimentando',type:'text',placeholder:'Quem receberá os alimentos',req:true},
     {id:'af_parent',label:'Grau de parentesco / vínculo',type:'text',placeholder:'Ex: filho menor, cônjuge',req:true},
     {id:'af_val_alim',label:'Valor dos alimentos pleiteado',type:'text',placeholder:'Ex: R$ 1.500,00 / 30% SM',req:true},
-    {id:'af_nec',label:'Necessidade do alimentando',type:'textarea',placeholder:'Despesas com moradia, saúde, educação...',req:true},
+    {id:'af_nec',label:'Necessidade do alimentando',type:'textarea',placeholder:'Despesas com moradia, saúde, educação...',req:true}
   ]},
   divorcio:{title:'Informações sobre o Divórcio',fields:[
     {id:'af_cas',label:'Data do casamento',type:'date',req:true},
     {id:'af_reg',label:'Regime de bens',type:'text',placeholder:'Ex: comunhão parcial de bens',req:true},
-    {id:'af_tipo_div',label:'Tipo: consensual ou litigioso?',type:'text',placeholder:'Consensual (ambos concordam) ou Litigioso (um se opõe)',req:true},
+    {id:'af_tipo_div',label:'Tipo: consensual ou litigioso?',type:'text',placeholder:'Consensual (ambos concordam) ou Litigioso',req:true},
     {id:'af_bens_div',label:'Há bens a partilhar? Quais?',type:'text',placeholder:'Ex: Não há bens / Imóvel na Rua X, automóvel placa Y',req:true},
-    {id:'af_filhos_div',label:'Filhos menores? Nomes e idades',type:'text',placeholder:'Ex: Pedro, 8 anos; Ana, 5 anos / Não há filhos',req:true},
+    {id:'af_filhos_div',label:'Filhos menores? Nomes e idades',type:'text',placeholder:'Ex: Pedro, 8 anos; Ana, 5 anos / Não há filhos',req:true}
   ]},
   negativacao:{title:'Informações sobre a Negativação',fields:[
     {id:'af_orgao',label:'Órgão de proteção (SPC, Serasa...)',type:'text',placeholder:'Ex: Serasa Experian',req:true},
     {id:'af_val_neg',label:'Valor da dívida negativada (R$)',type:'text',placeholder:'Ex: 2.350,00',req:true},
     {id:'af_orig_neg',label:'Origem da dívida (conforme consta)',type:'text',placeholder:'Ex: suposto débito de empréstimo nº 123',req:true},
-    {id:'af_rel_neg',label:'Havia relação contratual com o réu?',type:'text',placeholder:'Ex: Não houve nenhum contrato celebrado',req:true},
+    {id:'af_rel_neg',label:'Havia relação contratual com o réu?',type:'text',placeholder:'Ex: Não houve nenhum contrato celebrado',req:true}
   ]},
   plano:{title:'Informações sobre o Plano de Saúde',fields:[
     {id:'af_plano_nm',label:'Nome do plano / operadora',type:'text',placeholder:'Ex: Bradesco Saúde; Unimed; Amil',req:true},
     {id:'af_proc_neg',label:'Procedimento / tratamento negado',type:'text',placeholder:'Ex: cirurgia, quimioterapia, internação UTI',req:true},
     {id:'af_cid_plano',label:'CID / diagnóstico médico',type:'text',placeholder:'Ex: CID C50 — neoplasia mamária',req:true},
-    {id:'af_mot_neg',label:'Fundamento da negativa pelo plano',type:'text',placeholder:'Ex: "procedimento não coberto pelo contrato"',req:true},
+    {id:'af_mot_neg',label:'Fundamento da negativa pelo plano',type:'text',placeholder:'Ex: "procedimento não coberto pelo contrato"',req:true}
   ]},
   apo_inv:{title:'Informações para Aposentadoria por Invalidez',fields:[
     {id:'af_nit',label:'NIT / PIS / PASEP do segurado',type:'text',placeholder:'Número de inscrição no INSS',req:true},
     {id:'af_doenca_p',label:'Doença / incapacidade / CID',type:'text',placeholder:'Ex: hérnia lombar — CID M51.1',req:true},
     {id:'af_pericia',label:'Realizou perícia no INSS? Resultado?',type:'text',placeholder:'Ex: Sim — indeferido em dd/mm/aaaa',req:true},
-    {id:'af_nb',label:'Número do benefício / NB (se houver)',type:'text',placeholder:'Ex: NB 123.456.789-0',req:false},
+    {id:'af_nb',label:'Número do benefício / NB (se houver)',type:'text',placeholder:'Ex: NB 123.456.789-0',req:false}
   ]},
   loas:{title:'Informações para BPC/LOAS',fields:[
     {id:'af_benef',label:'Beneficiário (idoso ou PcD?)',type:'text',placeholder:'Ex: pessoa com deficiência — CID F84.0',req:true},
     {id:'af_idade_l',label:'Idade do beneficiário',type:'text',placeholder:'Ex: 68 anos',req:true},
     {id:'af_renda',label:'Renda familiar per capita',type:'text',placeholder:'Ex: R$ 350,00 por pessoa / sem renda',req:true},
-    {id:'af_comp',label:'Composição do grupo familiar',type:'text',placeholder:'Ex: 3 pessoas — mãe, 2 filhos menores',req:true},
-  ]},
+    {id:'af_comp',label:'Composição do grupo familiar',type:'text',placeholder:'Ex: 3 pessoas — mãe, 2 filhos menores',req:true}
+  ]}
 };
 
-// ══════════════════════
-// CHECKLISTS
-// ══════════════════════
+// ══ CHECKLISTS ══
 const CL={
   trab_geral:[
     {t:'<strong>CTPS assinada pelo empregador</strong> — verificar datas de admissão e demissão',o:true},
@@ -849,295 +788,209 @@ const CL={
     {t:'<strong>Holerites dos últimos 12 meses</strong> — confirmar salário e descontos',o:true},
     {t:'Extrato do FGTS (Caixa) — depósitos e multa de 40%',o:false},
     {t:'Ponto eletrônico ou manual — se pleitear horas extras',o:false},
-    {t:'Certificar prazo: 2 anos após a rescisão (CF/88, art. 7º, XXIX)',o:true},
+    {t:'Certificar prazo: 2 anos após a rescisão (CF/88, art. 7º, XXIX)',o:true}
   ],
   negativacao:[
     {t:'<strong>Print ou consulta do cadastro negativo</strong> — SPC, Serasa com data e valor',o:true},
     {t:'<strong>Comprovante de quitação</strong> ou de inexistência da dívida',o:true},
-    {t:'Verificar Súmula 385 STJ — se houver outros apontamentos legítimos, pode não haver dano moral',o:true},
-    {t:'Notificação de negativação recebida? Data?',o:false},
+    {t:'Verificar Súmula 385 STJ — outros apontamentos legítimos podem afastar o dano moral',o:true},
+    {t:'Notificação de negativação recebida? Data?',o:false}
   ],
   plano:[
     {t:'<strong>Contrato / apólice do plano de saúde</strong> — cláusulas de cobertura',o:true},
     {t:'<strong>Solicitação médica e negativa formal</strong> do plano (carta, e-mail, portal)',o:true},
     {t:'<strong>Laudo médico</strong> com CID e justificativa de necessidade',o:true},
     {t:'Verificar Rol de Procedimentos ANS atualizado',o:false},
-    {t:'Se urgência/emergência: verificar Lei 9.656/1998, art. 35-C',o:false},
+    {t:'Se urgência/emergência: verificar Lei 9.656/1998, art. 35-C',o:false}
   ],
   divorcio:[
     {t:'<strong>Certidão de casamento</strong> — original ou cópia autenticada',o:true},
-    {t:'<strong>Documentos dos bens</strong> a partilhar (escritura, CRLV, extrato de conta)',o:false},
+    {t:'<strong>Documentos dos bens</strong> a partilhar (escritura, CRLV, extrato)',o:false},
     {t:'<strong>Certidão de nascimento dos filhos menores</strong>',o:false},
-    {t:'Verificar regime de bens no cartório de registro de imóveis',o:true},
-    {t:'Se litigioso: confirmar fundamento do art. 1.572 do CC/2002',o:false},
+    {t:'Verificar regime de bens no cartório de registro de imóveis',o:true}
   ],
   alimentos:[
     {t:'<strong>Certidão de nascimento</strong> do alimentando',o:true},
     {t:'<strong>Comprovante de renda</strong> do alimentante (holerite, IR, CNIS)',o:true},
     {t:'<strong>Comprovante de despesas</strong> do alimentando (escola, saúde, moradia)',o:true},
-    {t:'Verificar se há acordo extrajudicial anterior',o:false},
+    {t:'Verificar se há acordo extrajudicial anterior',o:false}
   ],
   apo_inv:[
     {t:'<strong>Carta de indeferimento do INSS</strong> com número do NB e fundamento',o:true},
     {t:'<strong>Laudos médicos</strong> com CID, data e CRM do médico',o:true},
     {t:'<strong>CNIS</strong> — histórico de contribuições (Meu INSS ou advogado)',o:true},
     {t:'Verificar DCI (data de início da incapacidade) — impacta o DIB',o:true},
-    {t:'Confirmar carência: 12 contribuições (Lei 8.213/1991, art. 25, I)',o:true},
+    {t:'Confirmar carência: 12 contribuições (Lei 8.213/1991, art. 25, I)',o:true}
   ],
   default:[
     {t:'<strong>Verificar todos os artigos de lei citados</strong> — confirmar vigência e redação atual',o:true},
     {t:'<strong>Conferir valor da causa</strong> — deve corresponder ao benefício econômico pretendido (CPC/2015, art. 292)',o:true},
-    {t:'<strong>Verificar competência</strong> — Vara correta para o tipo de ação e domicílio do réu',o:true},
+    {t:'<strong>Verificar competência</strong> — Vara correta para o tipo de ação',o:true},
     {t:'Confirmar prazo prescricional — calcular a partir do evento danoso',o:true},
     {t:'Reunir todos os documentos listados como prova antes do protocolo',o:false},
     {t:'Revisar qualificação das partes — conferir CPF/CNPJ na Receita Federal',o:false},
     {t:'Se tutela requerida: garantir que os requisitos do CPC/2015, art. 300 estão demonstrados',o:false},
-    {t:'<strong>Assinar digitalmente</strong> no sistema do tribunal (PJe, e-SAJ, PROJUDI) antes de protocolar',o:true},
+    {t:'<strong>Assinar digitalmente</strong> no PJe, e-SAJ ou PROJUDI antes de protocolar',o:true}
   ]
 };
 
-// ══════════════════════
-// STATE
-// ══════════════════════
+// ══ STATE ══
 let SA='',SL='',SP='',SK='',SR='',DOC='peticao',pedN=0;
-let _summaryTimer=null;
+let _wsArea=null;
 
-// ══════════════════════
-// GENDER DETECTION
-// ══════════════════════
-// Terminations that strongly indicate feminine
-const femEndings=['a','iane','iane','iana','ine','eia','eia','ela'];
-
-function detectGender(){
-  const nome=vEl('a_nome').trim();
+// ══ GENDER DETECTION ══
+function dGender(){
+  const nome=V('a_nome');
   if(!nome)return;
-  const sexEl=gEl('a_sexo');
-  if(sexEl.value)return; // don't override manual selection
-  const first=nome.split(' ')[0].toLowerCase();
-  // Common feminine endings
-  if(/([aáâãà]|iane|iana|ine|eia|ela|isa|issa|ícia|ice|ize|ize|iene|iene)$/.test(first)){
-    sexEl.value='F';
-  } else if(/(o|os|or|im|ão|on|el|er|eu|eus|us|to|do|ro|lo|no)$/.test(first)){
-    sexEl.value='M';
-  }
+  const s=G('a_sexo');
+  if(s.value)return;
+  const f=nome.split(' ')[0].toLowerCase();
+  if(/([aáâãà]|iane|iana|ine|eia|ela|isa|issa|ice|ize|iene)$/.test(f))s.value='F';
+  else if(/(o|os|or|im|ão|on|el|er|eu|eus|us|to|do|ro|lo|no)$/.test(f))s.value='M';
 }
 
-// Returns gendered forms based on sex field
-function G(m,f){
-  const s=vEl('a_sexo')||'M';
-  return s==='F'?f:m;
-}
+function gSex(){return(G('a_sexo')&&G('a_sexo').value)||'M';}
+function gFem(){return gSex()==='F';}
 
-// Fix nationality with gender
 function getNac(){
-  const nac=vEl('a_nac');
-  const s=vEl('a_sexo')||'M';
-  if(nac==='brasileiro')return s==='F'?'brasileira':'brasileiro';
-  if(nac==='brasileiro naturalizado')return s==='F'?'brasileira naturalizada':'brasileiro naturalizado';
-  return s==='F'?'estrangeira':'estrangeiro';
+  const nac=V('a_nac');const f=gFem();
+  if(nac==='brasileiro')return f?'brasileira':'brasileiro';
+  if(nac==='brasileiro naturalizado')return f?'brasileira naturalizada':'brasileiro naturalizado';
+  return f?'estrangeira':'estrangeiro';
 }
 
-// Fix estado civil with gender
 function getEC(){
-  const ec=vEl('a_ec');
-  if(!ec)return '';
-  const s=vEl('a_sexo')||'M';
-  return ec.replace('(a)',s==='F'?'a':'o');
+  const ec=V('a_ec');
+  if(!ec)return'';
+  return ec.replace('(a)',gFem()?'a':'o');
 }
 
-// Get réu gender pronoun
-function getReuGenero(){
-  const tipo=vEl('r_tipo');
-  if(tipo==='pf_f')return'F';
-  if(tipo==='pf_m')return'M';
-  return'N'; // neutro (PJ/pub)
+function getReuGen(){
+  const t=V('r_tipo');
+  if(t==='pf_f')return'F';
+  if(t==='pf_m')return'M';
+  return'N';
 }
 
-function RG(m,f,n){
-  const g=getReuGenero();
-  if(g==='F')return f;
-  if(g==='N')return n||m;
-  return m;
-}
-
-// ══════════════════════
-// WELCOME SCREEN
-// ══════════════════════
-let wsSelectedArea=null;
-
-function wsSelect(card,area,lei,rito,presc){
-  document.querySelectorAll('.ws-card').forEach(c=>c.classList.remove('selected'));
-  card.classList.add('selected');
-  wsSelectedArea={area,lei,rito,presc,key:card.dataset.key};
-  gEl('wsBtnIniciar').disabled=false;
+// ══ WELCOME ══
+function wsSelArea(card,area,lei,rito,presc){
+  document.querySelectorAll('.wc').forEach(c=>c.classList.remove('sel'));
+  card.classList.add('sel');
+  _wsArea={area,lei,rito,presc,key:card.dataset.key};
+  G('wsBtnIniciar').disabled=false;
 }
 
 function wsIniciar(){
-  if(!wsSelectedArea)return;
-  gEl('welcomeScreen').style.opacity='0';
-  gEl('welcomeScreen').style.transform='scale(.97)';
-  gEl('welcomeScreen').style.transition='all .3s ease';
+  if(!_wsArea)return;
+  const s=G('ws');s.style.opacity='0';s.style.transform='scale(.97)';s.style.transition='all .28s';
   setTimeout(()=>{
-    gEl('welcomeScreen').style.display='none';
-    gEl('appShell').style.display='block';
-    const btn=document.querySelector(`.ab[data-key="${wsSelectedArea.key}"]`);
-    if(btn){selA(btn);}
-    else{
-      SA=wsSelectedArea.area;SL=wsSelectedArea.lei;SP=wsSelectedArea.presc;SK=wsSelectedArea.key;SR=wsSelectedArea.rito;
-      document.getElementById('p_presc').value=SP;
-      renderAF(SK);showAutoSuggestions(SK);upd();
-    }
-  },300);
+    s.style.display='none';
+    G('app').style.display='block';
+    const btn=document.querySelector(`.ab[data-key="${_wsArea.key}"]`);
+    if(btn)selA(btn);
+    else{SA=_wsArea.area;SL=_wsArea.lei;SP=_wsArea.presc;SK=_wsArea.key;SR=_wsArea.rito;G('p_presc').value=SP;renderAF(SK);showSuggestions(SK);upd();}
+  },280);
 }
 
 function wsVerTodos(){
-  gEl('welcomeScreen').style.opacity='0';gEl('welcomeScreen').style.transition='all .25s';
-  setTimeout(()=>{gEl('welcomeScreen').style.display='none';gEl('appShell').style.display='block';},250);
+  const s=G('ws');s.style.opacity='0';s.style.transition='all .22s';
+  setTimeout(()=>{s.style.display='none';G('app').style.display='block';},220);
 }
 
 function goHome(){
-  gEl('welcomeScreen').style.display='flex';gEl('welcomeScreen').style.opacity='1';gEl('welcomeScreen').style.transform='none';
-  gEl('appShell').style.display='none';
+  G('ws').style.display='flex';G('ws').style.opacity='1';G('ws').style.transform='none';
+  G('app').style.display='none';
 }
 
-// ══════════════════════
-// DOC SWITCH
-// ══════════════════════
+// ══ DOC SWITCH ══
 function switchDoc(type,btn){
   DOC=type;
   document.querySelectorAll('.dtab').forEach(t=>t.classList.remove('on'));
   btn.classList.add('on');
-  const labels={peticao:['LexForge PRO v5 · Petição Inicial · CPC/2015','Gerador de Petição Inicial'],contestacao:['LexForge PRO v5 · Contestação','Gerador de Contestação'],apelacao:['LexForge PRO v5 · Recurso de Apelação','Gerador de Recurso de Apelação'],agravo:['LexForge PRO v5 · Agravo de Instrumento','Gerador de Agravo de Instrumento']};
+  const labels={peticao:['LexForge PRO v6 · Petição Inicial · CPC/2015','Gerador de Petição Inicial'],contestacao:['LexForge PRO v6 · Contestação','Gerador de Contestação'],apelacao:['LexForge PRO v6 · Recurso de Apelação','Gerador de Recurso de Apelação'],agravo:['LexForge PRO v6 · Agravo de Instrumento','Gerador de Agravo de Instrumento']};
   const l=labels[type]||labels.peticao;
-  document.getElementById('docTypeLabel').textContent=l[0];
-  document.getElementById('docTitle').textContent=l[1];
+  G('docTypeLabel').textContent=l[0];G('docTitle').textContent=l[1];
 }
 
-// ══════════════════════
-// FILTER + SELECT AREA
-// ══════════════════════
+// ══ FILTER / SELECT AREA ══
 function filterA(q){
   const ql=q.toLowerCase();let n=0;
   document.querySelectorAll('.ab').forEach(b=>{const ok=!q||b.textContent.toLowerCase().includes(ql);b.style.display=ok?'':'none';if(ok)n++;});
   document.querySelectorAll('.sg').forEach(g=>{g.style.display=Array.from(g.querySelectorAll('.ab')).some(b=>b.style.display!=='none')?'':'none';});
-  document.getElementById('aCnt').textContent=n+' área'+(n!==1?'s':'')+' disponíve'+(n!==1?'is':'l');
+  G('aCnt').textContent=n+' área'+(n!==1?'s':'')+' disponíve'+(n!==1?'is':'l');
 }
 
 function selA(btn){
   document.querySelectorAll('.ab').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
   SA=btn.dataset.area;SL=btn.dataset.lei;SP=btn.dataset.presc||'';SK=btn.dataset.key||'default';SR=btn.dataset.rito||'';
-  document.getElementById('atE').style.display='none';
-  document.getElementById('atS').style.display='inline-flex';
-  document.getElementById('atTxt').textContent=SA;
-  document.getElementById('p_presc').value=SP;
-  if(SR&&!document.getElementById('p_rito').value)document.getElementById('p_rito').value=SR;
-  renderAF(SK);showAutoSuggestions(SK);upd();
+  G('atE').style.display='none';
+  G('atS').classList.add('vis');G('atTxt').textContent=SA;
+  G('p_presc').value=SP;
+  if(SR&&!G('p_rito').value)G('p_rito').value=SR;
+  renderAF(SK);showSuggestions(SK);upd();
 }
 
-// ══════════════════════
-// AUTO SUGGESTIONS
-// ══════════════════════
-function showAutoSuggestions(key){
-  const s=SUGESTOES[key];
-  const panel=gEl('autoPanel');
-  if(!s){panel.classList.remove('show');return;}
-  const fundsEl=gEl('autoFunds');const pedsEl=gEl('autoPeds');
-  fundsEl.innerHTML=s.funds.map((f,i)=>`<div class="auto-chip" data-type="fund" data-val="${f}" onclick="applyChip(this)">${f}</div>`).join('');
-  pedsEl.innerHTML=s.peds.map((p,i)=>`<div class="auto-chip" data-type="ped" data-val="${p}" onclick="applyChip(this)">${p}</div>`).join('');
-  panel.classList.add('show');
+// ══ SUGGESTIONS ══
+function showSuggestions(key){
+  const s=SUGE[key];
+  if(!s){G('autoPanel').classList.remove('show');return;}
+  G('autoFunds').innerHTML=s.funds.map(f=>`<div class="auto-chip" data-type="fund" data-val="${f}" onclick="applyChip(this)">${f}</div>`).join('');
+  G('autoPeds').innerHTML=s.peds.map(p=>`<div class="auto-chip" data-type="ped" data-val="${p}" onclick="applyChip(this)">${p}</div>`).join('');
+  G('autoPanel').classList.add('show');
 }
 
 function applyChip(el){
   if(el.classList.contains('applied'))return;
   const type=el.dataset.type,val=el.dataset.val;
   if(type==='fund'){
-    const tags=document.querySelectorAll('#fundGrid .tag');
     let found=false;
-    tags.forEach(t=>{if(t.textContent.toLowerCase().includes(val.toLowerCase().split('(')[0].trim())){t.classList.add('on');found=true;}});
-    if(!found){const ex=gEl('f_extra');ex.value=(ex.value?ex.value+'; ':'')+val;}
-    el.classList.add('applied');el.innerHTML='✓ '+val;showToast('✓ Fundamento aplicado');
-  } else if(type==='ped'){
-    addPWithText(val);el.classList.add('applied');el.innerHTML='✓ '+val;showToast('✓ Pedido adicionado');
+    document.querySelectorAll('#fundGrid .tag').forEach(t=>{if(t.textContent.toLowerCase().includes(val.toLowerCase().split('(')[0].trim())){t.classList.add('on');found=true;}});
+    if(!found){const ex=G('f_extra');ex.value=(ex.value?ex.value+'; ':'')+val;}
+    el.classList.add('applied');el.innerHTML='✓ '+val;toast('✓ Fundamento aplicado');
+  } else {
+    addPWithText(val);el.classList.add('applied');el.innerHTML='✓ '+val;toast('✓ Pedido adicionado');
   }
   upd();
 }
 
-function applyAllSuggestions(){
+function applyAll(){
   document.querySelectorAll('.auto-chip:not(.applied)').forEach(c=>applyChip(c));
-  showToast('✅ Todas as sugestões aplicadas');
+  toast('✅ Todas as sugestões aplicadas');
 }
 
-// ══════════════════════
-// AI SUMMARY
-// ══════════════════════
-function schedSummary(){
-  clearTimeout(_summaryTimer);
-  const txt=vEl('f_fatos');
-  if(txt.length<150||!getKey()){gEl('aiSummary').classList.remove('show');return;}
-  _summaryTimer=setTimeout(()=>genSummary(txt),1800);
-}
-
-async function genSummary(txt){
-  if(!getKey()){gEl('aiSummary').classList.remove('show');return;}
-  const s=gEl('aiSummary');
-  s.classList.add('show');
-  gEl('aisSpin').style.display='block';
-  gEl('aiSummaryBody').textContent='Gerando resumo...';
-  try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:apiHeaders(),body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,messages:[{role:'user',content:`Em 2 frases objetivas, faça um RESUMO DO CASO para o advogado, descrevendo o que aconteceu e o que o cliente quer. Sem formalidades. Use linguagem direta. Fatos: ${txt.slice(0,600)}`}]})});
-    if(!res.ok)throw new Error();
-    const d=await res.json();
-    const result=d.content.map(b=>b.text||'').join('');
-    gEl('aisSpin').style.display='none';
-    gEl('aiSummaryBody').textContent=result||'Resumo não disponível.';
-  }catch{gEl('aiSummary').classList.remove('show');}
-}
-
-// ══════════════════════
-// DYNAMIC FIELDS
-// ══════════════════════
+// ══ DYNAMIC FIELDS ══
 function renderAF(k){
-  const wrap=document.getElementById('afWrap'),def=AF[k],s5=document.getElementById('s5');
-  const card5=document.getElementById('c5');
+  const wrap=G('afWrap'),def=AF[k],s5=G('s5');
   if(!def){
-    wrap.innerHTML=`<p style="font-size:.72rem;color:var(--t3);font-style:italic">✓ Sem campos adicionais obrigatórios para esta área. Preencha os fatos com detalhes específicos.</p>`;
+    wrap.innerHTML=`<p style="font-size:.7rem;color:var(--t3);font-style:italic">✓ Sem campos adicionais para esta área. Preencha os fatos com detalhes específicos.</p>`;
     if(s5){s5.textContent='Sem campos extras';s5.className='cst opt';}
-    const old=document.getElementById('af-alert');if(old)old.remove();
     return;
   }
-  if(card5){card5.classList.add('open');card5.classList.add('tem-campos-pendentes');}
-  let h=`<div class="af-box" id="afBox">`;
-  h+=`<div class="af-title">⚙ Campos Específicos — ${def.title}</div>`;
+  G('c5').classList.add('open');
+  let h=`<div class="af-box"><div class="af-title">⚙ Campos Específicos — ${def.title}</div>`;
   for(let i=0;i<def.fields.length;i+=2){
     const f1=def.fields[i],f2=def.fields[i+1];
     const isTA=f1.type==='textarea';
     h+=`<div class="fr${isTA?' f1':''}">`;
-    h+=rF(f1);if(f2&&!isTA)h+=rF(f2);
+    h+=rFld(f1);if(f2&&!isTA)h+=rFld(f2);
     h+=`</div>`;
   }
   h+=`</div>`;
   wrap.innerHTML=h;
   wrap.querySelectorAll('input,textarea').forEach(el=>el.addEventListener('input',upd));
-  if(s5){s5.textContent='⚠ Preencher';s5.style.cssText='font-size:.62rem;color:#e0a020;font-weight:600;';}
-  const old=document.getElementById('af-alert');if(old)old.remove();
-  const alert=document.createElement('div');
-  alert.id='af-alert';
-  alert.style.cssText='background:rgba(224,160,32,.08);border:1px solid rgba(224,160,32,.3);border-left:3px solid #c0a020;padding:.5rem .85rem;margin-bottom:.7rem;font-size:.72rem;color:#d4b050;display:flex;align-items:center;gap:.5rem;';
-  alert.innerHTML=`<span style="font-size:1rem">⚠️</span><span><strong>Preencha os campos abaixo antes de gerar.</strong> São obrigatórios para esta área.</span>`;
-  wrap.insertBefore(alert,wrap.firstChild);
-  setTimeout(()=>card5.scrollIntoView({behavior:'smooth',block:'nearest'}),80);
+  if(s5){s5.textContent='⚠ Preencher';s5.style.cssText='font-size:.6rem;color:#e0a020;font-weight:600';}
 }
 
-function rF(f){
+function rFld(f){
   const req=f.req?`<span class="req">*</span>`:'';
   if(f.type==='textarea')return`<div class="fg"><label class="fl">${f.label} ${req}</label><textarea id="${f.id}" placeholder="${f.placeholder||''}" rows="3"></textarea></div>`;
   return`<div class="fg"><label class="fl">${f.label} ${req}</label><input type="${f.type}" id="${f.id}" placeholder="${f.placeholder||''}"></div>`;
 }
 
-function getAFvals(){
+function getAFStr(){
   const def=AF[SK];if(!def)return'';
-  return def.fields.map(f=>{const el=document.getElementById(f.id);return el&&el.value.trim()?`${f.label}: ${el.value.trim()}`:'';}).filter(Boolean).join('\n');
+  return def.fields.map(f=>{const el=document.getElementById(f.id);return el&&el.value.trim()?`${f.label}: ${el.value.trim()}`:''}).filter(Boolean).join('\n');
 }
 
 function validAF(){
@@ -1146,267 +999,385 @@ function validAF(){
   def.fields.filter(f=>f.req).forEach(f=>{
     const el=document.getElementById(f.id);
     if(!el||!el.value.trim()){
-      m.push(f.label+' (campo específico — Card 05)');
-      if(el){
-        el.classList.add('campo-erro');
-        const fg=el.closest('.fg');
-        if(fg){fg.classList.add('campo-erro-label');if(!fg.querySelector('.campo-erro-msg')){const span=document.createElement('span');span.className='campo-erro-msg';span.textContent='⚠ Obrigatório';fg.appendChild(span);}}
-      }
-      const c5=document.getElementById('c5');
-      if(c5&&!c5.classList.contains('open'))c5.classList.add('open');
+      m.push(f.label+' (Card 05)');
+      if(el){el.classList.add('err-f');const fg=el.closest('.fg');if(fg&&!fg.querySelector('.err-m')){fg.classList.add('err-lbl');const s=document.createElement('span');s.className='err-m';s.textContent='⚠ Obrigatório';fg.appendChild(s);}}
+      const c5=G('c5');if(c5&&!c5.classList.contains('open'))c5.classList.add('open');
     }
   });
   return{ok:m.length===0,m};
 }
 
-// ══════════════════════
-// HELPERS
-// ══════════════════════
-function tog(id){document.getElementById(id).classList.toggle('open');}
-function chkConj(){const v=document.getElementById('a_ec').value;document.getElementById('rw_conj').style.display=(v==='Casado(a)'||v==='Em união estável')?'grid':'none';}
-function chkReu(){const t=document.getElementById('r_tipo').value;const isPF=t==='pf_m'||t==='pf_f';document.getElementById('r_pf_f').style.display=isPF?'block':'none';document.getElementById('r_pj_f').style.display=t==='pj'?'block':'none';}
-function chCt(){const n=document.getElementById('f_fatos').value.length;const el=document.getElementById('chct');el.textContent=n+' car.'+(n>=300?' ✓':n>=100?' — mín. 300':' — insuficiente');el.style.color=n>=300?'var(--g3)':n>=100?'var(--t4)':'var(--red)';}
-const gEl=id=>document.getElementById(id);
-const vEl=id=>{const el=gEl(id);return el?el.value.trim():'';}
-
-function addP(){pedN++;const d=document.createElement('div');d.className='pr';d.id='p'+pedN;d.innerHTML=`<span class="pn">${pedN}.</span><input type="text" placeholder="Descreva o pedido com precisão e valores exatos" oninput="upd()"><button class="bdp" onclick="delP('p${pedN}')">✕</button>`;document.getElementById('pedList').appendChild(d);d.querySelector('input').focus();upd();}
-function addPWithText(txt){pedN++;const d=document.createElement('div');d.className='pr';d.id='p'+pedN;d.innerHTML=`<span class="pn">${pedN}.</span><input type="text" value="${txt.replace(/"/g,'&quot;')}" oninput="upd()"><button class="bdp" onclick="delP('p${pedN}')">✕</button>`;document.getElementById('pedList').appendChild(d);upd();}
-function delP(id){const el=gEl(id);if(el)el.remove();document.querySelectorAll('.pn').forEach((n,i)=>n.textContent=(i+1)+'.');upd();}
+// ══ HELPERS ══
+const G=id=>document.getElementById(id);
+const V=id=>{const el=G(id);return el?el.value.trim():''};
+function tog(id){G(id).classList.toggle('open');}
+function chkConj(){const v=V('a_ec');G('rw_conj').style.display=(v==='Casado(a)'||v==='Em união estável')?'grid':'none';}
+function chkReu(){const t=V('r_tipo');const isPF=t==='pf_m'||t==='pf_f';G('r_pf_f').style.display=isPF?'block':'none';G('r_pj_f').style.display=t==='pj'?'block':'none';}
+function chCt(){const n=G('f_fatos').value.length;const el=G('chct');el.textContent=n+' car.'+(n>=300?' ✓':n>=100?' — recomendado 300+':' — insuficiente');el.style.color=n>=300?'var(--g3)':n>=100?'var(--t4)':'var(--red)';}
+function addP(){pedN++;const d=document.createElement('div');d.className='pr';d.id='p'+pedN;d.innerHTML=`<span class="pn">${pedN}.</span><input type="text" placeholder="Descreva o pedido com precisão e valores exatos" oninput="upd()"><button class="bdp" onclick="delP('p${pedN}')">✕</button>`;G('pedList').appendChild(d);d.querySelector('input').focus();upd();}
+function addPWithText(txt){pedN++;const d=document.createElement('div');d.className='pr';d.id='p'+pedN;d.innerHTML=`<span class="pn">${pedN}.</span><input type="text" value="${txt.replace(/"/g,'&quot;')}" oninput="upd()"><button class="bdp" onclick="delP('p${pedN}')">✕</button>`;G('pedList').appendChild(d);upd();}
+function delP(id){const el=G(id);if(el)el.remove();document.querySelectorAll('.pn').forEach((n,i)=>n.textContent=(i+1)+'.');upd();}
 function getPeds(){return Array.from(document.querySelectorAll('#pedList input')).map(i=>i.value.trim()).filter(Boolean);}
 function tg(el){el.classList.toggle('on');}
-function getTags(g){return Array.from(document.querySelectorAll('#'+g+' .tag.on')).map(t=>t.textContent.trim());}
+function getTags(id){return Array.from(document.querySelectorAll('#'+id+' .tag.on')).map(t=>t.textContent.trim());}
 function getProvas(){return Array.from(document.querySelectorAll('#c9 .tag.on')).map(t=>t.textContent.trim());}
 
-// ══════════════════════
-// PROGRESS
-// ══════════════════════
+// ══ PROGRESS ══
 function upd(){
-  document.querySelectorAll('.campo-erro').forEach(el=>{
-    if(el.value&&el.value.trim()){el.classList.remove('campo-erro');const fg=el.closest('.fg');if(fg){fg.classList.remove('campo-erro-label');const m=fg.querySelector('.campo-erro-msg');if(m)m.remove();}}
-  });
-  const okA=!!(vEl('a_nome')&&vEl('a_cpf')&&vEl('a_ec')&&vEl('a_prof')&&vEl('a_end')&&vEl('a_sexo'));
-  const okR=!!(vEl('r_nome')&&vEl('r_tipo')&&vEl('r_end'));
-  const okD=!!(vEl('adv_n')&&vEl('adv_oab')&&vEl('adv_cidade')&&vEl('adv_comarca'));
-  const okP=!!(vEl('p_vara')&&vEl('p_rito')&&vEl('p_valor'));
-  const okF=vEl('f_fatos').length>=100;
+  document.querySelectorAll('.err-f').forEach(el=>{if(el.value&&el.value.trim()){el.classList.remove('err-f');const fg=el.closest('.fg');if(fg){fg.classList.remove('err-lbl');const m=fg.querySelector('.err-m');if(m)m.remove();}}});
+  const okA=!!(V('a_nome')&&V('a_cpf')&&V('a_ec')&&V('a_prof')&&V('a_end')&&V('a_sexo'));
+  const okR=!!(V('r_nome')&&V('r_tipo')&&V('r_end'));
+  const okD=!!(V('adv_n')&&V('adv_oab')&&V('adv_cidade')&&V('adv_comarca'));
+  const okP=!!(V('p_vara')&&V('p_rito')&&V('p_valor'));
+  const okF=G('f_fatos').value.length>=100;
   const okAF=validAF().ok;
   const okPed=getPeds().length>0;
   const checks=[!!SA,okA,okR,okD,okP,okF,okAF,okPed];
-  ['pd0','pd1','pd2','pd3','pd4','pd5','pd6','pd7'].forEach((id,i)=>gEl(id).className='pd'+(checks[i]?' ok':''));
-  gEl('pf').style.width=Math.round(checks.filter(Boolean).length/8*100)+'%';
-  const st=(id,ok,opt)=>{if(!gEl(id))return;if(opt){gEl(id).textContent=opt;gEl(id).className='cst opt';gEl(id).style.cssText='';return;}gEl(id).textContent=ok?'✓ Completo':'Pendente';gEl(id).className='cst '+(ok?'ok':'pend');gEl(id).style.cssText='';};
+  ['pd0','pd1','pd2','pd3','pd4','pd5','pd6','pd7'].forEach((id,i)=>G(id).className='pd'+(checks[i]?' ok':''));
+  G('pf').style.width=Math.round(checks.filter(Boolean).length/8*100)+'%';
+  const st=(id,ok,opt)=>{if(!G(id))return;if(opt){G(id).textContent=opt;G(id).className='cst opt';G(id).style.cssText='';return;}G(id).textContent=ok?'✓ Completo':'Pendente';G(id).className='cst '+(ok?'ok':'pend');G(id).style.cssText='';};
   st('s1',okA);st('s2',okR);st('s3',okD);st('s4',okP);st('s6',okF);st('s8',okPed);
-  const s5=gEl('s5');
-  if(s5){const def=AF[SK];if(!def){s5.textContent='Sem campos extras';s5.className='cst opt';s5.style.cssText='';}else if(okAF){s5.textContent='✓ Completo';s5.className='cst ok';s5.style.cssText='';const c5=gEl('c5');if(c5)c5.classList.remove('tem-campos-pendentes');}else{s5.textContent='⚠ Preencher';s5.style.cssText='font-size:.62rem;color:#e0a020;font-weight:600;';}}
+  const s5=G('s5');
+  if(s5){const def=AF[SK];if(!def){s5.textContent='Sem campos extras';s5.className='cst opt';s5.style.cssText='';}else if(okAF){s5.textContent='✓ Completo';s5.className='cst ok';s5.style.cssText='';}else{s5.textContent='⚠ Preencher';s5.style.cssText='font-size:.6rem;color:#e0a020;font-weight:600';}}
 }
 
-// ══════════════════════
-// COLLECT
-// ══════════════════════
+// ══ COLLECT ══
 function collect(){
   return{area:SA,lei:SL,presc:SP,key:SK,doc:DOC,
-    a:{nome:vEl('a_nome'),sexo:vEl('a_sexo'),nac:getNac(),ec:getEC(),prof:vEl('a_prof'),cpf:vEl('a_cpf'),rg:vEl('a_rg'),cnpj:vEl('a_cnpj'),conj:vEl('a_conj'),end:vEl('a_end'),email:vEl('a_email'),tel:vEl('a_tel')},
-    r:{nome:vEl('r_nome'),tipo:vEl('r_tipo'),cpf:vEl('r_cpf'),rg:vEl('r_rg'),cnpj:vEl('r_cnpj'),rep:vEl('r_rep'),qualif:vEl('r_qualif'),end:vEl('r_end')},
-    adv:{nome:vEl('adv_n'),oab:vEl('adv_oab'),end:vEl('adv_end'),email:vEl('adv_email'),cidade:vEl('adv_cidade')||'[Cidade]',comarca:vEl('adv_comarca')||'[Comarca]'},
-    proc:{vara:vEl('p_vara'),rito:vEl('p_rito'),valor:vEl('p_valor'),data:vEl('p_data'),grat:vEl('p_grat'),tutela:vEl('p_tutela'),urg:vEl('p_urg'),aud:vEl('p_aud')},
-    fatos:vEl('f_fatos'),tent:vEl('f_tent'),docs:vEl('f_docs'),
-    af:getAFvals(),funds:getTags('fundGrid'),provas:getProvas(),peds:getPeds(),extra:vEl('f_extra'),test:vEl('p_test')
+    a:{nome:V('a_nome'),sexo:V('a_sexo'),nac:getNac(),ec:getEC(),prof:V('a_prof'),cpf:V('a_cpf'),rg:V('a_rg'),cnpj:V('a_cnpj'),conj:V('a_conj'),end:V('a_end'),email:V('a_email'),tel:V('a_tel')},
+    r:{nome:V('r_nome'),tipo:V('r_tipo'),cpf:V('r_cpf'),rg:V('r_rg'),cnpj:V('r_cnpj'),rep:V('r_rep'),qualif:V('r_qualif'),end:V('r_end')},
+    adv:{nome:V('adv_n'),oab:V('adv_oab'),end:V('adv_end'),email:V('adv_email'),cidade:V('adv_cidade')||'[Cidade]',comarca:V('adv_comarca')||'[Comarca]'},
+    proc:{vara:V('p_vara'),rito:V('p_rito'),valor:V('p_valor'),data:V('p_data'),grat:V('p_grat'),tutela:V('p_tutela'),urg:V('p_urg'),aud:V('p_aud')},
+    fatos:G('f_fatos').value.trim(),tent:V('f_tent'),docs:V('f_docs'),
+    af:getAFStr(),funds:getTags('fundGrid'),provas:getProvas(),peds:getPeds(),extra:V('f_extra'),test:V('p_test')
   };
 }
 
-const docNames={peticao:'PETIÇÃO INICIAL',contestacao:'CONTESTAÇÃO',apelacao:'RECURSO DE APELAÇÃO',agravo:'AGRAVO DE INSTRUMENTO'};
-
-// ══════════════════════
-// VALIDATE
-// ══════════════════════
-function clearErros(){
-  document.querySelectorAll('.campo-erro').forEach(el=>el.classList.remove('campo-erro'));
-  document.querySelectorAll('.campo-erro-label').forEach(el=>el.classList.remove('campo-erro-label'));
-  document.querySelectorAll('.campo-erro-msg').forEach(el=>el.remove());
+// ══ VALIDATE ══
+function clearErrs(){
+  document.querySelectorAll('.err-f').forEach(el=>el.classList.remove('err-f'));
+  document.querySelectorAll('.err-lbl').forEach(el=>el.classList.remove('err-lbl'));
+  document.querySelectorAll('.err-m').forEach(el=>el.remove());
 }
 
-function markErro(id,msg){
-  const el=gEl(id);if(!el)return;
-  el.classList.add('campo-erro');
+function markErr(id,msg){
+  const el=G(id);if(!el)return;
+  el.classList.add('err-f');
   const fg=el.closest('.fg');
-  if(fg){fg.classList.add('campo-erro-label');if(!fg.querySelector('.campo-erro-msg')){const span=document.createElement('span');span.className='campo-erro-msg';span.textContent='⚠ '+msg;fg.appendChild(span);}}
+  if(fg){fg.classList.add('err-lbl');if(!fg.querySelector('.err-m')){const s=document.createElement('span');s.className='err-m';s.textContent='⚠ '+msg;fg.appendChild(s);}}
   const card=el.closest('.card');if(card&&!card.classList.contains('open'))card.classList.add('open');
 }
 
 function validate(){
-  clearErros();
-  const e=[];
+  clearErrs();const e=[];
   if(!SA)e.push('Selecione a área do Direito na barra lateral');
-  if(!vEl('a_nome')){markErro('a_nome','Obrigatório');e.push('Nome completo do Autor');}
-  if(!vEl('a_sexo')){markErro('a_sexo','Obrigatório');e.push('Sexo do Autor — necessário para qualificação correta');}
-  if(!vEl('a_cpf')){markErro('a_cpf','Obrigatório');e.push('CPF do Autor');}
-  if(!vEl('a_ec')){markErro('a_ec','Obrigatório');e.push('Estado civil do Autor');}
-  if(!vEl('a_prof')){markErro('a_prof','Obrigatório');e.push('Profissão do Autor');}
-  if(!vEl('a_end')){markErro('a_end','Obrigatório');e.push('Endereço completo do Autor — incluindo cidade e UF');}
-  if(!vEl('r_nome')){markErro('r_nome','Obrigatório');e.push('Nome do Réu');}
-  if(!vEl('r_tipo')){markErro('r_tipo','Obrigatório');e.push('Tipo de pessoa do Réu');}
-  if(!vEl('r_end')){markErro('r_end','Obrigatório');e.push('Endereço do Réu para citação');}
-  if(!vEl('adv_n')){markErro('adv_n','Obrigatório');e.push('Nome do Advogado');}
-  if(!vEl('adv_oab')){markErro('adv_oab','Obrigatório');e.push('OAB nº');}
-  if(!vEl('adv_cidade')){markErro('adv_cidade','Obrigatório');e.push('Cidade da assinatura');}
-  if(!vEl('adv_comarca')){markErro('adv_comarca','Obrigatório — será usada no endereçamento');e.push('Comarca (ex: Comarca de São Paulo/SP)');}
-  if(!vEl('p_vara')){markErro('p_vara','Obrigatório');e.push('Número/tipo da Vara');}
-  if(!vEl('p_rito')){markErro('p_rito','Obrigatório');e.push('Rito processual');}
-  if(!vEl('p_valor')){markErro('p_valor','Obrigatório');e.push('Valor da causa');}
-  const f=vEl('f_fatos');
-  if(!f){markErro('f_fatos','Obrigatório');e.push('Narração dos fatos (obrigatória)');}
-  else if(f.length<100){markErro('f_fatos','Mínimo 100 caracteres');e.push('Fatos muito curtos — mínimo 100 caracteres');}
+  if(!V('a_nome')){markErr('a_nome','Obrigatório');e.push('Nome completo do Autor');}
+  if(!V('a_sexo')){markErr('a_sexo','Obrigatório');e.push('Sexo do Autor — necessário para qualificação');}
+  if(!V('a_cpf')){markErr('a_cpf','Obrigatório');e.push('CPF do Autor');}
+  if(!V('a_ec')){markErr('a_ec','Obrigatório');e.push('Estado civil do Autor');}
+  if(!V('a_prof')){markErr('a_prof','Obrigatório');e.push('Profissão do Autor');}
+  if(!V('a_end')){markErr('a_end','Obrigatório');e.push('Endereço completo do Autor');}
+  if(!V('r_nome')){markErr('r_nome','Obrigatório');e.push('Nome do Réu');}
+  if(!V('r_tipo')){markErr('r_tipo','Obrigatório');e.push('Tipo de pessoa do Réu');}
+  if(!V('r_end')){markErr('r_end','Obrigatório');e.push('Endereço do Réu para citação');}
+  if(!V('adv_n')){markErr('adv_n','Obrigatório');e.push('Nome do Advogado');}
+  if(!V('adv_oab')){markErr('adv_oab','Obrigatório');e.push('OAB nº');}
+  if(!V('adv_cidade')){markErr('adv_cidade','Obrigatório');e.push('Cidade da assinatura');}
+  if(!V('adv_comarca')){markErr('adv_comarca','Obrigatório');e.push('Comarca');}
+  if(!V('p_vara')){markErr('p_vara','Obrigatório');e.push('Número/tipo da Vara');}
+  if(!V('p_rito')){markErr('p_rito','Obrigatório');e.push('Rito processual');}
+  if(!V('p_valor')){markErr('p_valor','Obrigatório');e.push('Valor da causa');}
+  const f=G('f_fatos').value;
+  if(!f){markErr('f_fatos','Obrigatório');e.push('Narração dos fatos');}
+  else if(f.length<100){markErr('f_fatos','Mínimo 100 caracteres');e.push('Fatos muito curtos — mínimo 100 caracteres');}
   validAF().m.forEach(m=>e.push(m));
   if(getPeds().length===0)e.push('Informe ao menos um pedido no Card 08');
   return e;
 }
 
 function setPhase(i,state){
-  const el=gEl('ph'+i);if(!el)return;
+  const el=G('ph'+i);if(!el)return;
   const ico={idle:'○',active:'⏳',done:'✅',error:'❌'};
   el.className='phase '+state;
-  const pico=el.querySelector('.pico');if(pico)pico.textContent=ico[state]||'○';
+  const p=el.querySelector('.pico');if(p)p.textContent=ico[state]||'○';
 }
 
-// ══════════════════════
-// GERAÇÃO LOCAL (Template completo e correto)
-// ══════════════════════
-function formalizarFatos(texto){
-  // Transforma linguagem informal em formal
-  // Mantém o conteúdo, apenas formaliza expressões comuns
-  return texto
-    .replace(/\bja deu ruim\b/gi,'encontra-se irremediavelmente comprometido')
-    .replace(/\bjaá deu ruim\b/gi,'encontra-se irremediavelmente comprometido')
-    .replace(/\bdeu ruim\b/gi,'deteriorou-se completamente')
-    .replace(/\bmeu marido\b/gi,'o Requerido')
-    .replace(/\bminha esposa\b/gi,'a Requerida')
-    .replace(/\bmeu patrão\b/gi,'o empregador')
-    .replace(/\bfui demitido\b/gi,'foi demitido')
-    .replace(/\bfui demitida\b/gi,'foi demitida')
-    .replace(/\bnão pagaram\b/gi,'deixaram de quitar')
-    .replace(/\bnão pagou\b/gi,'deixou de quitar')
-    .replace(/\bxinga\b/gi,'profere ofensas e insultos contra')
-    .replace(/\bxingou\b/gi,'proferiu ofensas e insultos contra')
-    .replace(/\bhumilha\b/gi,'submete a situações vexatórias e humilhantes')
-    .replace(/\bhumilhou\b/gi,'submeteu a situações vexatórias e humilhantes')
-    .replace(/\bbateu\b/gi,'agrediu fisicamente')
-    .replace(/\bnão quis pagar\b/gi,'recusou-se a efetuar o pagamento')
-    .replace(/\bbrigamos\b/gi,'as partes entraram em conflito')
-    .replace(/\bme xingou\b/gi,'proferiu ofensas contra a Requerente')
-    .replace(/\b(a gente|a gente)\b/gi,'as partes')
-    .trim();
-}
-
-function buildQualifAutor(d){
-  // Monta qualificação jurídica correta
-  const parts=[d.a.nome, d.a.nac, d.a.ec, d.a.prof];
-  parts.push(`inscrit${d.a.sexo==='F'?'a':'o'} no CPF nº ${d.a.cpf}`);
-  if(d.a.rg) parts.push(`portador${d.a.sexo==='F'?'a':'o'} do RG nº ${d.a.rg}`);
-  if(d.a.cnpj) parts.push(`inscrit${d.a.sexo==='F'?'a':'o'} no CNPJ nº ${d.a.cnpj}`);
-  if(d.a.conj) parts.push(`convivente com ${d.a.conj}`);
-  parts.push(`residente e domiciliad${d.a.sexo==='F'?'a':'o'} em ${d.a.end}`);
-  if(d.a.email) parts.push(`e-mail: ${d.a.email}`);
+// ══ QUALIFICAÇÃO ══
+function buildQAutor(d){
+  const f=d.a.sexo==='F';
+  const parts=[d.a.nome,d.a.nac,d.a.ec,d.a.prof];
+  parts.push(`inscrit${f?'a':'o'} no CPF sob o nº ${d.a.cpf}`);
+  if(d.a.rg)parts.push(`portador${f?'a':'o'} do RG nº ${d.a.rg}`);
+  if(d.a.cnpj)parts.push(`inscrit${f?'a':'o'} no CNPJ nº ${d.a.cnpj}`);
+  if(d.a.conj)parts.push(`convivente com ${d.a.conj}`);
+  parts.push(`residente e domiciliad${f?'a':'o'} em ${d.a.end}`);
+  if(d.a.email)parts.push(`e-mail: ${d.a.email}`);
   return parts.join(', ');
 }
 
-function buildQualifReu(d){
+function buildQReu(d){
   const tipo=d.r.tipo;
   const parts=[d.r.nome];
   if(tipo==='pj'||tipo==='pub'){
     parts.push(tipo==='pub'?'ente público':'pessoa jurídica de direito privado');
-    if(d.r.cnpj) parts.push(`inscrita no CNPJ nº ${d.r.cnpj}`);
-    if(d.r.rep) parts.push(`representada por ${d.r.rep}`);
+    if(d.r.cnpj)parts.push(`inscrita no CNPJ nº ${d.r.cnpj}`);
+    if(d.r.rep)parts.push(`representada por ${d.r.rep}`);
   } else {
     const gen=tipo==='pf_f'?'F':'M';
-    parts.push(tipo==='pf_f'?'pessoa física':'pessoa física');
-    if(d.r.qualif) parts.push(d.r.qualif);
-    if(d.r.cpf) parts.push(`inscrit${gen==='F'?'a':'o'} no CPF nº ${d.r.cpf}`);
-    if(d.r.rg) parts.push(`portador${gen==='F'?'a':'o'} do RG nº ${d.r.rg}`);
+    if(d.r.qualif)parts.push(d.r.qualif);
+    if(d.r.cpf)parts.push(`inscrit${gen==='F'?'a':'o'} no CPF nº ${d.r.cpf}`);
+    if(d.r.rg)parts.push(`portador${gen==='F'?'a':'o'} do RG nº ${d.r.rg}`);
   }
-  parts.push(`com endereço em ${d.r.end}`);
+  parts.push(`com endereço para citação em ${d.r.end}`);
   return parts.join(', ');
 }
 
-function gerarTextoLocal(d){
+function reuFlexao(tipo){
+  if(tipo==='pf_f')return{o:'a',do:'da',requerido:'Requerida'};
+  if(tipo==='pj'||tipo==='pub')return{o:'a',do:'da',requerido:'Requerida'};
+  return{o:'o',do:'do',requerido:'Requerido'};
+}
+
+// ══ GENERATE ══
+const docNames={peticao:'PETIÇÃO INICIAL',contestacao:'CONTESTAÇÃO',apelacao:'RECURSO DE APELAÇÃO',agravo:'AGRAVO DE INSTRUMENTO'};
+
+async function generate(){
+  const erros=validate();
+  if(erros.length){
+    G('vlist').innerHTML=erros.map(e=>`<li>${e}</li>`).join('');
+    G('vbox').classList.add('show');
+    G('vbox').scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+  G('vbox').classList.remove('show');
+  G('btnGen').disabled=true;
+  G('outSec').classList.remove('show');
+  G('ldState').classList.add('show');
+  G('ldState').scrollIntoView({behavior:'smooth'});
+  [0,1,2,3].forEach(i=>setPhase(i,''));
+
+  const d=collect();
+
+  // ETAPA 1: Validação
+  setPhase(0,'active');G('ldSub').textContent='Etapa 1 — Validando e qualificando as partes...';
+  await wait(300);setPhase(0,'done');
+
+  // ETAPA 2: Geração da petição
+  setPhase(1,'active');G('ldSub').textContent='Etapa 2 — IA Claude gerando petição completa...';
+  
+  let docHtml='';
+  const key=getKey();
+
+  if(key){
+    // Geração com API Anthropic
+    try{
+      docHtml=await gerarComIA(d,key);
+    }catch(err){
+      console.error('Erro na API:',err);
+      toast('⚠ Erro na API: '+err.message+' — usando geração local');
+      docHtml=gerarLocal(d);
+    }
+  } else {
+    // Geração local de alta qualidade
+    docHtml=gerarLocal(d);
+  }
+
+  window._dat=d;
+  renderDoc(docHtml,d);
+  setPhase(1,'done');
+
+  // ETAPA 3: Revisão
+  setPhase(2,'active');G('ldSub').textContent='Etapa 3 — Revisão crítica automática...';
+  if(key){
+    await doReview(G('theDoc').innerText,d,key);
+  } else {
+    G('revPanel').classList.add('show');
+    G('revBody').innerHTML=`<div style="font-size:.7rem;color:var(--t3);padding:.3rem 0"><span style="color:var(--g3)">ℹ</span> Adicione sua chave de API Anthropic para ativar a revisão automática. Sem a chave, revise manualmente os artigos antes de protocolar.</div>`;
+  }
+  setPhase(2,'done');
+
+  // ETAPA 4: Checklist
+  setPhase(3,'active');G('ldSub').textContent='Etapa 4 — Checklist pré-protocolo...';
+  await wait(200);
+  renderCL(d.key);setPhase(3,'done');
+
+  G('ldState').classList.remove('show');
+  G('btnGen').disabled=false;
+  setTimeout(()=>G('outSec').scrollIntoView({behavior:'smooth'}),100);
+}
+
+// ══ GERAÇÃO COM IA ANTHROPIC ══
+async function gerarComIA(d,key){
+  const arts=(ARTIGOS[d.key]||ARTIGOS.default).join('; ');
+  const f=d.a.sexo==='F';
+  const qAutor=buildQAutor(d);
+  const qReu=buildQReu(d);
+  const rg=reuFlexao(d.r.tipo);
+  const hoje=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+  const pedsList=d.peds.map((p,i)=>`${i+1}. ${p}`).join('\n');
+  const funds=d.funds.length?d.funds.join('; '):'';
+  const provas=d.provas.join(', ')||'prova documental e todas as admitidas em direito';
+
+  const prompt=`Você é um advogado brasileiro sênior especialista em ${d.area}. Redija uma ${docNames[d.doc]||'PETIÇÃO INICIAL'} COMPLETA, FORMAL e TECNICAMENTE PERFEITA para protocolo imediato.
+
+## DADOS INSUBSTITUÍVEIS — USE EXATAMENTE COMO FORNECIDOS:
+
+**ÁREA:** ${d.area}
+**LEGISLAÇÃO APLICÁVEL:** ${arts}
+**RITO:** ${d.proc.rito}
+**PRAZO PRESCRICIONAL:** ${d.presc}
+
+**QUALIFICAÇÃO DO AUTOR:**
+${qAutor}
+
+**QUALIFICAÇÃO DO RÉU:**
+${qReu}
+
+**ADVOGADO:** ${d.adv.nome}, OAB nº ${d.adv.oab}
+**COMARCA:** ${d.adv.comarca}
+**VARA:** ${d.proc.vara}
+**VALOR DA CAUSA:** R$ ${d.proc.valor}
+**DATA DOS FATOS:** ${d.proc.data||'não especificada'}
+**GRATUIDADE:** ${d.proc.grat==='sim'?'SIM — requerer nos termos do art. 98 CPC/2015':'NÃO requerida'}
+**TUTELA DE URGÊNCIA:** ${d.proc.tutela!=='nao'?d.proc.tutela+' — '+d.proc.urg:'NÃO requerida'}
+**AUDIÊNCIA CONCILIAÇÃO:** ${d.proc.aud==='nao'?'Autor manifesta DESINTERESSE (CPC/2015, art. 334, §4º, I)':'Autor NÃO se opõe'}
+
+**FATOS NARRADOS PELO CLIENTE:**
+${d.fatos}
+
+${d.tent?`**TENTATIVAS EXTRAJUDICIAIS:**\n${d.tent}`:''}
+${d.af?`**INFORMAÇÕES ESPECÍFICAS DA ÁREA:**\n${d.af}`:''}
+${d.docs?`**DOCUMENTOS DISPONÍVEIS:** ${d.docs}`:''}
+
+**PEDIDOS DEFINIDOS:**
+${pedsList}
+
+${funds?`**FUNDAMENTOS ADICIONAIS:** ${funds}`:''}
+${d.extra?`**FUNDAMENTO ESPECÍFICO EXTRA:** ${d.extra}`:''}
+**MEIOS DE PROVA:** ${provas}
+${d.test?`**TESTEMUNHAS:** ${d.test}`:''}
+
+## INSTRUÇÕES RIGOROSAS:
+
+1. **ESTRUTURA OBRIGATÓRIA (em HTML):**
+   - Endereçamento: "Excelentíssimo(a) Senhor(a) Doutor(a) Juiz(a) de Direito / ${d.proc.vara} — ${d.adv.comarca}"
+   - Qualificação das partes com os dados EXATOS fornecidos
+   - Seção "I — DOS FATOS": transforme os fatos em linguagem jurídica formal e técnica, em 4-7 parágrafos bem desenvolvidos
+   - Seção "II — DO DIREITO": fundamentos jurídicos com os artigos fornecidos, doutrina e jurisprudência pertinentes
+   - Seção "III — DOS PEDIDOS": lista numerada com os pedidos + citação do réu + custas e honorários
+   - "DO VALOR DA CAUSA": R$ ${d.proc.valor} (art. 292 CPC/2015)
+   - Fecho com data (${hoje}), cidade (${d.adv.cidade}), nome e OAB do advogado
+
+2. **LINGUAGEM:** Formal, técnica, forense. Use "Requerente" e "${rg.requerido}". Pronomes corretos.
+
+3. **ARTIGOS:** Use APENAS os artigos fornecidos acima. NÃO invente jurisprudência inexistente.
+
+4. **FORMATAÇÃO HTML** — use estas classes CSS do sistema:
+   - \`<div class="dh">\` para o endereçamento
+   - \`<div class="dj">\` para o juiz/vara
+   - \`<div class="dv">\` para a comarca
+   - \`<div class="ds">\` para os títulos das seções (I — DOS FATOS, etc.)
+   - \`<p>\` para parágrafos normais
+   - \`<p class="ct">\` para parágrafos centralizados
+   - \`<ol class="pl"><li>...</li></ol>\` para a lista de pedidos
+   - \`<div class="sig">\` para a assinatura
+   - \`<div class="sl">\</div>\` para a linha de assinatura
+   - \`<p class="sn">\` para o nome do advogado
+   - \`<p class="so">\` para OAB e informações adicionais
+
+5. **QUALIDADE:** Esta petição será protocolada em juízo. Deve ser impecável, sem erros e completa.
+
+Retorne APENAS o HTML da petição, sem markdown, sem explicações, sem \`\`\`.`;
+
+  const res=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json',
+      'x-api-key':key,
+      'anthropic-version':'2023-06-01',
+      'anthropic-dangerous-direct-browser-calls':'true'
+    },
+    body:JSON.stringify({
+      model:'claude-sonnet-4-20250514',
+      max_tokens:4000,
+      messages:[{role:'user',content:prompt}]
+    })
+  });
+
+  if(!res.ok){
+    const err=await res.json().catch(()=>({}));
+    throw new Error((err.error&&err.error.message)||'HTTP '+res.status);
+  }
+
+  const data=await res.json();
+  return data.content.map(b=>b.text||'').join('').trim();
+}
+
+// ══ GERAÇÃO LOCAL (fallback de alta qualidade) ══
+function gerarLocal(d){
   const hoje=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
   const arts=(ARTIGOS[d.key]||ARTIGOS.default).join('; ');
-  const tutela=d.proc.tutela!=='nao';
-  const grat=d.proc.grat==='sim';
+  const qAutor=buildQAutor(d);
+  const qReu=buildQReu(d);
+  const rg=reuFlexao(d.r.tipo);
+  const f=d.a.sexo==='F';
+  const autor=f?'a Requerente':'o Requerente';
   const peds=d.peds;
-  const funds=d.funds.length?d.funds:[];
-  const af=d.af?d.af.split('\n').filter(Boolean):[];
-
-  const qAutor=buildQualifAutor(d);
-  const qReu=buildQualifReu(d);
-
-  // Pronomes corretos do autor
-  const sg=d.a.sexo==='F';
-  const ele=sg?'ela':'ele';
-  const oA=sg?'a':'o';
-  const dA=sg?'da':'do';
-  const sA=sg?'sua':'seu';
-
-  // Fatos formalizados
-  const fatosFormalizados=formalizarFatos(d.fatos);
-
-  // Fundamentos adicionais
-  const fundsExtra=funds.length?`\n\nAplicam-se ainda ao caso concreto os seguintes fundamentos jurídicos: ${funds.join('; ')}.`:'';
-  const extraArt=d.extra?` Igualmente aplicável: ${d.extra}.`:'';
-  const afTxt=af.length?`\n\nInformações complementares da área em questão: ${af.join('; ')}.`:'';
-  const docsTxt=d.docs?`\n\nO${oA} Autor${sg?'a':''} possui os seguintes documentos probatórios: ${d.docs}.`:'';
-  const tentTxt=d.tent?`\n\nAntes de recorrer ao Judiciário, ${oA} Autor${sg?'a':''} envidou esforços para solucionar a controvérsia pela via extrajudicial, consoante se demonstra: ${d.tent}. Contudo, a tentativa restou infrutífera, tornando necessária a tutela jurisdicional.`:'';
-
-  const provasTxt=d.provas.join(', ')||'prova documental e demais admitidas em direito';
+  const funds=d.funds.length?`\n\n<p>Aplicam-se ainda ao caso concreto: <strong>${d.funds.join('; ')}</strong>.</p>`:'';
+  const extraArt=d.extra?` Igualmente pertinente: ${d.extra}.`:'';
+  const afTxt=d.af?`\n\n<p>Informações complementares: ${d.af.split('\n').filter(Boolean).join('; ')}.</p>`:'';
+  const docsTxt=d.docs?`\n\n<p>${f?'A Requerente':'O Requerente'} possui os seguintes documentos probatórios: ${d.docs}.</p>`:'';
+  const tentTxt=d.tent?`\n\n<p>Antes de recorrer ao Judiciário, ${autor} envidou esforços extrajudiciais: ${d.tent}. Contudo, a tentativa restou infrutífera, tornando necessária a tutela jurisdicional.</p>`:'' ;
+  const provas=d.provas.join(', ')||'prova documental e demais admitidas em direito';
   const testTxt=d.test?` Rol de testemunhas: ${d.test}.`:'';
+  const tutelaSec=d.proc.tutela!=='nao'?`\n\n<div class="ds">DA TUTELA DE URGÊNCIA</div>\n\n<p>Requer ${autor}, com fundamento no art. 300 do CPC/2015, a concessão de tutela de urgência, presentes o <em>fumus boni iuris</em> e o <em>periculum in mora</em>.${d.proc.urg?' Especificamente: '+d.proc.urg:''} Requer deferimento liminar, antes da citação.</p>`:'';
+  const gratSec=d.proc.grat==='sim'?`\n\n<p>${f?'A Requerente':'O Requerente'} declara, sob as penas da lei, não possuir condições de arcar com as custas processuais e honorários advocatícios sem prejuízo próprio e de sua família, requerendo a concessão da gratuidade da justiça, nos termos do art. 98 do CPC/2015.</p>`:'';
+  const audSec=d.proc.aud==='nao'?`\n\n<p>${f?'A Requerente':'O Requerente'} manifesta, desde já, o desinteresse na realização de audiência de conciliação ou de mediação, nos termos do art. 334, §4º, inciso I, do CPC/2015, tendo em vista que a natureza do litígio não comporta autocomposição.</p>`:'\n\n<p>O(A) Requerente não se opõe à realização de audiência de conciliação ou de mediação prevista no art. 334 do CPC/2015.</p>';
 
-  const tutelaSec=tutela?`\n\nDA TUTELA DE URGÊNCIA\n\nRequer ${oA} Autor${sg?'a':''}, com fundamento no art. 300 do CPC/2015, a concessão de tutela de urgência, diante da presença dos requisitos legais: probabilidade do direito (<em>fumus boni iuris</em>) e perigo de dano ou risco ao resultado útil do processo (<em>periculum in mora</em>).${d.proc.urg?` Especificamente: ${d.proc.urg}.':''} Requer seja o pedido apreciado liminarmente, antes da citação da parte contrária.`:'';
+  // Transformar fatos em texto mais formal
+  const fatosFormatados=d.fatos
+    .replace(/\n\n+/g,'</p>\n\n<p>')
+    .replace(/\n/g,' ');
 
-  const gratSec=grat?`\n\n${oA.toUpperCase()} Autor${sg?'a':''} declara, sob as penas da lei, que não possui condições de arcar com as custas processuais e os honorários advocatícios sem prejuízo próprio e de ${sg?'sua':'sua'} família, requerendo, por isso, a concessão dos benefícios da gratuidade da justiça, nos termos do art. 98 do CPC/2015.`:'';
-
-  const audSec=d.proc.aud==='nao'?`\n\n${oA.toUpperCase()} Autor${sg?'a':''} manifesta, desde já, o desinteresse na realização de audiência de conciliação ou de mediação, nos termos do art. 334, §4º, inciso I, do CPC/2015, por entender que a natureza do litígio inviabiliza a autocomposição.`:'\n\nO(A) Autor(a) não se opõe à realização de audiência de conciliação ou de mediação, conforme previsto no art. 334 do CPC/2015.';
-
-  // Comarca para endereçamento
-  const comarca=d.adv.comarca||'[Comarca]';
-  const vara=d.proc.vara||'[Vara]';
-
-  const html=`
-<div class="dh">
+  return `<div class="dh">
   <div class="dj">Excelentíssimo(a) Senhor(a) Doutor(a) Juiz(a) de Direito</div>
-  <div class="dv">${vara} — ${comarca}</div>
+  <div class="dv">${d.proc.vara} — ${d.adv.comarca}</div>
 </div>
 
-<p>${qAutor}, por seu${sg?'sua':''} advogad${sg?'a':'o'} que esta subscreve, com escritório profissional${d.adv.end?' no endereço indicado abaixo':' cujo endereço consta da procuração'}${d.adv.email?', e-mail '+d.adv.email:', onde recebe intimações'}, vem, respeitosamente, à presença de Vossa Excelência, com fundamento nos arts. 319 e 320 do Código de Processo Civil (Lei n.º 13.105/2015) e nos termos de ${arts}, propor a presente</p>
+<p>${qAutor}, por seu advogado que esta subscreve${d.adv.end?', com endereço profissional em '+d.adv.end:''}${d.adv.email?', e-mail '+d.adv.email+', onde recebe intimações':''}, vem, respeitosamente, à presença de Vossa Excelência, com fundamento nos arts. 319 e 320 do Código de Processo Civil (Lei n.º 13.105/2015) e nos termos de ${arts}, propor a presente</p>
 
 <div class="ds">PETIÇÃO INICIAL</div>
 
-<p>em face de ${qReu}, pelos fatos e fundamentos de direito a seguir expostos.</p>
+<p>em face de ${qReu}, pelos fatos e fundamentos jurídicos a seguir aduzidos.</p>
 
 <div class="ds">I — DOS FATOS</div>
 
-<p>${fatosFormalizados.replace(/\n\n/g,'</p><p>').replace(/\n/g,' ')}</p>${tentTxt}${afTxt}${docsTxt}
+<p>${fatosFormatados}</p>${tentTxt}${afTxt}${docsTxt}
 
 <div class="ds">II — DO DIREITO</div>
 
-<p>A pretensão deduzida na presente peça exordial encontra amparo na legislação vigente, especificamente em: <strong>${arts}</strong>.${extraArt}</p>
+<p>A pretensão deduzida na presente exordial encontra robusto amparo no ordenamento jurídico vigente, especificamente nos seguintes dispositivos legais: <strong>${arts}</strong>.${extraArt}</p>
 
-<p>Com efeito, a conduta perpetrada pel${getReuGenero()==='F'?'a':'o'} Requerid${getReuGenero()==='F'?'a':'o'} configura violação frontal às normas acima elencadas, causando ${oA} Autor${sg?'a':''} prejuízos que merecem integral reparação pelo Poder Judiciário, em prestígio ao princípio da inafastabilidade da jurisdição, esculpido no art. 5º, inciso XXXV, da Constituição Federal de 1988.</p>${fundsExtra?`\n\n<p>${fundsExtra}</p>`:''}${tutelaSec?`\n\n<p>${tutelaSec}</p>`:''}${gratSec?`\n\n<p>${gratSec}</p>`:''}
+<p>Com efeito, os fatos narrados caracterizam, de forma inequívoca, a responsabilidade d${rg.o} ${rg.requerido}, impondo-se a reparação integral dos danos causados ${autor}, em prestígio ao princípio constitucional da inafastabilidade da jurisdição, consagrado no art. 5º, inciso XXXV, da Constituição Federal de 1988.</p>
+
+<p>A conduta d${rg.o} ${rg.requerido} revela manifesta ilicitude, em nítida violação às normas protetivas acima elencadas, gerando o dever de reparar os danos materiais e morais causados ${autor}, na exata medida do que dispõem os arts. 186 e 927 do Código Civil de 2002.</p>${funds}${tutelaSec}${gratSec}
 
 <div class="ds">III — DOS PEDIDOS</div>
 
-<p>Diante do exposto, requer ${oA} Autor${sg?'a':''} que Vossa Excelência se digne a:</p>
+<p>Diante do exposto, requer ${autor} que Vossa Excelência se digne a:</p>
 <ol class="pl">
 ${peds.map(p=>`<li>${p};</li>`).join('\n')}
-<li>A citação ${getReuGenero()==='N'?'da empresa':'d'+RG('o','a','a')} Requerid${getReuGenero()==='F'?'a':'o'} para, querendo, contestar a presente ação no prazo legal, sob pena de revelia;</li>
-<li>A condenação ${getReuGenero()==='N'?'da empresa':'d'+RG('o','a','a')} Requerid${getReuGenero()==='F'?'a':'o'} ao pagamento das custas processuais e dos honorários advocatícios de sucumbência, nos termos do art. 85 do CPC/2015;</li>
-<li>A produção de ${provasTxt}.${testTxt}</li>
+<li>A citação d${rg.o} ${rg.requerido} para, querendo, contestar a presente ação no prazo legal, sob pena de revelia e presunção de veracidade dos fatos alegados;</li>
+<li>A condenação d${rg.o} ${rg.requerido} ao pagamento das custas processuais e honorários advocatícios de sucumbência, nos termos do art. 85 do CPC/2015;</li>
+<li>A produção de ${provas}.${testTxt}</li>
 </ol>
 
 <div class="ds">DO VALOR DA CAUSA</div>
 
-<p>Dá-se à causa o valor de <strong>R$ ${d.proc.valor}</strong>, nos termos do art. 292 do CPC/2015.</p>${audSec?`\n\n<p>${audSec}</p>`:''}
+<p>Dá-se à causa o valor de <strong>R$ ${d.proc.valor}</strong>, nos termos do art. 292 do Código de Processo Civil.</p>${audSec}
 
 <div class="sig">
-  <p class="ct" style="margin-bottom:1.8rem">Nesses termos, pede deferimento.</p>
+  <p class="ct" style="margin-bottom:1.8rem">Nesses termos,<br>Pede deferimento.</p>
   <p class="ct">${d.adv.cidade}, ${hoje}.</p>
   <div class="sl"></div>
   <p class="sn">${d.adv.nome}</p>
@@ -1414,107 +1385,56 @@ ${peds.map(p=>`<li>${p};</li>`).join('\n')}
   ${d.adv.end?`<p class="so">${d.adv.end}</p>`:''}
   ${d.adv.email?`<p class="so">${d.adv.email}</p>`:''}
 </div>`;
-
-  return html;
 }
 
-// ══════════════════════
-// GENERATE
-// ══════════════════════
-async function generate(){
-  const erros=validate();
-  if(erros.length){
-    gEl('vlist').innerHTML=erros.map(e=>`<li>${e}</li>`).join('');
-    gEl('vbox').classList.add('show');
-    gEl('vbox').scrollIntoView({behavior:'smooth',block:'center'});
-    return;
-  }
-  gEl('vbox').classList.remove('show');
-  gEl('btnGen').disabled=true;
-  gEl('outSec').classList.remove('show');
-  gEl('ldState').classList.add('show');
-  gEl('ldState').scrollIntoView({behavior:'smooth'});
-  [0,1,2,3].forEach(i=>setPhase(i,''));
-
-  const d=collect();
-
-  setPhase(0,'active');gEl('ldSub').textContent='Etapa 1 — Validando e qualificando partes...';
-  await new Promise(r=>setTimeout(r,350));setPhase(0,'done');
-
-  setPhase(1,'active');gEl('ldSub').textContent='Etapa 2 — Montando documento jurídico...';
-  await new Promise(r=>setTimeout(r,200));
-
-  const docHtml=gerarTextoLocal(d);
-  window._dat=d;
-  renderDireto(docHtml,d);
-  setPhase(1,'done');
-
-  setPhase(2,'active');gEl('ldSub').textContent='Etapa 3 — Revisão...';
-  const key=getKey();
-  if(key){
-    await reviewAuto(gEl('theDoc').innerText,d);
-  } else {
-    const panel=gEl('revPanel'),body=gEl('revBody');
-    panel.classList.add('show');
-    body.innerHTML=`<div style="font-size:.72rem;color:var(--t3);padding:.3rem 0"><span style="color:var(--g3)">ℹ</span> Revisão automática disponível com chave de API Anthropic. Sem a chave, revise manualmente os artigos antes de protocolar.</div>`;
-  }
-  setPhase(2,'done');
-
-  setPhase(3,'active');gEl('ldSub').textContent='Etapa 4 — Gerando checklist...';
-  await new Promise(r=>setTimeout(r,200));
-  renderCL(d.key);setPhase(3,'done');
-
-  gEl('ldState').classList.remove('show');
-  gEl('btnGen').disabled=false;
-  setTimeout(()=>gEl('outSec').scrollIntoView({behavior:'smooth'}),100);
+// ══ RENDER DOC ══
+function renderDoc(html,d){
+  G('outSec').classList.add('show');
+  G('theDoc').innerHTML=html;
+  const wc=G('theDoc').innerText.split(/\s+/).length;
+  G('docMeta').innerHTML=`<span class="mc">Palavras: <strong>~${wc.toLocaleString('pt-BR')}</strong></span><span class="mc">Área: <strong>${d.area.split('—')[0].trim()}</strong></span><span class="mc">Tipo: <strong>${docNames[d.doc]||'PETIÇÃO INICIAL'}</strong></span><span class="mc">Rito: <strong>${(d.proc.rito||'').split(' (')[0]}</strong></span><span class="mc">Valor: <strong>R$ ${d.proc.valor}</strong></span><span class="mc">Gerado: <strong>${new Date().toLocaleTimeString('pt-BR')}</strong></span>`;
+  window._raw=G('theDoc').innerText;
+  G('outLbl').textContent=(getKey()?'Petição gerada com IA':'Petição gerada')+' — revise antes de protocolar';
 }
 
-function renderDireto(docHtml,d){
-  gEl('outSec').classList.add('show');
-  gEl('theDoc').innerHTML=docHtml;
-  const wc=gEl('theDoc').innerText.split(/\s+/).length;
-  gEl('docMeta').innerHTML=`<span class="mc">Palavras: <strong>~${wc.toLocaleString('pt-BR')}</strong></span><span class="mc">Área: <strong>${d.area.split('—')[0].trim()}</strong></span><span class="mc">Tipo: <strong>${docNames[d.doc]||'PETIÇÃO INICIAL'}</strong></span><span class="mc">Rito: <strong>${(d.proc.rito||'').split(' (')[0]}</strong></span><span class="mc">Valor: <strong>R$ ${d.proc.valor}</strong></span><span class="mc">Gerado: <strong>${new Date().toLocaleTimeString('pt-BR')}</strong></span>`;
-  window._raw=gEl('theDoc').innerText;
-}
-
-// ══════════════════════
-// REVISÃO AUTOMÁTICA
-// ══════════════════════
-async function reviewAuto(raw,d){
-  const panel=gEl('revPanel'),body=gEl('revBody');
+// ══ REVISÃO AUTOMÁTICA ══
+async function doReview(raw,d,key){
+  const panel=G('revPanel'),body=G('revBody');
   panel.classList.add('show');
   body.innerHTML=`<div class="revld"><div class="rspin"></div>Analisando artigos, estrutura e qualidade...</div>`;
   const arts=(ARTIGOS[d.key]||ARTIGOS.default).join(', ');
-  const p=`Revisor jurídico sênior. Analise esta ${docNames[d.doc]||'petição'} de ${d.area} e retorne APENAS JSON válido.
+  const p=`Você é revisor jurídico sênior. Analise esta ${docNames[d.doc]||'petição'} de ${d.area} e retorne APENAS JSON válido, sem markdown.
 ARTIGOS PERMITIDOS: ${arts}
-DOCUMENTO (primeiros 3500 chars): ${raw.slice(0,3500)}
-JSON: {"score":0-100,"nivel":"Excelente|Bom|Adequado|Requer revisão","cpc_ok":true_ou_false,"cpc_obs":"obs","artigos_ok":true_ou_false,"artigos_obs":"obs","positivos":["máx 3"],"atencao":["máx 3"],"sugestoes":["máx 3"],"conclusao":"frase"}`;
+DOCUMENTO (primeiros 3000 chars): ${raw.slice(0,3000)}
+JSON: {"score":0-100,"nivel":"Excelente|Bom|Adequado|Requer revisão","cpc_ok":true_ou_false,"cpc_obs":"observação breve","artigos_ok":true_ou_false,"artigos_obs":"observação breve","positivos":["máx 3 pontos positivos"],"atencao":["máx 3 pontos de atenção"],"sugestoes":["máx 3 sugestões"],"conclusao":"frase conclusiva"}`;
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:apiHeaders(),body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,messages:[{role:'user',content:p}]})});
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-calls':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:700,messages:[{role:'user',content:p}]})
+    });
     if(!res.ok)throw new Error('HTTP '+res.status);
     const result=await res.json();
     let txt=result.content.map(b=>b.text||'').join('').replace(/```json|```/g,'').trim();
     const rev=JSON.parse(txt);
     const sc=rev.score||0,cls=sc>=80?'sc-ok':sc>=60?'sc-bom':'sc-attn',ic=sc>=80?'✅':sc>=60?'⚠️':'🔴';
     let h=`<div class="scb ${cls}">${ic} ${sc}/100 — ${rev.nivel||''}</div>`;
-    h+=`<div style="font-size:.68rem;margin-bottom:.4rem"><span style="color:var(--t3)">CPC/2015: </span><span style="color:${rev.cpc_ok?'var(--green)':'#e08080'}">${rev.cpc_obs||'—'}</span></div>`;
-    h+=`<div style="font-size:.68rem;margin-bottom:.5rem"><span style="color:var(--t3)">Artigos: </span><span style="color:${rev.artigos_ok?'var(--green)':'#e08080'}">${rev.artigos_obs||'—'}</span></div>`;
-    if(rev.positivos?.length){h+=`<div class="rst" style="color:var(--g3)">✓ Positivos</div>`;rev.positivos.forEach(x=>h+=`<div class="ri"><span style="color:var(--g3);flex-shrink:0">✓</span><span>${x}</span></div>`);}
+    h+=`<div style="font-size:.66rem;margin-bottom:.38rem"><span style="color:var(--t3)">CPC/2015: </span><span style="color:${rev.cpc_ok?'var(--green)':'#e08080'}">${rev.cpc_obs||'—'}</span></div>`;
+    h+=`<div style="font-size:.66rem;margin-bottom:.48rem"><span style="color:var(--t3)">Artigos: </span><span style="color:${rev.artigos_ok?'var(--green)':'#e08080'}">${rev.artigos_obs||'—'}</span></div>`;
+    if(rev.positivos?.length){h+=`<div class="rst" style="color:var(--g3)">✓ Pontos positivos</div>`;rev.positivos.forEach(x=>h+=`<div class="ri"><span style="color:var(--g3);flex-shrink:0">✓</span><span>${x}</span></div>`);}
     if(rev.atencao?.length){h+=`<div class="rst" style="color:#c0a020">⚠ Atenção</div>`;rev.atencao.forEach(x=>h+=`<div class="ri"><span style="color:#c0a020;flex-shrink:0">⚠</span><span>${x}</span></div>`);}
     if(rev.sugestoes?.length){h+=`<div class="rst" style="color:var(--blue)">→ Sugestões</div>`;rev.sugestoes.forEach(x=>h+=`<div class="ri"><span style="color:var(--blue);flex-shrink:0">→</span><span>${x}</span></div>`);}
-    if(rev.conclusao)h+=`<div style="margin-top:.6rem;padding-top:.5rem;border-top:1px solid rgba(201,168,76,.12);font-size:.7rem;font-style:italic;color:var(--t3)">${rev.conclusao}</div>`;
+    if(rev.conclusao)h+=`<div style="margin-top:.55rem;padding-top:.45rem;border-top:1px solid rgba(201,168,76,.1);font-size:.68rem;font-style:italic;color:var(--t3)">${rev.conclusao}</div>`;
     body.innerHTML=h;
-  }catch(err){body.innerHTML=`<div style="color:var(--red);font-size:.72rem">Revisão não disponível: ${err.message}</div>`;}
+  }catch(err){body.innerHTML=`<div style="color:var(--red);font-size:.7rem">Revisão não disponível: ${err.message}</div>`;}
 }
 
-// ══════════════════════
-// CHECKLIST
-// ══════════════════════
+// ══ CHECKLIST ══
 function renderCL(key){
-  const panel=gEl('clPanel'),body=gEl('clBody');
+  const panel=G('clPanel'),body=G('clBody');
   const items=(CL[key]||CL.default);
   panel.style.display='block';
-  let h='',total=items.length;
+  let h='';const total=items.length;
   items.forEach((item,i)=>{
     const tag=item.o?`<span class="cltag ct-o">OBRIG</span>`:`<span class="cltag ct-r">REC</span>`;
     h+=`<div class="clitem"><div class="clck" id="clck${i}" onclick="toggleCL(${i},${total})" tabindex="0"></div><div class="cltxt">${item.t} ${tag}</div></div>`;
@@ -1525,165 +1445,44 @@ function renderCL(key){
 }
 
 function toggleCL(i,total){
-  const el=gEl('clck'+i);if(!el)return;
+  const el=G('clck'+i);if(!el)return;
   el.classList.toggle('checked');el.textContent=el.classList.contains('checked')?'✓':'';
   const checked=document.querySelectorAll('.clck.checked').length;
   const pct=Math.round(checked/total*100);
-  const cpct=gEl('clpct'),cpf=gEl('clpfill');
-  if(cpct)cpct.textContent=`${checked}/${total} verificados`;
-  if(cpf)cpf.style.width=pct+'%';
+  const cp=G('clpct'),cf=G('clpfill');
+  if(cp)cp.textContent=`${checked}/${total} verificados`;
+  if(cf)cf.style.width=pct+'%';
 }
 
-// ══════════════════════
-// API KEY
-// ══════════════════════
-function getKey(){return(gEl('apiKeyInput')&&gEl('apiKeyInput').value.trim())||'';}
-
+// ══ API KEY ══
+function getKey(){return(G('apiKey')&&G('apiKey').value.trim())||'';}
 function saveKey(){
   const k=getKey();
-  const field=gEl('apiKeyInput')?.closest('.apibar-field');
-  const status=gEl('apiStatus');
-  if(!k){if(status){status.textContent='— sem chave';status.className='apibar-status wait';}if(field)field.classList.remove('has-key');return;}
-  if(k.length>20){if(status){status.textContent='✓ Chave informada';status.className='apibar-status ok';}if(field)field.classList.add('has-key');}
-  else{if(status){status.textContent='⚠ Chave muito curta';status.className='apibar-status err';}if(field)field.classList.remove('has-key');}
+  const field=G('apiField');const status=G('apiStatus');
+  if(!k){if(status){status.textContent='— sem chave (geração local)';status.className='api-status wait';}if(field)field.classList.remove('has-key');return;}
+  if(k.length>20){if(status){status.textContent='✓ API ativa — geração por IA Claude';status.className='api-status ok';}if(field)field.classList.add('has-key');}
+  else{if(status){status.textContent='⚠ Chave inválida';status.className='api-status err';}if(field)field.classList.remove('has-key');}
 }
+function toggleKeyVis(){const inp=G('apiKey');if(!inp)return;inp.type=inp.type==='password'?'text':'password';}
 
-function toggleKeyVis(){const inp=gEl('apiKeyInput');if(!inp)return;inp.type=inp.type==='password'?'text':'password';}
-
-function apiHeaders(){
-  const key=getKey();
-  const h={'Content-Type':'application/json','anthropic-dangerous-direct-browser-calls':'true'};
-  if(key)h['x-api-key']=key;
-  return h;
-}
-
-// ══════════════════════
-// EXPORT — FUNCIONAL
-// ══════════════════════
-function exportPDF(){openModal('pdf');}
-function exportWord(){openModal('word');}
-function openModal(t){gEl('exportModal').classList.add('show');gEl('exportModal').dataset.type=t;}
-function closeModal(){gEl('exportModal').classList.remove('show');}
-
-function doPDF(){
-  closeModal();
-  showToast('📄 Abrindo janela de impressão...');
-  setTimeout(()=>printDoc(),300);
-}
-
-function doWord(){
-  closeModal();
-  const d=window._dat;
-  if(!d){showToast('⚠ Gere o documento primeiro');return;}
-
-  showExportOverlay('Preparando Word...');
-
-  try{
-    const hoje=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
-    const docContent=gEl('theDoc');
-    if(!docContent){hideExportOverlay();showToast('⚠ Documento não encontrado');return;}
-
-    // Constrói HTML limpo para o Word (formato RTF-HTML compatível)
-    const innerHtml=docContent.innerHTML;
-
-    // CSS para o documento Word
-    const wordCSS=`
-      body { font-family: 'Times New Roman', Times, serif; font-size: 12pt; line-height: 2; margin: 3cm 2.5cm 3cm 3cm; color: #000; }
-      .dh { text-align: center; margin-bottom: 2.5cm; }
-      .dj { font-size: 11.5pt; font-weight: bold; text-transform: uppercase; letter-spacing: 0.07em; border-bottom: 2px solid #000; padding-bottom: 0.3cm; margin-bottom: 0.4cm; }
-      .dv { font-size: 10.5pt; color: #444; font-style: italic; }
-      .ds { font-size: 11pt; font-weight: bold; text-align: center; text-transform: uppercase; letter-spacing: 0.05em; margin: 2.5cm 0 0.7cm; border-bottom: 1px solid #bbb; padding-bottom: 0.25cm; page-break-after: avoid; }
-      p { text-indent: 2.5cm; text-align: justify; margin-bottom: 0.3cm; font-size: 12pt; }
-      p.ct { text-align: center; text-indent: 0; }
-      ol.pl { margin: 0.3cm 0 0.3cm 3.5cm; padding: 0; }
-      ol.pl li { font-size: 12pt; line-height: 2; text-align: justify; margin-bottom: 0.1cm; }
-      .sig { margin-top: 3cm; text-align: center; page-break-inside: avoid; }
-      .sl { width: 8cm; border-top: 1px solid #000; margin: 0.4cm auto; }
-      .sn { font-weight: bold; text-align: center; }
-      .so { font-style: italic; text-align: center; color: #555; font-size: 11pt; }
-      strong { font-weight: bold; }
-      em { font-style: italic; }
-    `;
-
-    const fullHtml=`<!DOCTYPE html>
-<html xmlns:o='urn:schemas-microsoft-com:office:office'
-      xmlns:w='urn:schemas-microsoft-com:office:word'
-      xmlns='http://www.w3.org/TR/REC-html40'>
-<head>
-<meta charset='UTF-8'>
-<meta name='ProgId' content='Word.Document'>
-<meta name='Generator' content='LexForge PRO v5'>
-<title>Peticao_${SK}_${Date.now()}</title>
-<!--[if gte mso 9]>
-<xml>
-  <w:WordDocument>
-    <w:View>Print</w:View>
-    <w:Zoom>100</w:Zoom>
-    <w:DoNotOptimizeForBrowser/>
-  </w:WordDocument>
-</xml>
-<![endif]-->
-<style>${wordCSS}</style>
-</head>
-<body>${innerHtml}</body>
-</html>`;
-
-    const blob=new Blob(['\ufeff'+fullHtml],{type:'application/msword;charset=utf-8'});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');
-    a.href=url;
-    a.download=`LexForge_${SA.split('—')[0].trim().replace(/\s+/g,'_').substring(0,30)}_${new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')}.doc`;
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
-
-    hideExportOverlay();
-    showToast('📝 Word baixado com sucesso!');
-  } catch(err){
-    hideExportOverlay();
-    showToast('⚠ Erro ao gerar Word: '+err.message);
-    console.error('Word export error:',err);
-  }
-}
-
-function showExportOverlay(msg){
-  const ov=gEl('exportOverlay');
-  const emsg=gEl('exportMsg');
-  if(ov){ov.classList.add('show');}
-  if(emsg)emsg.textContent=msg||'Preparando...';
-}
-
-function hideExportOverlay(){
-  const ov=gEl('exportOverlay');
-  if(ov)ov.classList.remove('show');
-}
-
-// ══════════════════════
-// COPY / PRINT / RESET
-// ══════════════════════
+// ══ EXPORT ══
 function copyDoc(){
-  const txt=gEl('theDoc').innerText;
-  if(navigator.clipboard){
-    navigator.clipboard.writeText(txt).then(()=>showToast('✓ Documento copiado')).catch(()=>copyFallback(txt));
-  } else {
-    copyFallback(txt);
-  }
+  const txt=G('theDoc').innerText;
+  if(navigator.clipboard){navigator.clipboard.writeText(txt).then(()=>toast('✓ Documento copiado')).catch(()=>copyFB(txt));}
+  else copyFB(txt);
 }
-
-function copyFallback(txt){
-  const ta=document.createElement('textarea');
-  ta.value=txt;ta.style.position='fixed';ta.style.left='-9999px';
+function copyFB(txt){
+  const ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.left='-9999px';
   document.body.appendChild(ta);ta.select();
-  try{document.execCommand('copy');showToast('✓ Documento copiado');}
-  catch{showToast('⚠ Não foi possível copiar');}
+  try{document.execCommand('copy');toast('✓ Documento copiado');}catch{toast('⚠ Não foi possível copiar');}
   document.body.removeChild(ta);
 }
 
 function printDoc(){
-  const body=gEl('theDoc').innerHTML;
-  const w=window.open('','_blank','width=800,height=600');
-  if(!w){showToast('⚠ Pop-up bloqueado — permita pop-ups para imprimir');return;}
-  w.document.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>LexForge PRO — Documento Jurídico</title><style>
+  const body=G('theDoc').innerHTML;
+  const w=window.open('','_blank','width=800,height=700');
+  if(!w){toast('⚠ Pop-up bloqueado — permita pop-ups');return;}
+  w.document.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>LexForge PRO — Petição</title><style>
 @page{margin:3cm 2.5cm 3cm 3cm;size:A4}
 *{box-sizing:border-box}
 body{font-family:'Times New Roman',Times,serif;font-size:12pt;color:#000;background:#fff;line-height:2}
@@ -1697,23 +1496,42 @@ ol.pl{margin:.32rem 0 .32rem 3.5cm;padding:0}
 ol.pl li{font-size:12pt;line-height:2;text-align:justify;margin-bottom:.1rem}
 .sig{margin-top:3cm;text-align:center;page-break-inside:avoid}
 .sl{width:8cm;border-top:1px solid #000;margin:.42rem auto}
-.sn{font-weight:700;text-align:center}
-.so{font-style:italic;text-align:center;color:#555;font-size:11pt}
+.sn{font-weight:700;text-align:center;text-indent:0}
+.so{font-style:italic;text-align:center;text-indent:0;color:#555;font-size:11pt}
 strong{font-weight:700}em{font-style:italic}
 </style></head><body>${body}</body></html>`);
   w.document.close();
-  w.onload=()=>{setTimeout(()=>w.print(),400);};
+  w.onload=()=>{setTimeout(()=>w.print(),500);};
 }
 
+function exportWord(){
+  const d=window._dat;if(!d){toast('⚠ Gere o documento primeiro');return;}
+  showOv('Gerando Word...');
+  try{
+    const docEl=G('theDoc');if(!docEl){hideOv();toast('⚠ Documento não encontrado');return;}
+    const innerHtml=docEl.innerHTML;
+    const wordCSS=`body{font-family:'Times New Roman',Times,serif;font-size:12pt;line-height:2;margin:3cm 2.5cm 3cm 3cm;color:#000}.dh{text-align:center;margin-bottom:2.5cm}.dj{font-size:11.5pt;font-weight:bold;text-transform:uppercase;letter-spacing:0.07em;border-bottom:2px solid #000;padding-bottom:0.3cm;margin-bottom:0.4cm}.dv{font-size:10.5pt;color:#444;font-style:italic}.ds{font-size:11pt;font-weight:bold;text-align:center;text-transform:uppercase;letter-spacing:0.05em;margin:2.5cm 0 0.7cm;border-bottom:1px solid #bbb;padding-bottom:0.25cm;page-break-after:avoid}p{text-indent:2.5cm;text-align:justify;margin-bottom:0.3cm;font-size:12pt}p.ct{text-align:center;text-indent:0}ol.pl{margin:0.3cm 0 0.3cm 3.5cm;padding:0}ol.pl li{font-size:12pt;line-height:2;text-align:justify;margin-bottom:0.1cm}.sig{margin-top:3cm;text-align:center;page-break-inside:avoid}.sl{width:8cm;border-top:1px solid #000;margin:0.4cm auto}.sn{font-weight:bold;text-align:center}.so{font-style:italic;text-align:center;color:#555;font-size:11pt}strong{font-weight:bold}em{font-style:italic}`;
+    const fullHtml=`<!DOCTYPE html><html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='UTF-8'><meta name='ProgId' content='Word.Document'><title>Peticao_${SK}_${Date.now()}</title><!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom></w:WordDocument></xml><![endif]--><style>${wordCSS}</style></head><body>${innerHtml}</body></html>`;
+    const blob=new Blob(['\ufeff'+fullHtml],{type:'application/msword;charset=utf-8'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download=`LexForge_${SA.split('—')[0].trim().replace(/\s+/g,'_').substring(0,30)}_${new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')}.doc`;
+    document.body.appendChild(a);a.click();
+    setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
+    hideOv();toast('📝 Word baixado com sucesso!');
+  }catch(err){hideOv();toast('⚠ Erro: '+err.message);}
+}
+
+function showOv(msg){G('expOv').classList.add('show');G('expMsg').textContent=msg||'Aguarde...';}
+function hideOv(){G('expOv').classList.remove('show');}
 function resetAll(){if(confirm('Iniciar novo documento? Os dados serão perdidos.'))location.reload();}
+function wait(ms){return new Promise(r=>setTimeout(r,ms));}
 
-function showToast(msg){
-  const t=gEl('toast');
-  t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),3000);
+function toast(msg){
+  const t=G('toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(t._tid);t._tid=setTimeout(()=>t.classList.remove('show'),3000);
 }
 
-// INIT
+// ══ INIT ══
 addP();upd();
 </script>
 </body>
