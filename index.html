@@ -328,7 +328,7 @@ input.err-f,select.err-f,textarea.err-f{border-color:#c0392b!important;box-shado
       <div class="ws-logo">LexForge <span>PRO</span></div>
       <div class="ws-sub">Legal Document Automation System</div>
       <div class="ws-div"></div>
-      <p class="ws-desc">Geração de petições completas com IA Claude, artigos verificados, qualificação correta das partes e revisão automática pós-geração.</p>
+      <p class="ws-desc">Geração de petições completas com IA Gemini (Google) — <strong>gratuita</strong>. Artigos verificados, qualificação correta das partes e revisão automática pós-geração.</p>
     </div>
     <div class="ws-step">① Selecione a área do direito</div>
     <div class="ws-grid" id="wsGrid">
@@ -346,7 +346,7 @@ input.err-f,select.err-f,textarea.err-f{border-color:#c0392b!important;box-shado
       <button class="ws-btn2" onclick="wsVerTodos()">Ver todas as áreas</button>
     </div>
     <div class="ws-feats">
-      <div class="wf"><div class="wfi">🤖</div><div><div class="wft">IA Claude Gerando</div><div class="wfd">Petição gerada 100% pelo Claude — linguagem jurídica formal e precisa</div></div></div>
+      <div class="wf"><div class="wfi">🤖</div><div><div class="wft">IA Gemini Gratuita</div><div class="wfd">Petição gerada pelo Gemini (Google) — sem pagar nada</div></div></div>
       <div class="wf"><div class="wfi">🛡</div><div><div class="wft">Zero Invenção</div><div class="wfd">Artigos pré-selecionados por área — apenas vigentes</div></div></div>
       <div class="wf"><div class="wfi">✍️</div><div><div class="wft">Qualificação Correta</div><div class="wfd">Gênero, CPF, endereço, comarca — tudo automático</div></div></div>
       <div class="wf"><div class="wfi">🔍</div><div><div class="wft">Dupla Revisão IA</div><div class="wfd">Revisão crítica automática pós-geração</div></div></div>
@@ -376,13 +376,13 @@ input.err-f,select.err-f,textarea.err-f{border-color:#c0392b!important;box-shado
 <div class="apibar" id="apiBar">
   <div class="apibar-in">
     <span style="font-size:.85rem">🔑</span>
-    <span class="api-lbl">Chave de API Anthropic:</span>
+    <span class="api-lbl">Chave Gemini (Google) — Gratuita:</span>
     <div class="api-field" id="apiField">
-      <input type="password" id="apiKey" placeholder="sk-ant-api03-..." autocomplete="off" oninput="saveKey()" onpaste="setTimeout(saveKey,10)">
+      <input type="password" id="apiKey" placeholder="AIzaSy..." autocomplete="off" oninput="saveKey()" onpaste="setTimeout(saveKey,10)">
       <button class="api-eye" onclick="toggleKeyVis()" title="Mostrar/Ocultar">👁</button>
     </div>
     <span class="api-status wait" id="apiStatus">— sem chave (geração local)</span>
-    <a class="api-link" href="https://console.anthropic.com/settings/keys" target="_blank">Obter chave ↗</a>
+    <a class="api-link" href="https://aistudio.google.com/app/apikey" target="_blank">Pegar chave grátis ↗</a>
   </div>
 </div>
 
@@ -620,8 +620,8 @@ input.err-f,select.err-f,textarea.err-f{border-color:#c0392b!important;box-shado
   <!-- GENERATE BAR -->
   <div class="genbar">
     <div class="geninner">
-      <button class="bgen" id="btnGen" onclick="generate()">⚖ Gerar Petição com IA</button>
-      <div class="gennote"><strong>Pipeline automático:</strong><br>① Validação + qualificação das partes<br>② IA Claude gera texto jurídico formal<br>③ Revisão crítica automática (com chave)<br>④ Checklist pré-protocolo</div>
+      <button class="bgen" id="btnGen" onclick="generate()">⚖ Gerar Petição com Gemini IA</button>
+      <div class="gennote"><strong>Pipeline automático:</strong><br>① Validação + qualificação das partes<br>② Gemini IA gera texto jurídico formal<br>③ Revisão crítica automática<br>④ Checklist pré-protocolo<br><span style="color:var(--g3)">🔑 Cole sua chave Gemini gratuita acima</span></div>
     </div>
   </div>
 
@@ -864,11 +864,20 @@ function getNac(){
   if(nac==='brasileiro naturalizado')return f?'brasileira naturalizada':'brasileiro naturalizado';
   return f?'estrangeira':'estrangeiro';
 }
-
 function getEC(){
   const ec=V('a_ec');
   if(!ec)return'';
-  return ec.replace('(a)',gFem()?'a':'o');
+  const f=gFem();
+  // Concordância de gênero correta para cada estado civil
+  const map={
+    'Solteiro(a)':f?'solteira':'solteiro',
+    'Casado(a)':f?'casada':'casado',
+    'Divorciado(a)':f?'divorciada':'divorciado',
+    'Separado(a) judicialmente':f?'separada judicialmente':'separado judicialmente',
+    'Viúvo(a)':f?'viúva':'viúvo',
+    'Em união estável':'em união estável'
+  };
+  return map[ec]||ec.replace('(a)',f?'a':'o');
 }
 
 function getReuGen(){
@@ -1213,7 +1222,7 @@ async function generate(){
   setTimeout(()=>G('outSec').scrollIntoView({behavior:'smooth'}),100);
 }
 
-// ══ GERAÇÃO COM IA ANTHROPIC ══
+// ══ GERAÇÃO COM GEMINI ══
 async function gerarComIA(d,key){
   const arts=(ARTIGOS[d.key]||ARTIGOS.default).join('; ');
   const f=d.a.sexo==='F';
@@ -1225,7 +1234,7 @@ async function gerarComIA(d,key){
   const funds=d.funds.length?d.funds.join('; '):'';
   const provas=d.provas.join(', ')||'prova documental e todas as admitidas em direito';
 
-  const prompt=`Você é um advogado brasileiro sênior especialista em ${d.area}. Redija uma ${docNames[d.doc]||'PETIÇÃO INICIAL'} COMPLETA, FORMAL e TECNICAMENTE PERFEITA para protocolo imediato.
+  const prompt=`Você é um advogado brasileiro sênior especialista em ${d.area}. Redija uma ${docNames[d.doc]||'PETIÇÃO INICIAL'} COMPLETA, FORMAL e TECNICAMENTE PERFEITA para protocolo imediato em juízo.
 
 ## DADOS INSUBSTITUÍVEIS — USE EXATAMENTE COMO FORNECIDOS:
 
@@ -1249,7 +1258,7 @@ ${qReu}
 **TUTELA DE URGÊNCIA:** ${d.proc.tutela!=='nao'?d.proc.tutela+' — '+d.proc.urg:'NÃO requerida'}
 **AUDIÊNCIA CONCILIAÇÃO:** ${d.proc.aud==='nao'?'Autor manifesta DESINTERESSE (CPC/2015, art. 334, §4º, I)':'Autor NÃO se opõe'}
 
-**FATOS NARRADOS PELO CLIENTE:**
+**FATOS NARRADOS PELO CLIENTE (FORMALIZAR COMPLETAMENTE):**
 ${d.fatos}
 
 ${d.tent?`**TENTATIVAS EXTRAJUDICIAIS:**\n${d.tent}`:''}
@@ -1260,64 +1269,57 @@ ${d.docs?`**DOCUMENTOS DISPONÍVEIS:** ${d.docs}`:''}
 ${pedsList}
 
 ${funds?`**FUNDAMENTOS ADICIONAIS:** ${funds}`:''}
-${d.extra?`**FUNDAMENTO ESPECÍFICO EXTRA:** ${d.extra}`:''}
+${d.extra?`**FUNDAMENTO ESPECÍFICO:** ${d.extra}`:''}
 **MEIOS DE PROVA:** ${provas}
 ${d.test?`**TESTEMUNHAS:** ${d.test}`:''}
 
-## INSTRUÇÕES RIGOROSAS:
+## INSTRUÇÕES OBRIGATÓRIAS:
 
-1. **ESTRUTURA OBRIGATÓRIA (em HTML):**
-   - Endereçamento (CPC/2015, art. 319, I): ao JUÍZO (órgão), não à pessoa do juiz. Use: "${d.proc.vara} — ${d.adv.comarca}" (sem "Excelentíssimo Senhor Doutor Juiz" — endereça-se ao JUÍZO conforme CPC/2015)
-   - Qualificação das partes com os dados EXATOS fornecidos
-   - Seção "I — DOS FATOS": transforme os fatos em linguagem jurídica formal e técnica, em 4-7 parágrafos bem desenvolvidos
-   - Seção "II — DO DIREITO": fundamentos jurídicos com os artigos fornecidos, doutrina e jurisprudência pertinentes
-   - Seção "III — DOS PEDIDOS": lista numerada com os pedidos + citação do réu + custas e honorários
-   - "DO VALOR DA CAUSA": R$ ${d.proc.valor} (art. 292 CPC/2015)
-   - Fecho com data (${hoje}), cidade (${d.adv.cidade}), nome e OAB do advogado
+1. **FATOS:** Transforme completamente os fatos do cliente em linguagem jurídica formal e técnica. Nunca transcreva linguagem informal. Desenvolva em 4-6 parágrafos coesos.
 
-2. **LINGUAGEM:** Formal, técnica, forense. Use "Requerente" e "${rg.requerido}". Pronomes corretos.
+2. **DO DIREITO:** Fundamente ESPECIFICAMENTE para a área "${d.area}". NÃO use linguagem de indenização/dano moral em ação de divórcio, família ou previdência. Use os artigos corretos para a área.
 
-3. **ARTIGOS:** Use APENAS os artigos fornecidos acima. NÃO invente jurisprudência inexistente.
+3. **ENDEREÇAMENTO:** Use somente "${d.proc.vara}" e "${d.adv.comarca}" — sem "Excelentíssimo Senhor Doutor Juiz".
 
-4. **FORMATAÇÃO HTML** — use estas classes CSS do sistema:
-   - \`<div class="dh">\` para o endereçamento
-   - \`<div class="dj">\` para o juiz/vara
-   - \`<div class="dv">\` para a comarca
-   - \`<div class="ds">\` para os títulos das seções (I — DOS FATOS, etc.)
-   - \`<p>\` para parágrafos normais
-   - \`<p class="ct">\` para parágrafos centralizados
-   - \`<ol class="pl"><li>...</li></ol>\` para a lista de pedidos
-   - \`<div class="sig">\` para a assinatura
-   - \`<div class="sl">\</div>\` para a linha de assinatura
-   - \`<p class="sn">\` para o nome do advogado
-   - \`<p class="so">\` para OAB e informações adicionais
+4. **ESTRUTURA HTML** com estas classes CSS:
+   - <div class="dh"> para o endereçamento completo
+   - <div class="dj"> para a vara
+   - <div class="dv"> para a comarca
+   - <div class="ds"> para títulos das seções
+   - <p class="intro"> para o primeiro parágrafo (sem recuo)
+   - <p> para parágrafos normais (com recuo)
+   - <p class="ct"> para parágrafos centralizados
+   - <ol class="pl"><li> para lista de pedidos
+   - <div class="sig"> para assinatura
+   - <div class="sl"></div> para linha de assinatura
+   - <p class="sn"> para nome do advogado
+   - <p class="so"> para OAB e dados adicionais
 
-5. **QUALIDADE:** Esta petição será protocolada em juízo. Deve ser impecável, sem erros e completa.
+5. **QUALIDADE:** Petição para protocolo real. Impecável, sem erros gramaticais, concordância correta.
 
-Retorne APENAS o HTML da petição, sem markdown, sem explicações, sem \`\`\`.`;
+Retorne APENAS o HTML, sem markdown, sem explicações, sem blocos de código.`;
 
-  const res=await fetch('https://api.anthropic.com/v1/messages',{
+  const url=`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`;
+  const res=await fetch(url,{
     method:'POST',
-    headers:{
-      'Content-Type':'application/json',
-      'x-api-key':key,
-      'anthropic-version':'2023-06-01',
-      'anthropic-dangerous-direct-browser-calls':'true'
-    },
+    headers:{'Content-Type':'application/json'},
     body:JSON.stringify({
-      model:'claude-sonnet-4-20250514',
-      max_tokens:4000,
-      messages:[{role:'user',content:prompt}]
+      contents:[{parts:[{text:prompt}]}],
+      generationConfig:{maxOutputTokens:4000,temperature:0.2}
     })
   });
 
   if(!res.ok){
     const err=await res.json().catch(()=>({}));
-    throw new Error((err.error&&err.error.message)||'HTTP '+res.status);
+    const msg=(err.error&&err.error.message)||'HTTP '+res.status;
+    throw new Error(msg);
   }
 
   const data=await res.json();
-  return data.content.map(b=>b.text||'').join('').trim();
+  const text=data.candidates?.[0]?.content?.parts?.[0]?.text||'';
+  if(!text)throw new Error('Gemini não retornou conteúdo');
+  // Remove markdown code fences if Gemini adds them
+  return text.replace(/^```html?\n?/i,'').replace(/\n?```$/,'').trim();
 }
 
 // ══ GERAÇÃO LOCAL (fallback de alta qualidade) ══
@@ -1401,28 +1403,30 @@ function renderDoc(html,d){
   const wc=G('theDoc').innerText.split(/\s+/).length;
   G('docMeta').innerHTML=`<span class="mc">Palavras: <strong>~${wc.toLocaleString('pt-BR')}</strong></span><span class="mc">Área: <strong>${d.area.split('—')[0].trim()}</strong></span><span class="mc">Tipo: <strong>${docNames[d.doc]||'PETIÇÃO INICIAL'}</strong></span><span class="mc">Rito: <strong>${(d.proc.rito||'').split(' (')[0]}</strong></span><span class="mc">Valor: <strong>R$ ${d.proc.valor}</strong></span><span class="mc">Gerado: <strong>${new Date().toLocaleTimeString('pt-BR')}</strong></span>`;
   window._raw=G('theDoc').innerText;
-  G('outLbl').textContent=(getKey()?'Petição gerada com IA':'Petição gerada')+' — revise antes de protocolar';
+  G('outLbl').textContent=(getKey()?'Petição gerada com Gemini IA':'Petição gerada')+' — revise antes de protocolar';
 }
 
-// ══ REVISÃO AUTOMÁTICA ══
+// ══ REVISÃO AUTOMÁTICA COM GEMINI ══
 async function doReview(raw,d,key){
   const panel=G('revPanel'),body=G('revBody');
   panel.classList.add('show');
   body.innerHTML=`<div class="revld"><div class="rspin"></div>Analisando artigos, estrutura e qualidade...</div>`;
   const arts=(ARTIGOS[d.key]||ARTIGOS.default).join(', ');
-  const p=`Você é revisor jurídico sênior. Analise esta ${docNames[d.doc]||'petição'} de ${d.area} e retorne APENAS JSON válido, sem markdown.
+  const p=`Você é revisor jurídico sênior brasileiro. Analise esta ${docNames[d.doc]||'petição'} de ${d.area} e retorne APENAS JSON válido, sem markdown, sem explicações.
 ARTIGOS PERMITIDOS: ${arts}
 DOCUMENTO (primeiros 3000 chars): ${raw.slice(0,3000)}
-JSON: {"score":0-100,"nivel":"Excelente|Bom|Adequado|Requer revisão","cpc_ok":true_ou_false,"cpc_obs":"observação breve","artigos_ok":true_ou_false,"artigos_obs":"observação breve","positivos":["máx 3 pontos positivos"],"atencao":["máx 3 pontos de atenção"],"sugestoes":["máx 3 sugestões"],"conclusao":"frase conclusiva"}`;
+Retorne exatamente este JSON preenchido: {"score":0-100,"nivel":"Excelente|Bom|Adequado|Requer revisão","cpc_ok":true_ou_false,"cpc_obs":"observação breve","artigos_ok":true_ou_false,"artigos_obs":"observação breve","positivos":["ponto1","ponto2","ponto3"],"atencao":["ponto1","ponto2","ponto3"],"sugestoes":["sug1","sug2","sug3"],"conclusao":"frase conclusiva"}`;
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
+    const url=`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`;
+    const res=await fetch(url,{
       method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-calls':'true'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:700,messages:[{role:'user',content:p}]})
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({contents:[{parts:[{text:p}]}],generationConfig:{maxOutputTokens:700,temperature:0.1}})
     });
     if(!res.ok)throw new Error('HTTP '+res.status);
     const result=await res.json();
-    let txt=result.content.map(b=>b.text||'').join('').replace(/```json|```/g,'').trim();
+    let txt=result.candidates?.[0]?.content?.parts?.[0]?.text||'';
+    txt=txt.replace(/```json|```/g,'').trim();
     const rev=JSON.parse(txt);
     const sc=rev.score||0,cls=sc>=80?'sc-ok':sc>=60?'sc-bom':'sc-attn',ic=sc>=80?'✅':sc>=60?'⚠️':'🔴';
     let h=`<div class="scb ${cls}">${ic} ${sc}/100 — ${rev.nivel||''}</div>`;
@@ -1467,8 +1471,8 @@ function saveKey(){
   const k=getKey();
   const field=G('apiField');const status=G('apiStatus');
   if(!k){if(status){status.textContent='— sem chave (geração local)';status.className='api-status wait';}if(field)field.classList.remove('has-key');return;}
-  if(k.length>20){if(status){status.textContent='✓ API ativa — geração por IA Claude';status.className='api-status ok';}if(field)field.classList.add('has-key');}
-  else{if(status){status.textContent='⚠ Chave inválida';status.className='api-status err';}if(field)field.classList.remove('has-key');}
+  if(k.startsWith('AIza')&&k.length>20){if(status){status.textContent='✓ Gemini ativo — geração por IA gratuita';status.className='api-status ok';}if(field)field.classList.add('has-key');}
+  else{if(status){status.textContent='⚠ Chave inválida — deve começar com AIza';status.className='api-status err';}if(field)field.classList.remove('has-key');}
 }
 function toggleKeyVis(){const inp=G('apiKey');if(!inp)return;inp.type=inp.type==='password'?'text':'password';}
 
