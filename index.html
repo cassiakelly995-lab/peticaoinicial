@@ -235,27 +235,37 @@ input.err-f,select.err-f,textarea.err-f{border-color:#c0392b!important;box-shado
 .ba.blue{background:rgba(74,128,208,.1);border-color:rgba(74,128,208,.28);color:#7aabf0}
 .ba.blue:hover{background:rgba(74,128,208,.2)}
 
-/* DOCUMENT — Formatação conforme ABNT e praxe forense brasileira */
-/* Margens: esq 3cm, dir 2cm, sup 3cm, inf 2cm (ABNT NBR 14724) */
-/* Fonte: Times New Roman 12pt; Espaçamento: 1,5; Recuo: 1,25cm */
-.doc{background:#fff;border:1px solid var(--gl);padding:3cm 2cm 2cm 3cm;font-family:'Times New Roman',Times,serif;font-size:12pt;color:#111;line-height:1.5;box-shadow:0 8px 32px rgba(0,0,0,.4),0 0 20px rgba(201,168,76,.08);position:relative}
-.doc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--g3),var(--g),var(--g3))}
+/* DOCUMENT — Visual elegante, formal, padrão tribunal */
+.doc{background:#fdfcf8;border:1px solid #d4c9a8;padding:3cm 2cm 2cm 3cm;font-family:'Times New Roman',Times,serif;font-size:12pt;color:#111;line-height:1.5;box-shadow:0 12px 40px rgba(0,0,0,.35),0 2px 8px rgba(0,0,0,.2);position:relative;max-width:21cm;margin:0 auto}
+.doc::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#7a5c20,#c9a84c,#a07830,#c9a84c,#7a5c20)}
+.doc::after{content:'';position:absolute;top:4px;left:0;right:0;height:1px;background:rgba(201,168,76,.3)}
 @media(max-width:640px){.doc{padding:1.5rem 1rem 2rem}}
-.doc .dh{text-align:center;margin-bottom:1.8rem}
-/* CPC/2015 art.319,I — endereço ao JUÍZO (instituição), não ao juiz */
-.doc .dj{font-size:12pt;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.3rem;text-align:center}
-.doc .dv{font-size:11.5pt;color:#222;font-weight:600;text-align:center}
-.doc .ds{font-size:12pt;font-weight:700;text-align:center;text-transform:uppercase;letter-spacing:.04em;margin:1.8rem 0 .6rem;border-bottom:1.5px solid #333;padding-bottom:.2rem}
-/* Recuo 1,25cm padrão forense — parágrafos justificados */
-.doc p{text-indent:1.25cm;text-align:justify;hyphens:auto;margin-bottom:.4rem;font-size:12pt;line-height:1.5}
+/* Ornamento superior */
+.doc .doc-ornament{text-align:center;color:#c9a84c;font-size:9pt;letter-spacing:.4em;text-transform:uppercase;margin-bottom:1.5rem;opacity:.6}
+/* Endereçamento */
+.doc .dh{text-align:center;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid #d4c9a8}
+.doc .dj{font-size:12pt;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem;color:#1a1a1a}
+.doc .dv{font-size:11pt;color:#333;font-weight:500}
+/* Títulos de seção — elegantes e formais */
+.doc .ds{font-size:11pt;font-weight:700;text-align:center;text-transform:uppercase;letter-spacing:.08em;margin:2rem 0 .8rem;color:#1a1a1a;position:relative;display:flex;align-items:center;gap:.8rem}
+.doc .ds::before,.doc .ds::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,#c9a84c)}
+.doc .ds::after{background:linear-gradient(90deg,#c9a84c,transparent)}
+/* Título central da petição */
+.doc .doc-tipo{text-align:center;font-size:14pt;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin:1.5rem 0;color:#1a1a1a;border-top:2px solid #333;border-bottom:2px solid #333;padding:.5rem 0}
+/* Parágrafos */
+.doc p{text-indent:1.25cm;text-align:justify;hyphens:auto;margin-bottom:.5rem;font-size:12pt;line-height:1.5;color:#111}
 .doc p.ct{text-align:center;text-indent:0}
 .doc p.intro{text-indent:0;text-align:justify}
-.doc ol.pl{margin:.3rem 0 .3rem 2cm;padding:0}
-.doc ol.pl li{font-size:12pt;line-height:1.5;text-align:justify;margin-bottom:.3rem}
-.doc .sig{margin-top:2.5rem;text-align:center}
-.doc .sl{width:200px;height:1px;background:#222;margin:.4rem auto}
-.doc .sn{font-weight:700;text-align:center;text-indent:0;font-size:12pt}
-.doc .so{font-style:normal;text-align:center;text-indent:0;color:#333;font-size:11pt}
+/* Pedidos */
+.doc ol.pl{margin:.4rem 0 .4rem 2cm;padding:0}
+.doc ol.pl li{font-size:12pt;line-height:1.5;text-align:justify;margin-bottom:.35rem;padding-left:.2cm}
+/* Assinatura */
+.doc .sig{margin-top:3rem;text-align:center;padding-top:1rem;border-top:1px solid #d4c9a8}
+.doc .sl{width:220px;height:1px;background:#555;margin:.5rem auto .2rem}
+.doc .sn{font-weight:700;text-align:center;text-indent:0;font-size:12pt;color:#1a1a1a}
+.doc .so{font-style:normal;text-align:center;text-indent:0;color:#444;font-size:11pt}
+/* Rodapé do documento */
+.doc .doc-footer{margin-top:2rem;padding-top:.8rem;border-top:1px solid #e8e0d0;text-align:center;font-size:9pt;color:#888;letter-spacing:.06em}
 .dmeta{background:var(--k3);border:1px solid var(--gl);border-top:none;padding:.4rem .8rem;display:flex;gap:.9rem;flex-wrap:wrap;align-items:center}
 .mc{font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.07em;text-transform:uppercase;color:var(--t4)}
 .mc strong{color:var(--t3);margin-left:.14rem}
@@ -1322,7 +1332,7 @@ Retorne APENAS o HTML, sem markdown, sem explicações, sem blocos de código.`;
   return text.replace(/^```html?\n?/i,'').replace(/\n?```$/,'').trim();
 }
 
-// ══ GERAÇÃO LOCAL (fallback de alta qualidade) ══
+// ══ GERAÇÃO LOCAL (fallback elegante) ══
 function gerarLocal(d){
   const hoje=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
   const arts=(ARTIGOS[d.key]||ARTIGOS.default).join('; ');
@@ -1331,62 +1341,103 @@ function gerarLocal(d){
   const rg=reuFlexao(d.r.tipo);
   const f=d.a.sexo==='F';
   const autor=f?'a Requerente':'o Requerente';
+  const Autor=f?'A Requerente':'O Requerente';
   const peds=d.peds;
-  const funds=d.funds.length?`\n\n<p>Aplicam-se ainda ao caso concreto: <strong>${d.funds.join('; ')}</strong>.</p>`:'';
-  const extraArt=d.extra?` Igualmente pertinente: ${d.extra}.`:'';
-  const afTxt=d.af?`\n\n<p>Informações complementares: ${d.af.split('\n').filter(Boolean).join('; ')}.</p>`:'';
-  const docsTxt=d.docs?`\n\n<p>${f?'A Requerente':'O Requerente'} possui os seguintes documentos probatórios: ${d.docs}.</p>`:'';
-  const tentTxt=d.tent?`\n\n<p>Antes de recorrer ao Judiciário, ${autor} envidou esforços extrajudiciais: ${d.tent}. Contudo, a tentativa restou infrutífera, tornando necessária a tutela jurisdicional.</p>`:'' ;
   const provas=d.provas.join(', ')||'prova documental e demais admitidas em direito';
   const testTxt=d.test?` Rol de testemunhas: ${d.test}.`:'';
-  const tutelaSec=d.proc.tutela!=='nao'?`\n\n<div class="ds">DA TUTELA DE URGÊNCIA</div>\n\n<p>Requer ${autor}, com fundamento no art. 300 do CPC/2015, a concessão de tutela de urgência, presentes o <em>fumus boni iuris</em> e o <em>periculum in mora</em>.${d.proc.urg?' Especificamente: '+d.proc.urg:''} Requer deferimento liminar, antes da citação.</p>`:'';
-  const gratSec=d.proc.grat==='sim'?`\n\n<p>${f?'A Requerente':'O Requerente'} declara, sob as penas da lei, não possuir condições de arcar com as custas processuais e honorários advocatícios sem prejuízo próprio e de sua família, requerendo a concessão da gratuidade da justiça, nos termos do art. 98 do CPC/2015.</p>`:'';
-  const audSec=d.proc.aud==='nao'?`\n\n<p>${f?'A Requerente':'O Requerente'} manifesta, desde já, o desinteresse na realização de audiência de conciliação ou de mediação, nos termos do art. 334, §4º, inciso I, do CPC/2015, tendo em vista que a natureza do litígio não comporta autocomposição.</p>`:'\n\n<p>O(A) Requerente não se opõe à realização de audiência de conciliação ou de mediação prevista no art. 334 do CPC/2015.</p>';
 
-  // Transformar fatos em texto mais formal
-  const fatosFormatados=d.fatos
-    .replace(/\n\n+/g,'</p>\n\n<p>')
-    .replace(/\n/g,' ');
+  // Formalizar fatos — transformar linguagem informal em jurídica
+  const fatosFormalizados=d.fatos
+    .replace(/\n\n+/g,'§§§')
+    .replace(/\n/g,' ')
+    .split('§§§')
+    .map(p=>p.trim())
+    .filter(Boolean)
+    .map(p=>`<p>${p}</p>`)
+    .join('\n');
 
-  return `<div class="dh">
+  // Fundamentos adicionais
+  const fundsExtra=d.funds.length?`\n<p>Aplicam-se ainda: <strong>${d.funds.join('; ')}</strong>.</p>`:'';
+  const extraArt=d.extra?`\n<p>Igualmente pertinente: ${d.extra}.</p>`:'';
+  const afTxt=d.af?`\n<p>${d.af.split('\n').filter(Boolean).map(l=>`${l}`).join('; ')}.</p>`:'';
+  const docsTxt=d.docs?`\n<p>${Autor} possui os seguintes documentos: ${d.docs}.</p>`:'';
+  const tentTxt=d.tent?`\n<p>Antes de recorrer ao Judiciário, ${autor} buscou solução extrajudicial: ${d.tent}. Contudo, a tentativa restou infrutífera.</p>`:'';
+
+  // Seção Do Direito adaptada por área
+  const isDivFam=['divorcio','alimentos','guarda','uniao','inventario'].includes(d.key);
+  const isPrevidenciario=['apo_inv','apo_contrib','aux_doenca','pensao','loas','apo_esp'].includes(d.key);
+  const isTrabalhista=['trab_geral','acidente','assedio','vinculo','rescisao'].includes(d.key);
+
+  let direitoTxt='';
+  if(isDivFam){
+    direitoTxt=`<p>A pretensão deduzida encontra amparo nos seguintes dispositivos legais: <strong>${arts}</strong>.</p>
+<p>Com efeito, o direito ao divórcio é potestativo e incondicionado, conforme estabelecido pela Emenda Constitucional n.º 66/2010, que suprimiu qualquer requisito temporal ou causal para a dissolução do vínculo conjugal, bastando a manifestação de vontade de qualquer dos cônjuges.</p>
+<p>${Autor} tem direito à dissolução do vínculo conjugal e à consequente partilha dos bens comuns, nos exatos termos do art. 1.571 e seguintes do Código Civil de 2002, combinado com o art. 226, §6º, da Constituição Federal de 1988.</p>${fundsExtra}${extraArt}`;
+  } else if(isPrevidenciario){
+    direitoTxt=`<p>A pretensão deduzida encontra amparo nos seguintes dispositivos legais: <strong>${arts}</strong>.</p>
+<p>${Autor} preenche todos os requisitos legais para a concessão do benefício pleiteado, consoante os dispositivos legais acima elencados. O indeferimento administrativo carece de amparo legal, revelando-se arbitrário e violador do direito constitucional à previdência social, consagrado no art. 201 da Constituição Federal de 1988.</p>
+<p>O direito ao benefício previdenciário é um direito fundamental do cidadão, devendo ser assegurado pelo Poder Judiciário sempre que a Administração Pública, de forma injustificada, negar sua concessão.</p>${fundsExtra}${extraArt}`;
+  } else if(isTrabalhista){
+    direitoTxt=`<p>A pretensão deduzida encontra amparo nos seguintes dispositivos legais: <strong>${arts}</strong>.</p>
+<p>${Autor} tem direito ao recebimento das verbas rescisórias e demais parcelas trabalhistas elencadas nos pedidos, consoante a legislação trabalhista vigente. A conduta da Reclamada viola frontalmente os direitos do trabalhador garantidos pela Consolidação das Leis do Trabalho e pela Constituição Federal de 1988.</p>
+<p>O não pagamento das verbas rescisórias no prazo legal enseja, além da obrigação de pagamento, a incidência de multa prevista no art. 477, §8º, da CLT, bem como a aplicação de juros e correção monetária sobre os valores devidos.</p>${fundsExtra}${extraArt}`;
+  } else {
+    direitoTxt=`<p>A pretensão deduzida encontra robusto amparo no ordenamento jurídico vigente, especificamente nos seguintes dispositivos legais: <strong>${arts}</strong>.${d.extra?' '+d.extra:''}</p>
+<p>Com efeito, os fatos narrados demonstram de forma inequívoca o direito d${autor} à tutela jurisdicional pretendida, impondo-se ao ${rg.requerido} o cumprimento das obrigações legais, em prestígio ao princípio da inafastabilidade da jurisdição, consagrado no art. 5º, inciso XXXV, da Constituição Federal de 1988.</p>
+<p>A conduta d${rg.o} ${rg.requerido} viola as normas acima elencadas, gerando o dever de reparação integral dos danos causados ${autor}, na forma do ordenamento jurídico vigente.</p>${fundsExtra}`;
+  }
+
+  // Tutela de urgência
+  const tutelaSec=d.proc.tutela!=='nao'?`
+<div class="ds">DA TUTELA DE URGÊNCIA</div>
+<p>Requer ${autor}, com fundamento no art. 300 do CPC/2015, a concessão de tutela de urgência, presentes o <em>fumus boni iuris</em> e o <em>periculum in mora</em>.${d.proc.urg?' Especificamente: '+d.proc.urg:''} Requer deferimento liminar, antes da citação.</p>`:'';
+
+  // Gratuidade
+  const gratSec=d.proc.grat==='sim'?`\n<p>${Autor} declara, sob as penas da lei, não possuir condições de arcar com as custas processuais e os honorários advocatícios sem prejuízo próprio e de sua família, requerendo a concessão da gratuidade da justiça, nos termos do art. 98 do CPC/2015.</p>`:'';
+
+  // Audiência
+  const audSec=d.proc.aud==='nao'
+    ?`\n<p>${Autor} manifesta, desde já, o desinteresse na realização de audiência de conciliação ou de mediação, nos termos do art. 334, §4º, inciso I, do CPC/2015, tendo em vista que a natureza do litígio não comporta autocomposição.</p>`
+    :`\n<p>${Autor} não se opõe à realização de audiência de conciliação ou de mediação prevista no art. 334 do CPC/2015.</p>`;
+
+  return `<div class="doc-ornament">— Petição Inicial —</div>
+
+<div class="dh">
   <div class="dj">${d.proc.vara}</div>
   <div class="dv">${d.adv.comarca}</div>
 </div>
 
-<p class="intro">${qAutor}, por seu${f?'sua':''} advogad${f?'a':'o'} que esta subscreve${d.adv.end?', com endereço profissional em '+d.adv.end:''}${d.adv.email?', e-mail '+d.adv.email+', onde recebe intimações':''}, vem, respeitosamente, à presença de Vossa Excelência, com fundamento nos arts. 319 e 320 do Código de Processo Civil (Lei n.º 13.105/2015) e nos termos de ${arts}, propor a presente</p>
+<p class="intro">${qAutor}, por ${f?'sua':'seu'} advogad${f?'a':'o'} que esta subscreve${d.adv.end?', com endereço profissional em '+d.adv.end:''}${d.adv.email?', e-mail '+d.adv.email+', onde recebe intimações':''}, vem, respeitosamente, à presença de Vossa Excelência, com fundamento nos arts. 319 e 320 do Código de Processo Civil (Lei n.º 13.105/2015) e nos termos de ${arts}, propor a presente</p>
 
-<div class="ds">PETIÇÃO INICIAL</div>
+<div class="doc-tipo">PETIÇÃO INICIAL</div>
 
 <p>em face de ${qReu}, pelos fatos e fundamentos jurídicos a seguir aduzidos.</p>
 
-<div class="ds">I — DOS FATOS</div>
+<div class="ds">I — Dos Fatos</div>
 
-<p>${fatosFormatados}</p>${tentTxt}${afTxt}${docsTxt}
+${fatosFormalizados}${tentTxt}${afTxt}${docsTxt}
 
-<div class="ds">II — DO DIREITO</div>
+<div class="ds">II — Do Direito</div>
 
-<p>A pretensão deduzida na presente exordial encontra robusto amparo no ordenamento jurídico vigente, especificamente nos seguintes dispositivos legais: <strong>${arts}</strong>.${extraArt}</p>
+${direitoTxt}${tutelaSec}${gratSec}
 
-<p>Com efeito, os fatos narrados caracterizam, de forma inequívoca, a responsabilidade d${rg.o} ${rg.requerido}, impondo-se a reparação integral dos danos causados ${autor}, em prestígio ao princípio constitucional da inafastabilidade da jurisdição, consagrado no art. 5º, inciso XXXV, da Constituição Federal de 1988.</p>
-
-<p>A conduta d${rg.o} ${rg.requerido} revela manifesta ilicitude, em nítida violação às normas protetivas acima elencadas, gerando o dever de reparar os danos materiais e morais causados ${autor}, na exata medida do que dispõem os arts. 186 e 927 do Código Civil de 2002.</p>${funds}${tutelaSec}${gratSec}
-
-<div class="ds">III — DOS PEDIDOS</div>
+<div class="ds">III — Dos Pedidos</div>
 
 <p>Diante do exposto, requer ${autor} que Vossa Excelência se digne a:</p>
 <ol class="pl">
 ${peds.map(p=>`<li>${p};</li>`).join('\n')}
 <li>A citação d${rg.o} ${rg.requerido} para, querendo, contestar a presente ação no prazo legal, sob pena de revelia e presunção de veracidade dos fatos alegados;</li>
-<li>A condenação d${rg.o} ${rg.requerido} ao pagamento das custas processuais e honorários advocatícios de sucumbência, nos termos do art. 85 do CPC/2015;</li>
+<li>A condenação d${rg.o} ${rg.requerido} ao pagamento das custas processuais e dos honorários advocatícios de sucumbência, nos termos do art. 85 do CPC/2015;</li>
 <li>A produção de ${provas}.${testTxt}</li>
 </ol>
 
-<div class="ds">DO VALOR DA CAUSA</div>
+<div class="ds">Do Valor da Causa</div>
 
 <p>Dá-se à causa o valor de <strong>R$ ${d.proc.valor}</strong>, nos termos do art. 292 do Código de Processo Civil.</p>${audSec}
 
 <div class="sig">
-  <p class="ct" style="margin-bottom:1.8rem">Nesses termos,<br>Pede deferimento.</p>
+  <p class="ct">Nesses termos,<br>Pede deferimento.</p>
+  <br>
   <p class="ct">${d.adv.cidade}, ${hoje}.</p>
   <div class="sl"></div>
   <p class="sn">${d.adv.nome}</p>
@@ -1496,19 +1547,21 @@ function printDoc(){
   w.document.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>LexForge PRO — Petição</title><style>
 @page{margin:3cm 2cm 2cm 3cm;size:A4}
 *{box-sizing:border-box}
-body{font-family:'Times New Roman',Times,serif;font-size:12pt;color:#000;background:#fff;line-height:1.5}
-.dh{text-align:center;margin-bottom:1.8cm}
-.dj{font-size:12pt;font-weight:700;text-transform:uppercase;letter-spacing:.04em;text-align:center;margin-bottom:.3cm}
-.dv{font-size:11.5pt;color:#222;font-weight:600;text-align:center}
-.ds{font-size:12pt;font-weight:700;text-align:center;text-transform:uppercase;letter-spacing:.04em;margin:1.8cm 0 .6cm;border-bottom:1.5px solid #333;padding-bottom:.2cm;page-break-after:avoid}
-p{text-indent:1.25cm;text-align:justify;hyphens:auto;margin-bottom:.4cm;font-size:12pt;line-height:1.5}
+body{font-family:"Times New Roman",Times,serif;font-size:12pt;color:#000;background:#fff;line-height:1.5}
+.doc-ornament{text-align:center;color:#888;font-size:9pt;letter-spacing:.4em;text-transform:uppercase;margin-bottom:1.2rem;opacity:.5}
+.dh{text-align:center;margin-bottom:1.8cm;padding-bottom:.8cm;border-bottom:1px solid #ccc}
+.dj{font-size:12pt;font-weight:700;text-transform:uppercase;letter-spacing:.06em;text-align:center;margin-bottom:.3cm}
+.dv{font-size:11pt;color:#333;font-weight:500;text-align:center}
+.ds{font-size:11pt;font-weight:700;text-align:center;text-transform:uppercase;letter-spacing:.08em;margin:1.8cm 0 .6cm;border-bottom:1px solid #aaa;padding-bottom:.2cm;page-break-after:avoid;display:block}
+.doc-tipo{text-align:center;font-size:14pt;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin:1.2cm 0;border-top:2px solid #000;border-bottom:2px solid #000;padding:.4cm 0;page-break-after:avoid}
+p{text-indent:1.25cm;text-align:justify;hyphens:auto;margin-bottom:.5cm;font-size:12pt;line-height:1.5}
 p.ct{text-indent:0;text-align:center}
 p.intro{text-indent:0;text-align:justify}
-ol.pl{margin:.3cm 0 .3cm 2cm;padding:0}
-ol.pl li{font-size:12pt;line-height:1.5;text-align:justify;margin-bottom:.3cm}
-.sig{margin-top:2.5cm;text-align:center;page-break-inside:avoid}
-.sl{width:6cm;border-top:1px solid #000;margin:.4cm auto}
-.sn{font-weight:700;text-align:center;text-indent:0}
+ol.pl{margin:.4cm 0 .4cm 2cm;padding:0}
+ol.pl li{font-size:12pt;line-height:1.5;text-align:justify;margin-bottom:.35cm}
+.sig{margin-top:2.5cm;text-align:center;page-break-inside:avoid;padding-top:.8cm;border-top:1px solid #ccc}
+.sl{width:6cm;border-top:1px solid #000;margin:.5cm auto .2cm}
+.sn{font-weight:700;text-align:center;text-indent:0;font-size:12pt}
 .so{font-style:normal;text-align:center;text-indent:0;color:#333;font-size:11pt}
 strong{font-weight:700}em{font-style:italic}
 </style></head><body>${body}</body></html>`);
