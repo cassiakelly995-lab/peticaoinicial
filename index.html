@@ -8,8 +8,8 @@
 <style>
 :root{--k:#09090d;--k2:#0f0f16;--k3:#16161f;--k4:#1c1c28;--k5:#252535;--s2:#16161f;--s3:#1c1c28;--g:#c8952a;--g2:#e8b84a;--g3:#c8952a;--ga:rgba(200,149,42,.08);--gb:rgba(200,149,42,.15);--t1:#f0ead8;--t2:#b8b09a;--t3:#706858;--t4:#3c3830;--red:#b03020;--redbg:rgba(176,48,32,.08);--green:#4ab870;--greenbg:rgba(74,184,112,.1);--blue:#2a5aa0;}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{font-size:15px;scroll-behavior:smooth}
-body{font-family:'Outfit',sans-serif;background:var(--k);color:var(--t1);min-height:100vh;-webkit-font-smoothing:antialiased}
+html{font-size:15px;scroll-behavior:smooth;height:100%}
+body{font-family:'Outfit',sans-serif;background:var(--k);color:var(--t1);height:100%;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;overflow:hidden}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--k2)}::-webkit-scrollbar-thumb{background:var(--k5)}
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -47,8 +47,8 @@ body{font-family:'Outfit',sans-serif;background:var(--k);color:var(--t1);min-hei
 .fb-sync{font-family:'JetBrains Mono',monospace;font-size:.48rem;color:var(--t4)}
 .fb-user{display:flex;align-items:center;gap:.3rem;font-size:.67rem;color:var(--t2)}
 .fb-avatar{width:20px;height:20px;border-radius:50%;border:1px solid var(--gb);object-fit:cover}
-.layout{display:grid;grid-template-columns:270px 1fr;height:calc(100vh - 130px)}
-.sb{background:var(--k2);border-right:1px solid var(--gb);position:sticky;top:130px;height:calc(100vh - 130px);overflow-y:auto;display:flex;flex-direction:column}
+.layout{display:grid;grid-template-columns:270px 1fr;flex:1;overflow:hidden;min-height:0}
+.sb{background:var(--k2);border-right:1px solid var(--gb);height:100%;overflow-y:auto;display:flex;flex-direction:column}
 .sb-top{padding:.6rem .72rem .45rem;border-bottom:1px solid var(--gb);background:var(--k3)}
 .sb-inp{width:100%;background:var(--k4);border:1px solid var(--gb);color:var(--t1);font-size:.72rem;padding:.36rem .6rem;outline:none;font-family:'Outfit',sans-serif}
 .sb-inp:focus{border-color:var(--g3)}
@@ -69,7 +69,7 @@ body{font-family:'Outfit',sans-serif;background:var(--k);color:var(--t1);min-hei
 .pd.ok{background:var(--g3);border-color:var(--g)}
 .ptrack{height:2px;background:var(--k5);margin-top:.42rem}
 .pfill{height:100%;background:linear-gradient(90deg,var(--g3),var(--g));transition:width .3s}
-.main{padding:1.3rem 1.5rem 4rem;max-width:820px;overflow-y:auto;scroll-behavior:smooth}
+.main{width:100%;height:100%;padding:1.3rem 1.5rem 4rem;max-width:820px;overflow-y:auto;scroll-behavior:smooth}
 .ph{margin-bottom:1rem;padding-bottom:.8rem;border-bottom:1px solid var(--gb)}
 .ph-ey{font-family:'JetBrains Mono',monospace;font-size:.48rem;letter-spacing:.2em;text-transform:uppercase;color:var(--g3);margin-bottom:.25rem}
 .ph h1{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:700;color:var(--g2);line-height:1.1}
@@ -447,7 +447,7 @@ input.err-f,select.err-f{border-color:#b03020!important;box-shadow:0 0 0 3px rgb
   <div class="card open" id="c1">
     <div class="ch" onclick="tog('c1')"><span class="cnum">01</span><span class="ctit">Qualificacao do Autor (Requerente)</span><span class="cst pend" id="s1">Pendente</span><span class="cch">▾</span></div>
     <div class="cb">
-      <div class="fr"><div class="fg" id="fg_anome"><label class="fl">Nome completo <span class="req">*</span></label><input type="text" id="a_nome" placeholder="Nome civil completo" oninput="upd();dGender()"></div><div class="fg"><label class="fl">Sexo <span class="req">*</span></label><select id="a_sexo" onchange="upd()"><option value="">Selecione</option><option value="M">Masculino</option><option value="F">Feminino</option></select></div></div>
+      <div class="fr"><div class="fg" id="fg_anome"><label class="fl">Nome completo <span class="req">*</span></label><input type="text" id="a_nome" placeholder="Nome civil completo" oninput="upd();dGender()" onblur="dGender()"></div><div class="fg"><label class="fl">Sexo <span class="req">*</span></label><select id="a_sexo" onchange="upd()"><option value="">Selecione</option><option value="M">Masculino</option><option value="F">Feminino</option></select></div></div>
       <div class="fr"><div class="fg"><label class="fl">Nacionalidade <span class="req">*</span></label><select id="a_nac" onchange="upd()"><option value="brasileiro">Brasileiro(a)</option><option value="brasileiro naturalizado">Brasileiro(a) Naturalizado(a)</option><option value="estrangeiro">Estrangeiro(a)</option></select></div><div class="fg"><label class="fl">Estado civil <span class="req">*</span></label><select id="a_ec" onchange="upd();chkConj()"><option value="">Selecione</option><option>Solteiro(a)</option><option>Casado(a)</option><option>Divorciado(a)</option><option>Separado(a) judicialmente</option><option>Viuvo(a)</option><option>Em uniao estavel</option></select></div></div>
       <div class="fr"><div class="fg"><label class="fl">Profissao <span class="req">*</span></label><input type="text" id="a_prof" placeholder="Ex: comerciante, enfermeira" oninput="upd()"></div><div class="fg" id="fg_acpf"><label class="fl">CPF <span class="req">*</span></label><input type="text" id="a_cpf" placeholder="000.000.000-00" maxlength="14" oninput="maskCPF(this);validCPFField('a_cpf','fg_acpf');upd()"><span class="val-ok">✓ CPF valido</span><span class="val-err-msg">⚠ CPF invalido</span></div></div>
       <div class="fr"><div class="fg"><label class="fl">RG <span class="opt">(recomendado)</span></label><input type="text" id="a_rg" placeholder="00.000.000-0 SSP/UF"></div><div class="fg" id="fg_acnpj"><label class="fl">CNPJ <span class="opt">(se P.J.)</span></label><input type="text" id="a_cnpj" placeholder="00.000.000/0001-00" maxlength="18" oninput="maskCNPJ(this,'fg_acnpj')"><span class="val-ok">✓ CNPJ valido</span><span class="val-err-msg">⚠ CNPJ invalido</span></div></div>
@@ -1594,7 +1594,17 @@ function renderJurisResult(k){const p=G('jurisResult'),b=G('jurisResultBody');if
 let SA='',SL='',SP='',SK='',SR='',pedN=0;
 const G=id=>document.getElementById(id);
 const V=id=>{const el=G(id);return el?el.value.trim():'';};
-function dGender(){const nome=V('a_nome');if(!nome)return;const s=G('a_sexo');if(s&&s.value)return;const f=nome.split(' ')[0].toLowerCase();if(/([aáâãà]|iane|iana|ine|ela|isa|ice)$/.test(f))s&&(s.value='F');else if(/(o|or|im|ão|on|el|er|eu|us|to|do|ro|lo|no)$/.test(f))s&&(s.value='M');}
+function dGender(){
+  const nome=V('a_nome');if(!nome)return;
+  const s=G('a_sexo');
+  // Só detecta se o campo está vazio ou sem escolha
+  if(s&&s.value&&s.value!=='')return;
+  const f=nome.split(' ')[0].toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+  // Nomes femininos: terminam em a, ia, ina, ela, isa, ice, ane, iane
+  if(/^(cassia|livia|lyvia|ana|maria|julia|paula|carla|camila|bruna|laura|patricia|cintia|claudia|daniela|fernanda|gabriela|isabela|jessica|juliana|leticia|luciana|mariana|natalia|rafaela|renata|sabrina|sandra|simone|tatiana|vanessa|viviane|priscila|alessandra|cristina|carolina|beatriz|alice|amanda|bianca|cecilia|denise|elaine|evelyn|flavia|gisele|heloisa|ingrid|janaina|karoline|larissa|lidiane|luciene|luisa|marcela|melissa|micheli|miriam|nadia|noemia|pamela|rebeca|rosana|roseli|rosemeire|sheila|silvia|sonia|soraia|sueli|suely|tania|telma|thais|valeria|vanda|vera|zenaide)$/.test(f))s&&(s.value='F');
+  else if(/([aáâãàé]|iane|iana|ine|ela|isa|ice|ize|eze|lli|lli)$/.test(f))s&&(s.value='F');
+  else if(/(o|or|im|on|el|er|eu|us|to|do|ro|lo|no|em|am|ao|ão)$/.test(f))s&&(s.value='M');
+}
 function gSex(){return(G('a_sexo')&&G('a_sexo').value)||'M';}
 function gFem(){return gSex()==='F';}
 function getNac(){const n=V('a_nac'),f=gFem();return n==='brasileiro'?(f?'brasileira':'brasileiro'):n==='brasileiro naturalizado'?(f?'brasileira naturalizada':'brasileiro naturalizado'):(f?'estrangeira':'estrangeiro');}
@@ -1698,7 +1708,14 @@ function restoreForm(){try{const raw=localStorage.getItem('lxf_form');if(!raw)re
   if(h1&&SA){const n=SA.split('—')[0].split('–')[0].trim();h1.textContent='Petição: '+n;}
   const lbl=G('docTypeLabel');
   if(lbl&&SL){const l=SL.split(';')[0].trim();lbl.textContent=l+' · '+(SR.split('(')[0].trim()||'');}
-}const pp=G('p_presc');if(pp)pp.value=SP||'';renderAF(SK);showSugg(SK);loadJuris(SK);}SAVE_FIELDS.forEach(id=>{const el=G(id);if(el&&snap.fields&&snap.fields[id]!==undefined)el.value=snap.fields[id];});if(SK&&snap.afFields){const def=AF[SK];if(def){def.fields.forEach(f=>{const el=G(f.id);if(el&&snap.afFields[f.id]!==undefined)el.value=snap.afFields[f.id];});}}if(snap.peds&&snap.peds.length){const pl=G('pedList');if(pl)pl.innerHTML='';pedN=0;snap.peds.forEach(p=>addPWithText(p));}if(snap.funds){document.querySelectorAll('#fundGrid .tag').forEach(t=>{t.classList.toggle('on',snap.funds.includes(t.textContent.trim()));});}if(snap.provas){document.querySelectorAll('#c9 .tag').forEach(t=>{t.classList.toggle('on',snap.provas.includes(t.textContent.trim()));});}chkConj();chkReu();upd();toast('Rascunho restaurado');}catch(e){console.warn('restoreForm:',e);}}
+}const pp=G('p_presc');if(pp)pp.value=SP||'';renderAF(SK);showSugg(SK);loadJuris(SK);}SAVE_FIELDS.forEach(id=>{
+  const el=G(id);
+  if(el&&snap.fields&&snap.fields[id]!==undefined){
+    el.value=snap.fields[id];
+    if(id==='a_cpf'||id==='r_cpf')maskCPF(el);
+    if(id==='a_cnpj'||id==='r_cnpj')maskCNPJ(el,id==='a_cnpj'?'fg_acnpj':'fg_rcnpj');
+  }
+});if(SK&&snap.afFields){const def=AF[SK];if(def){def.fields.forEach(f=>{const el=G(f.id);if(el&&snap.afFields[f.id]!==undefined)el.value=snap.afFields[f.id];});}}if(snap.peds&&snap.peds.length){const pl=G('pedList');if(pl)pl.innerHTML='';pedN=0;snap.peds.forEach(p=>addPWithText(p));}if(snap.funds){document.querySelectorAll('#fundGrid .tag').forEach(t=>{t.classList.toggle('on',snap.funds.includes(t.textContent.trim()));});}if(snap.provas){document.querySelectorAll('#c9 .tag').forEach(t=>{t.classList.toggle('on',snap.provas.includes(t.textContent.trim()));});}chkConj();chkReu();upd();toast('Rascunho restaurado');}catch(e){console.warn('restoreForm:',e);}}
 function getKey(){return(G('apiKey')&&G('apiKey').value.trim())||'';}
 function saveKey(){const k=getKey();const field=G('apiField');const status=G('apiStatus');if(!k){if(status){status.textContent='cole sua chave para ativar';status.className='api-status wait';}if(field)field.classList.remove('has-key');try{localStorage.removeItem('lxf_key');}catch(e){}return;}try{localStorage.setItem('lxf_key',k);}catch(e){}if(k.startsWith('AIza')&&k.length>20){if(status){status.textContent='✓ Gemini ativo';status.className='api-status ok';}if(field)field.classList.add('has-key');}else{if(status){status.textContent='⚠ Chave invalida';status.className='api-status err';}if(field)field.classList.remove('has-key');}}
 function loadSavedKey(){try{const k=localStorage.getItem('lxf_key');if(k&&G('apiKey')){G('apiKey').value=k;saveKey();}}catch(e){}}
