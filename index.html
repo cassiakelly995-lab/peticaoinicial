@@ -69,13 +69,13 @@ body{font-family:'Outfit',sans-serif;background:var(--k);color:var(--t1);min-hei
 .pd.ok{background:var(--g3);border-color:var(--g)}
 .ptrack{height:2px;background:var(--k5);margin-top:.42rem}
 .pfill{height:100%;background:linear-gradient(90deg,var(--g3),var(--g));transition:width .3s}
-.main{padding:1.3rem 1.5rem 4rem;max-width:820px}
+.main{padding:1.3rem 1.5rem 4rem;max-width:820px;overflow-y:auto;height:100vh}
 .ph{margin-bottom:1rem;padding-bottom:.8rem;border-bottom:1px solid var(--gb)}
 .ph-ey{font-family:'JetBrains Mono',monospace;font-size:.48rem;letter-spacing:.2em;text-transform:uppercase;color:var(--g3);margin-bottom:.25rem}
 .ph h1{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:700;color:var(--g2);line-height:1.1}
 .ph p{font-size:.73rem;color:var(--t3);margin-top:.25rem;line-height:1.5}
 .atag-e{display:inline-flex;align-items:center;gap:.35rem;font-size:.65rem;color:var(--t4);border:1px dashed var(--k5);padding:.15rem .6rem;margin-top:.42rem}
-.atag{display:none;align-items:center;gap:.35rem;font-size:.65rem;font-weight:500;border:1px solid var(--gb);padding:.15rem .6rem;color:var(--g2);background:var(--ga);margin-top:.42rem}
+.atag{display:none;align-items:center;gap:.35rem;font-size:.72rem;font-weight:600;border:1px solid var(--gb);padding:.15rem .6rem;color:var(--g2);background:var(--ga);margin-top:.42rem}
 .atag.vis{display:inline-flex}
 .card{background:var(--k2);border:1px solid rgba(200,149,42,.08);margin-bottom:.45rem;box-shadow:0 1px 4px rgba(0,0,0,.3)}
 .card.open{border-color:rgba(200,149,42,.17)}
@@ -424,7 +424,7 @@ input.err-f,select.err-f{border-color:#b03020!important;box-shadow:0 0 0 3px rgb
 <main class="main">
   <div class="ph">
     <div class="ph-ey" id="docTypeLabel">LexForge PRO v9 · 86 Areas · 89 Formularios · CPC/2015 · CNJ Res. 615/2025</div>
-    <h1 id="docTitle">Gerador de Peticao Inicial</h1>
+    <h1 id="docTitle" style="transition:all .25s ease;word-break:break-word">Gerador de Peticao Inicial</h1>
     <p>IA Gemini · Validacao Real CPF/OAB · Jurisprudencia STJ/STF · Revisao Adversarial · Word (.docx)</p>
     <div><div class="atag-e" id="atE">← Selecione a area do direito na barra lateral</div><div class="atag" id="atS">⚖ <span id="atTxt"></span></div></div>
   </div>
@@ -1594,7 +1594,57 @@ function gFem(){return gSex()==='F';}
 function getNac(){const n=V('a_nac'),f=gFem();return n==='brasileiro'?(f?'brasileira':'brasileiro'):n==='brasileiro naturalizado'?(f?'brasileira naturalizada':'brasileiro naturalizado'):(f?'estrangeira':'estrangeiro');}
 function getEC(){const ec=V('a_ec');if(!ec)return'';const f=gFem();const m={'Solteiro(a)':f?'solteira':'solteiro','Casado(a)':f?'casada':'casado','Divorciado(a)':f?'divorciada':'divorciado','Separado(a) judicialmente':f?'separada judicialmente':'separado judicialmente','Viuvo(a)':f?'viuva':'viuvo','Em uniao estavel':'em uniao estavel'};return m[ec]||ec.replace('(a)',f?'a':'o');}
 function filterA(q){const ql=q.toLowerCase();let n=0;document.querySelectorAll('.ab').forEach(b=>{const ok=!q||b.textContent.toLowerCase().includes(ql);b.style.display=ok?'':'none';if(ok)n++;});document.querySelectorAll('.sg').forEach(g=>{g.style.display=Array.from(g.querySelectorAll('.ab')).some(b=>b.style.display!=='none')?'':'none';});const cnt=G('aCnt');if(cnt)cnt.textContent=n+' area'+(n!==1?'s':'')+' disponive'+(n!==1?'is':'l');}
-function selA(btn){document.querySelectorAll('.ab').forEach(b=>b.classList.remove('on'));btn.classList.add('on');SA=btn.dataset.area;SL=btn.dataset.lei;SP=btn.dataset.presc||'';SK=btn.dataset.key||'default';SR=btn.dataset.rito||'';const atE=G('atE'),atS=G('atS'),atTxt=G('atTxt');if(atE)atE.style.display='none';if(atS)atS.classList.add('vis');if(atTxt)atTxt.textContent=SA;const pp=G('p_presc');if(pp)pp.value=SP;const pr=G('p_rito');if(SR&&pr&&!pr.value)pr.value=SR;renderAF(SK);showSugg(SK);loadJuris(SK);upd();}
+function selA(btn){
+  document.querySelectorAll('.ab').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  SA=btn.dataset.area;
+  SL=btn.dataset.lei;
+  SP=btn.dataset.presc||'';
+  SK=btn.dataset.key||'default';
+  SR=btn.dataset.rito||'';
+
+  // Atualiza badge de area selecionada
+  const atE=G('atE'),atS=G('atS'),atTxt=G('atTxt');
+  if(atE)atE.style.display='none';
+  if(atS)atS.classList.add('vis');
+  if(atTxt)atTxt.textContent=SA;
+
+  // Atualiza H1 titulo com a area selecionada
+  const h1=G('docTitle');
+  if(h1){
+    // Extrai nome curto da area (antes do travessao)
+    const nomeArea=SA.split('—')[0].split('–')[0].trim();
+    h1.textContent='Petição: '+nomeArea;
+  }
+
+  // Atualiza subtitulo com legislacao
+  const label=G('docTypeLabel');
+  if(label&&SL){
+    const leiCurta=SL.split(';')[0].trim();
+    label.textContent=leiCurta+' · '+SR.split('(')[0].trim();
+  }
+
+  // Prescrição
+  const pp=G('p_presc');
+  if(pp)pp.value=SP;
+
+  // Rito automatico
+  const pr=G('p_rito');
+  if(SR&&pr&&!pr.value)pr.value=SR;
+
+  // Render area-specific content
+  renderAF(SK);
+  showSugg(SK);
+  loadJuris(SK);
+  upd();
+
+  // Scroll suave para o topo do formulário (main)
+  const main=document.querySelector('.main');
+  if(main)main.scrollTo({top:0,behavior:'smooth'});
+  // Fallback: scroll da página
+  const ph=document.querySelector('.ph');
+  if(ph)ph.scrollIntoView({behavior:'smooth',block:'start'});
+}
 function showSugg(key){const s=SUGE[key];const ap=G('autoPanel');if(!s||!ap){if(ap)ap.classList.remove('show');return;}const af=G('autoFunds'),ap2=G('autoPeds');if(af)af.innerHTML=s.funds.map(f=>'<div class="auto-chip" data-type="fund" data-val="'+f.replace(/"/g,'&quot;')+'" onclick="applyChip(this)">'+f+'</div>').join('');if(ap2)ap2.innerHTML=s.peds.map(p=>'<div class="auto-chip" data-type="ped" data-val="'+p.replace(/"/g,'&quot;')+'" onclick="applyChip(this)">'+p+'</div>').join('');ap.classList.add('show');}
 function applyChip(el){if(el.classList.contains('applied'))return;const type=el.dataset.type,val=el.dataset.val;if(type==='fund'){let found=false;document.querySelectorAll('#fundGrid .tag').forEach(t=>{if(t.textContent.toLowerCase().includes(val.toLowerCase().split('(')[0].trim())){t.classList.add('on');found=true;}});if(!found){const ex=G('f_extra');if(ex)ex.value=(ex.value?ex.value+'; ':'')+val;}el.classList.add('applied');el.innerHTML='✓ '+val;toast('✓ Fundamento aplicado');}else{addPWithText(val);el.classList.add('applied');el.innerHTML='✓ '+val;toast('✓ Pedido adicionado');}upd();}
 function applyAll(){document.querySelectorAll('.auto-chip:not(.applied)').forEach(c=>applyChip(c));toast('✅ Todas as sugestoes aplicadas');}
@@ -1633,7 +1683,18 @@ function toggleCL(i,total){const el=G('clck'+i);if(!el)return;el.classList.toggl
 const SAVE_FIELDS=['a_nome','a_sexo','a_nac','a_ec','a_prof','a_cpf','a_rg','a_cnpj','a_conj','a_end','a_email','a_tel','r_nome','r_tipo','r_qualif','r_cpf','r_rg','r_cnpj','r_rep','r_end','r_email','adv_n','adv_oab','adv_end','adv_email','adv_cidade','adv_comarca','p_vara','p_rito','p_valor','p_data','p_presc','p_grat','p_tutela','p_urg','p_aud','f_fatos','f_tent','f_docs','f_extra','p_test'];
 let _saveTimer=null;
 function autoSave(){clearTimeout(_saveTimer);_saveTimer=setTimeout(()=>{try{const snap={area:{SA,SL,SP,SK,SR},fields:{}};SAVE_FIELDS.forEach(id=>{const el=G(id);if(el)snap.fields[id]=el.value;});const def=AF[SK];if(def){snap.afFields={};def.fields.forEach(f=>{const el=G(f.id);if(el)snap.afFields[f.id]=el.value;});}snap.peds=getPeds();snap.funds=getTags('fundGrid');snap.provas=Array.from(document.querySelectorAll('#c9 .tag.on')).map(t=>t.textContent.trim());localStorage.setItem('lxf_form',JSON.stringify(snap));const ind=G('saveInd');if(ind){ind.textContent='✓ Salvo';ind.style.opacity='1';setTimeout(()=>ind.style.opacity='0',1800);}}catch(e){}},800);}
-function restoreForm(){try{const raw=localStorage.getItem('lxf_form');if(!raw)return;const snap=JSON.parse(raw);if(snap.area&&snap.area.SA){SA=snap.area.SA;SL=snap.area.SL;SP=snap.area.SP;SK=snap.area.SK;SR=snap.area.SR;const btn=document.querySelector('.ab[data-key="'+SK+'"]');if(btn){btn.classList.add('on');const atE=G('atE'),atS=G('atS'),atTxt=G('atTxt');if(atE)atE.style.display='none';if(atS)atS.classList.add('vis');if(atTxt)atTxt.textContent=SA;}const pp=G('p_presc');if(pp)pp.value=SP||'';renderAF(SK);showSugg(SK);loadJuris(SK);}SAVE_FIELDS.forEach(id=>{const el=G(id);if(el&&snap.fields&&snap.fields[id]!==undefined)el.value=snap.fields[id];});if(SK&&snap.afFields){const def=AF[SK];if(def){def.fields.forEach(f=>{const el=G(f.id);if(el&&snap.afFields[f.id]!==undefined)el.value=snap.afFields[f.id];});}}if(snap.peds&&snap.peds.length){const pl=G('pedList');if(pl)pl.innerHTML='';pedN=0;snap.peds.forEach(p=>addPWithText(p));}if(snap.funds){document.querySelectorAll('#fundGrid .tag').forEach(t=>{t.classList.toggle('on',snap.funds.includes(t.textContent.trim()));});}if(snap.provas){document.querySelectorAll('#c9 .tag').forEach(t=>{t.classList.toggle('on',snap.provas.includes(t.textContent.trim()));});}chkConj();chkReu();upd();toast('Rascunho restaurado');}catch(e){console.warn('restoreForm:',e);}}
+function restoreForm(){try{const raw=localStorage.getItem('lxf_form');if(!raw)return;const snap=JSON.parse(raw);if(snap.area&&snap.area.SA){SA=snap.area.SA;SL=snap.area.SL;SP=snap.area.SP;SK=snap.area.SK;SR=snap.area.SR;const btn=document.querySelector('.ab[data-key="'+SK+'"]');if(btn){
+  btn.classList.add('on');
+  const atE=G('atE'),atS=G('atS'),atTxt=G('atTxt');
+  if(atE)atE.style.display='none';
+  if(atS)atS.classList.add('vis');
+  if(atTxt)atTxt.textContent=SA;
+  // Restaurar H1 e label
+  const h1=G('docTitle');
+  if(h1&&SA){const n=SA.split('—')[0].split('–')[0].trim();h1.textContent='Petição: '+n;}
+  const lbl=G('docTypeLabel');
+  if(lbl&&SL){const l=SL.split(';')[0].trim();lbl.textContent=l+' · '+(SR.split('(')[0].trim()||'');}
+}const pp=G('p_presc');if(pp)pp.value=SP||'';renderAF(SK);showSugg(SK);loadJuris(SK);}SAVE_FIELDS.forEach(id=>{const el=G(id);if(el&&snap.fields&&snap.fields[id]!==undefined)el.value=snap.fields[id];});if(SK&&snap.afFields){const def=AF[SK];if(def){def.fields.forEach(f=>{const el=G(f.id);if(el&&snap.afFields[f.id]!==undefined)el.value=snap.afFields[f.id];});}}if(snap.peds&&snap.peds.length){const pl=G('pedList');if(pl)pl.innerHTML='';pedN=0;snap.peds.forEach(p=>addPWithText(p));}if(snap.funds){document.querySelectorAll('#fundGrid .tag').forEach(t=>{t.classList.toggle('on',snap.funds.includes(t.textContent.trim()));});}if(snap.provas){document.querySelectorAll('#c9 .tag').forEach(t=>{t.classList.toggle('on',snap.provas.includes(t.textContent.trim()));});}chkConj();chkReu();upd();toast('Rascunho restaurado');}catch(e){console.warn('restoreForm:',e);}}
 function getKey(){return(G('apiKey')&&G('apiKey').value.trim())||'';}
 function saveKey(){const k=getKey();const field=G('apiField');const status=G('apiStatus');if(!k){if(status){status.textContent='cole sua chave para ativar';status.className='api-status wait';}if(field)field.classList.remove('has-key');try{localStorage.removeItem('lxf_key');}catch(e){}return;}try{localStorage.setItem('lxf_key',k);}catch(e){}if(k.startsWith('AIza')&&k.length>20){if(status){status.textContent='✓ Gemini ativo';status.className='api-status ok';}if(field)field.classList.add('has-key');}else{if(status){status.textContent='⚠ Chave invalida';status.className='api-status err';}if(field)field.classList.remove('has-key');}}
 function loadSavedKey(){try{const k=localStorage.getItem('lxf_key');if(k&&G('apiKey')){G('apiKey').value=k;saveKey();}}catch(e){}}
