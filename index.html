@@ -811,6 +811,10 @@ input.err-f,select.err-f{border-color:rgba(220,38,38,.5)!important}
     </button>
     <span class="offline-badge" id="offlineBadge">● Offline</span>
     <button class="nav-btn pwa-install" id="pwaBtn" onclick="installPWA()">⬇ Instalar App</button>
+    <button class="nav-btn" onclick="resetAll()" style="border-color:rgba(220,38,38,.4);color:#dc2626;gap:.3rem" title="Limpar todos os dados e começar novo documento">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>
+      Novo / Limpar
+    </button>
   </div>
 </nav>
 
@@ -2418,7 +2422,121 @@ function markErr(id,msg){const el=G(id);if(!el)return;el.classList.add('err-f');
 function validate(){clearErrs();const e=[];if(!SA)e.push('Selecione a area do Direito na barra lateral');if(!V('a_nome')){markErr('a_nome','Obrigatorio');e.push('Nome do Autor');}if(!V('a_sexo')){markErr('a_sexo','Obrigatorio');e.push('Sexo do Autor');}const cpf=V('a_cpf');if(!cpf){markErr('a_cpf','Obrigatorio');e.push('CPF do Autor');}else if(!validaCPF(cpf)){markErr('a_cpf','CPF invalido');e.push('CPF invalido');}if(!V('a_ec')){markErr('a_ec','Obrigatorio');e.push('Estado civil');}if(!V('a_prof')){markErr('a_prof','Obrigatorio');e.push('Profissao');}if(!V('a_end')){markErr('a_end','Obrigatorio');e.push('Endereco do Autor');}if(!V('r_nome')){markErr('r_nome','Obrigatorio');e.push('Nome do Reu');}if(!V('r_tipo')){markErr('r_tipo','Obrigatorio');e.push('Tipo do Reu');}if(!V('r_end')){markErr('r_end','Obrigatorio');e.push('Endereco do Reu');}if(!V('adv_n')){markErr('adv_n','Obrigatorio');e.push('Nome do Advogado');}const oab=V('adv_oab');if(!oab){markErr('adv_oab','Obrigatorio');e.push('OAB');}else if(!validaOAB(oab)){markErr('adv_oab','Formato invalido');e.push('OAB invalida');}if(!V('adv_cidade')){markErr('adv_cidade','Obrigatorio');e.push('Cidade');}if(!V('adv_comarca')){markErr('adv_comarca','Obrigatorio');e.push('Comarca');}if(!V('p_vara')){markErr('p_vara','Obrigatorio');e.push('Vara');}if(!V('p_rito')){markErr('p_rito','Obrigatorio');e.push('Rito');}if(!V('p_valor')){markErr('p_valor','Obrigatorio');e.push('Valor da causa');}const fc=G('f_fatos');if(!fc||!fc.value){markErr('f_fatos','Obrigatorio');e.push('Fatos');}else if(fc.value.length<100){markErr('f_fatos','Minimo 100 chars');e.push('Fatos muito curtos');}validAF().m.forEach(m=>e.push(m));if(getPeds().length===0)e.push('Informe ao menos um pedido');return e;}
 function setPhase(i,st){const el=G('ph'+i);if(!el)return;const ic={active:'⏳',done:'✅',error:'❌'};el.className='phase '+st;const p=el.querySelector('.pico');if(p&&ic[st])p.textContent=ic[st];}
 async function generate(){const erros=validate();if(erros.length){const vl=G('vlist'),vb=G('vbox');if(vl)vl.innerHTML=erros.map(e=>'<li>'+e+'</li>').join('');if(vb){vb.classList.add('show');vb.scrollIntoView({behavior:'smooth',block:'center'});}return;}const vb=G('vbox');if(vb)vb.classList.remove('show');const btnGen=G('btnGen'),outSec=G('outSec'),ldState=G('ldState');if(btnGen)btnGen.disabled=true;if(outSec)outSec.classList.remove('show');if(ldState){ldState.classList.add('show');ldState.scrollIntoView({behavior:'smooth'});}[0,1,2,3].forEach(i=>setPhase(i,''));const d=collect();const key=getKey();setPhase(0,'active');const ls=G('ldSub');if(ls)ls.textContent='Validando CPF, OAB e qualificacao...';await wait(300);setPhase(0,'done');setPhase(1,'active');if(ls)ls.textContent=key?'Gemini gerando documento...':'Gerando documento (modo local)...';let docHtml='';try{if(key){docHtml=await gerarComGemini(d,key);}else{docHtml=gerarLocal(d);toast('Cole sua chave Gemini para geracao com IA');}}catch(err){console.error('Gemini:',err);toast('Erro Gemini — modo local ativado');docHtml=gerarLocal(d);}window._dat=d;renderDoc(docHtml,d);setPhase(1,'done');setPhase(3,'active');if(ls)ls.textContent='Jurisprudencia e checklist...';renderJurisResult(d.key);renderCL(d.key);setPhase(3,'done');if(ldState)ldState.classList.remove('show');if(btnGen)btnGen.disabled=false;setTimeout(()=>outSec&&outSec.scrollIntoView({behavior:'smooth'}),80);if(key){const rawTxt=(G('theDoc')||{innerText:''}).innerText;setPhase(2,'active');Promise.all([doReviewAdversarial(rawTxt,d,key).catch(e=>console.warn(e)),doReviewQuality(rawTxt,d,key).catch(e=>console.warn(e))]).then(()=>{setPhase(2,'done');toast('✅ Revisoes concluidas');});}else{setPhase(2,'done');const ap=G('advPanel'),ab=G('advBody'),rp=G('revPanel'),rb=G('revBody');if(ap)ap.classList.add('show');if(ab)ab.innerHTML='<div style="font-size:.69rem;color:var(--t3)">Adicione chave Gemini para revisao adversarial.</div>';if(rp)rp.classList.add('show');if(rb)rb.innerHTML='<div style="font-size:.69rem;color:var(--t3)">Adicione chave Gemini para revisao de qualidade.</div>';}if(typeof FB!=='undefined'&&FB.user)FB.saveDoc(docHtml,d);}
-async function gerarComGemini(d,key){const arts=(ARTIGOS[d.key]||ARTIGOS.geral).join('; ');const jurisList=(JURIS[d.key]||JURIS.geral).map(j=>j.tag+': '+j.txt).join('\n');const qAutor=buildQAutor(d);const qReu=buildQReu(d);const hoje=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});const pedsList=d.peds.map((p,i)=>(i+1)+'. '+p).join('\n');const prompt='Você é um advogado brasileiro de excelência, com 30 anos de experiência nos tribunais brasileiros, especializado em '+d.area+'. Sua missão é redigir uma PETIÇÃO INICIAL que seja:\n\n— Ortograficamente impecável: português brasileiro culto, sem erros de grafia, acentuação, concordância, regência ou pontuação;\n— Juridicamente blindada: fundamentos legais precisos, jurisprudência real, estrutura CPC art. 319 completa;\n— Estilisticamente elegante: linguagem forense formal, sentenças bem construídas, parágrafos coesos;\n— Aceita em qualquer tribunal do Brasil.\n\nREGRAS ABSOLUTAS — VIOLAÇÃO ZERARÁ O RESULTADO:\n\n1. ORTOGRAFIA E LÍNGUA PORTUGUESA: use sempre o português culto formal. Acentue corretamente todas as palavras (não, está, será, jurídico, família, ação, petição, réu, etc). Concordância verbal e nominal perfeitas. Pontuação correta. JAMAIS use linguagem coloquial, abreviações informais ou expressões populares.\n\n2. TRANSFORMAÇÃO FORENSE OBRIGATÓRIA: JAMAIS reproduza o texto dos fatos como o cliente digitou. SEMPRE converta para linguagem jurídica formal e culta. Exemplos obrigatórios:\n— "o casamento acabou" → "O vínculo conjugal estabelecido entre as partes tornou-se insustentável em razão de divergências irreconciliáveis, impossibilitando a manutenção da vida em comum"\n— "ele não me pagou" → "O Requerido deixou de adimplir a obrigação contratualmente assumida, quedando-se inerte mesmo após regular notificação extrajudicial"\n— "fui demitido sem motivo" → "O Reclamante foi dispensado imotivadamente, sem o pagamento das verbas rescisórias legalmente devidas"\nTODO relato informal deve ser revestido de linguagem forense precisa.\n\n3. ESTRUTURA CPC art. 319 — TODOS OS ELEMENTOS OBRIGATÓRIOS:\na) Endereçamento: "Excelentíssimo(a) Senhor(a) Doutor(a) Juiz(a) de Direito da [Vara] da Comarca de [Comarca]" — fundamentar competência;\nb) Qualificação completa do Autor: nome completo, nacionalidade, estado civil, profissão, CPF, RG (se fornecido), endereço completo com CEP, e-mail, telefone;\nc) Qualificação completa do Réu: todos os dados fornecidos; se incompletos, consignar "a ser complementado"\nd) Causa de pedir REMOTA: fatos narrados cronologicamente com datas precisas, em linguagem forense;\ne) Causa de pedir PRÓXIMA: artigos, incisos e parágrafos específicos que fundamentam cada pedido;\nf) Pedidos CERTOS E DETERMINADOS com valores monetários precisos;\ng) Valor da causa fundamentado no art. 292 CPC;\nh) Especificação dos meios de prova;\ni) Manifestação sobre audiência de conciliação (art. 334, § 4.º, I, CPC).\n\n4. JURISPRUDÊNCIA: cite APENAS os precedentes fornecidos abaixo. JAMAIS invente número de REsp, AgInt, HC ou acórdão. Se não há precedente para determinado ponto, fundamente somente na lei.\n\n5. JUROS — LEI N.º 14.905/2024: fatos anteriores a 30/08/2024 = correção pela SELIC integral (STJ Tema 1.368, vedada a cumulação com outro índice). Fatos posteriores a 30/08/2024 = IPCA (art. 389, parágrafo único, CC) + Taxa Legal SELIC-IPCA (art. 406 CC). JAMAIS mencione "juros de 1% ao mês" ou "juros legais de 12% ao ano".\n\n6. DANO IN RE IPSA: em caso de negativação indevida, protesto ilegítimo, uso não autorizado de imagem ou assédio, declarar expressamente que o dano moral prescinde de prova do prejuízo (Súmulas 385, 388, 403, 609 STJ conforme aplicável).\n\n7. SÚMULA 326 STJ: incluir nos pedidos que "a condenação em montante inferior ao postulado não implica sucumbência recíproca".\n\n8. PEDIDOS COMPLETOS: pedido principal + subsidiários + citação do réu + honorários advocatícios mínimos de 10% (art. 85, § 2.º, CPC) + custas processuais + gratuidade de justiça (se requerida, art. 98 CPC) + todas as provas admitidas.\n\n9. TUTELA DE URGÊNCIA: se requerida, demonstrar especificamente o fumus boni iuris (probabilidade do direito com base nos fatos) e o periculum in mora (perigo de dano irreparável ou de difícil reparação). Não usar fórmulas genéricas.\n\n10. FORMATAÇÃO HTML FORENSE ELEGANTE — USE OBRIGATORIAMENTE:\n— <div class="dh"> para cabeçalho centralizado;\n— <div class="dj"> para nome do juízo em MAIÚSCULAS e negrito;\n— <div class="dv"> para cidade e Estado;\n— <div class="doc-tipo"> para tipo da ação em MAIÚSCULAS entre linhas duplas;\n— <p class="intro"> para qualificação das partes (sem recuo);\n— <p> para parágrafos com recuo de 1,25 cm e texto justificado;\n— <p class="ct"> para texto centralizado;\n— <span class="ds"> para títulos das seções (I — DOS FATOS, II — DO DIREITO, etc.) em MAIÚSCULAS, negrito e centralizados;\n— <ol class="pl"> com <li> para lista numerada de pedidos;\n— <div class="sig"> para área de assinatura;\n— <div class="sl"> para linha de assinatura;\n— <p class="sn"> para nome do advogado em negrito;\n— <p class="so"> para OAB e dados do escritório;\n— <div class="doc-footer"> para rodapé;\n— Use <strong> para ênfase em nomes de leis, súmulas e datas;\n— Use <em> para nomes das ações processuais;\n— JAMAIS use Markdown (**, ##, *, -).\n\n11. ESTRUTURA OBRIGATÓRIA DA PETIÇÃO:\nI. Endereçamento\nII. Qualificação do(a) Autor(a)/Requerente\n[Tipo da Ação em destaque]\nIII. Qualificação do(a) Réu/Requerido(a)\nIV. I — DOS FATOS\nV. II — DO DIREITO\nVI. III — DOS PEDIDOS\nVII. IV — DO VALOR DA CAUSA\nVIII. V — DAS PROVAS\nIX. Requerimento de citação\nX. Local, data\nXI. Assinatura do advogado\n\nDADOS DO CASO:\nÁREA: '+d.area+'\nLEGISLAÇÃO: '+arts+'\nJURISPRUDÊNCIA:\n'+jurisList+'\nRITO: '+d.proc.rito+'\nPRESCRIÇÃO: '+d.presc+'\n\nQUALIFICAÇÃO DO(A) AUTOR(A):\n'+qAutor+'\n\nQUALIFICAÇÃO DO(A) RÉU/REQUERIDO(A):\n'+qReu+'\n\nADVOGADO(A): '+d.adv.nome+(d.adv.oab?', OAB n.º '+d.adv.oab:'')+(d.adv.end?', '+d.adv.end:'')+(d.adv.email?', e-mail: '+d.adv.email:'')+'\nCOMARCA/VARA: '+d.adv.comarca+' — '+d.proc.vara+'\nVALOR DA CAUSA: R$ '+d.proc.valor+' (art. 292 CPC)\nDATA DOS FATOS: '+(d.proc.data||'conforme narrado')+'\nGRATUIDADE: '+(d.proc.grat==='sim'?'SIM — art. 98 CPC':'NÃO requerida')+'\nTUTELA DE URGÊNCIA: '+(d.proc.tutela!=='nao'?d.proc.tutela+' — '+d.proc.urg:'NÃO requerida')+'\nAUDIÊNCIA: '+(d.proc.aud==='nao'?'Desinteresse — art. 334, § 4.º, I, CPC':'Não se opõe')+'\n\nFATOS NARRADOS PELO CLIENTE (transformar em linguagem forense):\n'+d.fatos+(d.tent?'\nTENTATIVA EXTRAJUDICIAL: '+d.tent:'')+(d.af?'\nINFORMAÇÕES ESPECÍFICAS DA ÁREA:\n'+d.af:'')+(d.docs?'\nDOCUMENTOS DISPONÍVEIS: '+d.docs:'')+'\n\nPEDIDOS (redigir com precisão técnica):\n'+pedsList+(d.funds.length?'\nFUNDAMENTOS ADICIONAIS: '+d.funds.join('; '):''  )+(d.extra?'\nFUNDAMENTO ESPECÍFICO: '+d.extra:'')+'\nPROVAS: '+(d.provas.join(', ')||'todos os meios em Direito admitidos, especialmente documental e testemunhal')+(d.test?'\nTESTEMUNHAS: '+d.test:'')+'\n\nRODAPÉ OBRIGATÓRIO ao final: <div class="doc-footer">Elaborado com auxílio de Inteligência Artificial (Gemini 2.0) sob supervisão humana obrigatória do advogado subscritor — CNJ Res. n.º 615/2025, art. 3.º, VII | '+hoje+' | LexForge PRO v9 | Responsabilidade exclusiva do advogado signatário</div>\n\nATENÇÃO FINAL: A petição deve ser digna de um advogado de excelência. Ortografia perfeita. Linguagem culta. Estrutura impecável. Apenas HTML com as classes indicadas. Zero Markdown.'
+async function gerarComGemini(d,key){const arts=(ARTIGOS[d.key]||ARTIGOS.geral).join('; ');const jurisList=(JURIS[d.key]||JURIS.geral).map(j=>j.tag+': '+j.txt).join('\n');const qAutor=buildQAutor(d);const qReu=buildQReu(d);const hoje=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});const pedsList=d.peds.map((p,i)=>(i+1)+'. '+p).join('\n');const prompt=`IDENTIDADE: Você é um advogado brasileiro de excelência, com 30 anos de experiência, especializado em ${d.area}. Redija uma PETIÇÃO INICIAL que seja:
+✓ Ortograficamente impecável — português culto, acentuação correta, pontuação precisa
+✓ Juridicamente blindada — lei e jurisprudência reais, sem invenção alguma
+✓ Forense e elegante — linguagem de tribunal, digna de protocolo imediato
+✓ Aceita em qualquer juízo do Brasil
+
+═══════════════════════════════════════
+REGRA 1 — ANTI-ALUCINAÇÃO (CRÍTICA — TOLERÂNCIA ZERO)
+═══════════════════════════════════════
+JAMAIS invente, fabrique, suponha ou complete com dados fictícios:
+— Números de processo, REsp, AgInt, HC, RE, ARE ou qualquer acórdão não fornecido
+— Datas não informadas pelo cliente
+— Fatos que o cliente não mencionou
+— Valores não informados
+— Testemunhos, documentos ou cláusulas não descritos
+— Histórico médico, profissional ou familiar não fornecido
+USE APENAS: (a) leis fornecidas abaixo; (b) súmulas/temas fornecidos; (c) fatos exatamente como narrados; (d) valores exatamente como informados.
+Quando algo não foi fornecido: use "[a completar pelo advogado]" — NUNCA invente.
+
+═══════════════════════════════════════
+REGRA 2 — ORTOGRAFIA IMPECÁVEL
+═══════════════════════════════════════
+Português culto formal obrigatório em CADA palavra:
+— Acentuação correta: petição, réu, jurídico, família, ação, não, está, será, é, também, além, através, após, até, àquele, à, às
+— Concordância verbal e nominal perfeitas
+— Pontuação precisa: vírgula nas orações intercaladas; ponto-e-vírgula entre itens de lista; dois pontos antes de enumerações
+— Crase obrigatória: à Vossa Excelência, às fls., ao juízo, à parte
+— PROIBIDO: linguagem coloquial, gírias, abreviações informais, Markdown (**, ##, *, -)
+
+═══════════════════════════════════════
+REGRA 3 — TRANSFORMAÇÃO FORENSE OBRIGATÓRIA
+═══════════════════════════════════════
+NUNCA reproduza o texto do cliente literalmente. SEMPRE converta para linguagem jurídica:
+"o casamento acabou" → "O vínculo conjugal tornou-se insustentável em razão de divergências irreconciliáveis, inviabilizando a manutenção da vida em comum"
+"ele não me pagou" → "O Requerido quedou-se inerte diante da obrigação contratualmente assumida, deixando de adimplir o débito mesmo após regular notificação extrajudicial"
+"fui demitido sem motivo" → "O Reclamante foi dispensado imotivadamente, sem o pagamento das verbas rescisórias legalmente devidas"
+"sofri um acidente" → "A Requerente sofreu acidente de trabalho em [data fornecida], resultando em [lesão fornecida], conforme Comunicação de Acidente do Trabalho — CAT"
+
+═══════════════════════════════════════
+REGRA 4 — ESTRUTURA CPC art. 319 COMPLETA
+═══════════════════════════════════════
+a) Endereçamento: "Excelentíssimo(a) Senhor(a) Doutor(a) Juiz(a) de Direito da [Vara] da Comarca de [Comarca]"
+b) Qualificação completa do(a) Autor(a)/Requerente: nome, nacionalidade, estado civil, profissão, CPF, endereço com CEP, e-mail
+c) Qualificação completa do(a) Réu(é)/Requerido(a): todos os dados fornecidos; lacunas entre colchetes
+d) Causa de pedir REMOTA: fatos cronológicos em linguagem forense, com datas fornecidas
+e) Causa de pedir PRÓXIMA: artigos, incisos e parágrafos específicos que fundamentam cada pedido
+f) Pedidos CERTOS E DETERMINADOS com valores precisos
+g) Valor da causa com critério do art. 292 CPC especificado
+h) Meios de prova especificados
+i) Posição sobre audiência de conciliação — art. 334, § 4.º, I, CPC
+
+═══════════════════════════════════════
+REGRA 5 — JUROS — LEI N.º 14.905/2024
+═══════════════════════════════════════
+Fatos ANTES de 30/08/2024: correção pela Taxa SELIC integral (STJ Tema 1.368 — vedada cumulação)
+Fatos APÓS 30/08/2024: IPCA (art. 389, § único, CC) + Taxa Legal SELIC-IPCA (art. 406 CC)
+JAMAIS escreva "juros de 1% ao mês" ou "juros legais de 12% ao ano"
+
+═══════════════════════════════════════
+REGRA 6 — PEDIDOS COMPLETOS
+═══════════════════════════════════════
+Inclua: pedido principal + subsidiários (se cabível) + citação do réu + honorários mínimos 10% (art. 85, § 2.º, CPC) + custas + gratuidade (se requerida — art. 98 CPC) + Súmula 326 STJ (condenação inferior não gera sucumbência recíproca)
+
+═══════════════════════════════════════
+REGRA 7 — FORMATAÇÃO HTML FORENSE ELEGANTE
+═══════════════════════════════════════
+Use OBRIGATORIAMENTE estas classes HTML — ZERO Markdown:
+<div class="dh"> — cabeçalho centralizado
+<div class="dj"> — nome do juízo em MAIÚSCULAS e negrito
+<div class="dv"> — Comarca e Estado
+<div class="doc-tipo"> — tipo da ação em MAIÚSCULAS entre linhas duplas
+<p class="intro"> — qualificação das partes (sem recuo)
+<p> — parágrafos com recuo 1,25 cm e texto justificado
+<span class="ds"> — títulos: I — DOS FATOS, II — DO DIREITO, III — DOS PEDIDOS, IV — DO VALOR DA CAUSA, V — DAS PROVAS
+<ol class="pl"><li> — pedidos numerados
+<div class="sig"> + <div class="sl"> + <p class="sn"> + <p class="so"> — assinatura
+<div class="doc-footer"> — rodapé
+<strong> — leis, súmulas, datas relevantes
+<em> — nomes das ações processuais
+
+═══════════════════════════════════════
+DADOS DO CASO
+═══════════════════════════════════════
+ÁREA: ${d.area}
+LEGISLAÇÃO: ${arts}
+JURISPRUDÊNCIA:
+${jurisList}
+RITO: ${d.proc.rito}
+PRESCRIÇÃO: ${d.presc}
+
+QUALIFICAÇÃO DO(A) AUTOR(A):
+${qAutor}
+
+QUALIFICAÇÃO DO(A) RÉU/REQUERIDO(A):
+${qReu}
+
+ADVOGADO(A): ${d.adv.nome}${d.adv.oab?', OAB n.º '+d.adv.oab:''}${d.adv.end?', '+d.adv.end:''}${d.adv.email?', e-mail: '+d.adv.email:''}
+COMARCA/VARA: ${d.adv.comarca} — ${d.proc.vara}
+VALOR DA CAUSA: R$ ${d.proc.valor} (art. 292 CPC)
+DATA DOS FATOS: ${d.proc.data||'conforme narrado'}
+GRATUIDADE: ${d.proc.grat==='sim'?'SIM — art. 98 CPC':'NÃO requerida'}
+TUTELA DE URGÊNCIA: ${d.proc.tutela!=='nao'?d.proc.tutela+' — '+d.proc.urg:'NÃO requerida'}
+AUDIÊNCIA: ${d.proc.aud==='nao'?'Desinteresse — art. 334, § 4.º, I, CPC':'Não se opõe'}
+
+FATOS NARRADOS (transformar em linguagem forense — NÃO reproduzir literalmente):
+${d.fatos}${d.tent?'\nTENTATIVA EXTRAJUDICIAL: '+d.tent:''}${d.af?'\nINFORMAÇÕES ESPECÍFICAS DA ÁREA:\n'+d.af:''}${d.docs?'\nDOCUMENTOS: '+d.docs:''}
+
+PEDIDOS (redigir com precisão técnica):
+${pedsList}${d.funds.length?'\nFUNDAMENTOS ADICIONAIS: '+d.funds.join('; '):''}${d.extra?'\nFUNDAMENTO ESPECÍFICO: '+d.extra:''}
+PROVAS: ${d.provas.join(', ')||'todos os meios em Direito admitidos, especialmente documental e testemunhal'}${d.test?'\nTESTEMUNHAS: '+d.test:''}
+
+RODAPÉ OBRIGATÓRIO ao final do documento:
+<div class="doc-footer">Elaborado com auxílio de Inteligência Artificial (Gemini 2.0) sob supervisão humana obrigatória do advogado subscritor — CNJ Res. n.º 615/2025, art. 3.º, VII | ${hoje} | LexForge PRO v9 | Responsabilidade exclusiva do advogado signatário</div>
+
+INSTRUÇÃO FINAL: Redija a petição COMPLETA e ELEGANTE. Ortografia perfeita. Linguagem forense culta. Estrutura impecável. Apenas HTML com as classes acima. Zero Markdown. Zero alucinação. Zero invenção. Verifique cada afirmação antes de escrever.`
 const url='https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+key;const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{maxOutputTokens:6000,temperature:0.15}})});if(!res.ok){const err=await res.json().catch(()=>({}));throw new Error((err.error&&err.error.message)||'HTTP '+res.status);}const data=await res.json();const text=data.candidates&&data.candidates[0]&&data.candidates[0].content&&data.candidates[0].content.parts&&data.candidates[0].content.parts[0]&&data.candidates[0].content.parts[0].text||'';if(!text)throw new Error('Gemini nao retornou conteudo');return text.replace(/^```html?\n?/i,'').replace(/\n?```$/,'').trim();}
 function gerarLocal(d){const hoje=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});const arts=(ARTIGOS[d.key]||ARTIGOS.geral).join('; ');const jurisList=JURIS[d.key]||JURIS.geral;const qAutor=buildQAutor(d);const qReu=buildQReu(d);const rg=reuFlexao(d.r.tipo);const f=d.a.sexo==='F';const autor=f?'a Requerente':'o Requerente';const Autor=f?'A Requerente':'O Requerente';const provas=d.provas.join(', ')||'prova documental e demais admitidas em direito';const jurisT=jurisList.length?'\n<p>Aplicam-se os seguintes precedentes: '+jurisList.map(j=>'<strong>'+j.tag+'</strong> — '+j.txt).join('; ')+'.</p>':'';const fatosPs=d.fatos.replace(/\n\n+/g,'§§§').replace(/\n/g,' ').split('§§§').map(p=>p.trim()).filter(Boolean).map(p=>'<p>'+p+'</p>').join('\n');const fundsE=d.funds.length?'\n<p>Aplicam-se ainda: <strong>'+d.funds.join('; ')+'</strong>.</p>':'';const afT=d.af?'\n<p>'+d.af.split('\n').filter(Boolean).join('; ')+'.</p>':'';const docsT=d.docs?'\n<p>'+Autor+' possui: '+d.docs+'.</p>':'';const tentT=d.tent?'\n<p>Antes de recorrer ao Judiciario, '+autor+' buscou solucao extrajudicial: '+d.tent+'. A tentativa restou infrutifera.</p>':'';const tutelaSec=d.proc.tutela!=='nao'?'\n<div class="ds">Da Tutela de Urgencia</div>\n<p>Requer '+autor+', com fundamento no art. 300 do CPC/2015, tutela de urgencia.'+(d.proc.urg?' '+d.proc.urg:'')+' Requer deferimento liminar, inaudita altera parte.</p>':'';const gratSec=d.proc.grat==='sim'?'\n<p>'+Autor+' requer os beneficios da Justica Gratuita, na forma do art. 98 do CPC/2015.</p>':'';const audSec=d.proc.aud==='nao'?'\n<p>'+Autor+' manifesta desinteresse na audiencia de conciliacao (CPC/2015, art. 334, par.4, I).</p>':'';const dir='<p>A pretensao encontra amparo em: <strong>'+arts+'</strong>.'+(d.extra?' '+d.extra:'')+'</p><p>Os fatos demonstram o direito d'+autor+', impondo-se '+rg.ao+' '+rg.requerido+' o cumprimento das obrigacoes legais.</p>'+jurisT+fundsE;const footer='<div class="doc-footer">Gerado com IA sob supervisao do advogado responsavel — CNJ Res. 615/2025, art. 3, VII — Supervisao humana obrigatoria | '+hoje+' | LexForge PRO v9 | Responsab. exclusiva do subscritor</div>';const sig='<div class="sig"><p class="ct">Nestes termos, pede deferimento.</p><br><p class="ct">'+d.adv.cidade+', '+hoje+'.</p><br><br><div class="sl"></div><p class="sn">'+d.adv.nome+'</p><p class="so">OAB n.o '+d.adv.oab+'</p>'+(d.adv.end?'<p class="so">'+d.adv.end+'</p>':'')+(d.adv.email?'<p class="so">'+d.adv.email+'</p>':'')+'</div>';return '<div class="doc-ornament">⚖ &nbsp; PETICAO INICIAL &nbsp; ⚖</div>\n<div class="dh"><div class="dj">'+d.proc.vara+'</div><div class="dv">'+d.adv.comarca+'</div></div>\n<p class="intro">'+qAutor+', vem propor a presente</p>\n<div class="doc-tipo">PETICAO INICIAL</div>\n<p>em face de '+qReu+', pelos fatos e fundamentos a seguir.</p>\n<div class="ds">I — Dos Fatos</div>\n'+fatosPs+tentT+afT+docsT+'\n<div class="ds">II — Do Direito</div>\n'+dir+tutelaSec+gratSec+'\n<div class="ds">III — Dos Pedidos</div>\n<p>Requer '+autor+' que Vossa Excelencia:</p>\n<ol class="pl">\n'+d.peds.map(p=>'<li>'+p+';</li>').join('\n')+'\n<li>A citacao d'+rg.o+' '+rg.requerido+' para contestar no prazo legal (CPC/2015, art. 344);</li>\n<li>A condenacao d'+rg.o+' '+rg.requerido+' ao pagamento de custas e honorarios (CPC/2015, art. 85);</li>\n<li>A producao de '+provas+'.</li>\n</ol>\n<div class="ds">Do Valor da Causa</div>\n<p>Atribui-se o valor de <strong>R$ '+d.proc.valor+'</strong> (CPC/2015, art. 292).</p>'+audSec+'\n'+sig+footer;}
 function renderDoc(html,d){const os=G('outSec'),td=G('theDoc'),dm=G('docMeta'),ol=G('outLbl');if(os)os.classList.add('show');if(td)td.innerHTML=html;const wc=(td&&td.innerText||'').split(/\s+/).length;if(dm)dm.innerHTML='<span class="mc">Palavras: <strong>~'+wc.toLocaleString('pt-BR')+'</strong></span><span class="mc">Area: <strong>'+d.area.split('—')[0].trim()+'</strong></span><span class="mc">Valor: <strong>R$ '+d.proc.valor+'</strong></span><span class="mc">✅ CPF Validado</span><span class="mc">Gerado: <strong>'+new Date().toLocaleTimeString('pt-BR')+'</strong></span>';if(ol)ol.textContent=(getKey()?'Gemini IA':'Modo local')+' · Revisao obrigatoria (CNJ 615/2025)';try{localStorage.setItem('lxf_output',JSON.stringify({html,ts:new Date().toISOString()}));}catch(e){}saveDocToHistory(html,d);}
@@ -2462,7 +2580,15 @@ function createSimpleZip(files){const enc=new TextEncoder();const lh=[],cd=[];le
 function exportWordLegacy(){const d=window._dat;if(!d){toast('Gere o documento primeiro');return;}showOv('Gerando .doc...');try{const td=G('theDoc');if(!td){hideOv();return;}const h=td.innerHTML;const css='body{font-family:"Times New Roman",serif;font-size:12pt;line-height:1.8;margin:3cm 2.5cm}.dj{font-size:13pt;font-weight:bold;text-transform:uppercase;text-align:center}.ds{font-weight:bold;text-align:center;text-transform:uppercase;margin:1.5cm 0 .5cm}.doc-tipo{text-align:center;font-size:14pt;font-weight:bold;text-transform:uppercase;margin:1cm 0}p{text-indent:1.25cm;text-align:justify}.sig{margin-top:2.5cm;text-align:center}.sl{width:220px;border-top:1px solid #000;margin:.5cm auto .2cm}.sn{font-weight:bold;text-align:center;text-indent:0}.so{text-align:center;text-indent:0}';const full='<!DOCTYPE html><html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="UTF-8"><style>'+css+'</style></head><body>'+h+'</body></html>';const blob=new Blob(['\ufeff'+full],{type:'application/msword;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='LexForge_v9_'+new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')+'.doc';document.body.appendChild(a);a.click();setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},1000);hideOv();toast('📄 .doc baixado!');}catch(err){hideOv();toast('Erro: '+err.message);}}
 function showOv(msg){const ov=G('expOv'),em=G('expMsg');if(ov)ov.classList.add('show');if(em)em.textContent=msg||'Aguarde...';}
 function hideOv(){const ov=G('expOv');if(ov)ov.classList.remove('show');}
-function resetAll(){if(confirm('Novo documento? Dados atuais serao perdidos.')){try{localStorage.removeItem('lxf_form');localStorage.removeItem('lxf_output');}catch(e){}location.reload();}}
+function resetAll(){
+  if(confirm('🗑️ Limpar todos os dados e começar novo documento?\n\nTodos os campos preenchidos serão apagados. O histórico e templates são mantidos.')){
+    try{
+      localStorage.removeItem('lxf_form');
+      localStorage.removeItem('lxf_output');
+    }catch(e){}
+    location.reload();
+  }
+}
 function wait(ms){return new Promise(r=>setTimeout(r,ms));}
 function toast(msg){const t=G('toast');if(!t)return;t.textContent=msg;t.classList.add('show');clearTimeout(t._tid);t._tid=setTimeout(()=>t.classList.remove('show'),3200);}
 const FB={app:null,auth:null,db:null,user:null,unsub:null,_fApp:null,_fAuth:null,_fDb:null,async init(){try{const[fApp,fAuth,fDb]=await Promise.all([import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js'),import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')]);this._fApp=fApp;this._fAuth=fAuth;this._fDb=fDb;this.app=fApp.initializeApp({apiKey:'AIzaSyD_QLNBMIYh_6SnTYfjjG0N4eDxfRwPuEE',authDomain:'painel-da-cassia-concurso.firebaseapp.com',projectId:'painel-da-cassia-concurso',appId:'1:88462134882:web:946223397c13ca8519cb3b',storageBucket:'painel-da-cassia-concurso.firebasestorage.app',messagingSenderId:'88462134882'});this.auth=fAuth.getAuth(this.app);this.db=fDb.getFirestore(this.app);fAuth.onAuthStateChanged(this.auth,user=>{this.user=user;this._updateUI();if(user){this._syncKey();this._listenDocs();loadPerfilFromCloud();loadTemplatesFromCloud();}else{if(this.unsub){this.unsub();this.unsub=null;}}});}catch(e){console.error('Firebase:',e);}},async login(){if(!this.auth){toast('Firebase nao inicializado');return;}try{const p=new this._fAuth.GoogleAuthProvider();await this._fAuth.signInWithPopup(this.auth,p);}catch(e){toast('Login cancelado');}},async logout(){if(!this.auth)return;await this._fAuth.signOut(this.auth);toast('Saiu da conta');},_updateUI(){
